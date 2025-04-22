@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>授業記録まとめ</title>
+    <!-- ↓↓↓ 本来ここにCSSファイルへのリンクが入ります ↓↓↓ -->
+    <!-- <link rel="stylesheet" href="/assets/css/style.css"> -->
+    <style>
+        /* 最低限の見た目のための仮スタイル（後でCSSファイルに移行します） */
+        body { font-family: sans-serif; margin: 20px; line-height: 1.6; }
+        .site-header, .site-footer { background-color: #f0f0f0; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+        .site-header h1 { margin: 0 0 10px 0; }
+        .search-container { margin-bottom: 10px; }
+        .search-container input[type="search"] { padding: 8px; width: 250px; }
+        .search-container button { padding: 8px 12px; }
+        .category-nav ul { list-style: none; padding: 0; margin: 0; }
+        .category-nav li { display: inline-block; margin-right: 15px; }
+        .category-nav a { text-decoration: none; color: #007bff; }
+        .category-nav a:hover { text-decoration: underline; }
+        .main-content { max-width: 1200px; margin: 0 auto; } /* 中央寄せ */
+        .controls { margin-bottom: 15px; }
+        .sort-button { padding: 8px 12px; }
+        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 15px;}
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; } /* カードサイズ調整 */
+        .card { border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
+        .card-title { margin-top: 0; margin-bottom: 5px; font-size: 1.1em;}
+        .card-title a { text-decoration: none; color: #0056b3; font-weight: bold; }
+        .card-title a:hover { text-decoration: underline; }
+        .card-date { font-size: 0.9em; color: #555; margin-bottom: 10px; }
+        .card-summary { margin-top: 5px; margin-bottom: 10px; font-size: 0.95em; color: #333; }
+        .card-tags { margin-top: 10px; }
+        .tag { background-color: #e0e0e0; padding: 3px 8px; border-radius: 10px; font-size: 0.85em; margin-right: 5px; text-decoration: none; color: #333; display: inline-block; margin-bottom: 5px; }
+        .tag:hover { background-color: #c0c0c0; }
+        .site-footer p { margin: 0; text-align: center; font-size: 0.9em; color: #555; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <h1>授業記録まとめ</h1>
+        <div class="search-container">
+            <!-- 検索機能はまだ実装されていません -->
+            <input type="search" placeholder="キーワードで検索...">
+            <button>検索</button>
+        </div>
+        <nav class="category-nav">
+            <ul>
+                <!-- カテゴリリンク（クリックしてもまだ正しく絞り込まれません） -->
+                <li><a href="#">すべて表示</a></li>
+                <li><a href="/categories/数学/">数学</a></li>
+                <li><a href="/categories/英語/">英語</a></li>
+                <li><a href="/categories/歴史/">歴史</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="controls">
+             <!-- 並べ替えボタン（まだ機能しません） -->
+            <button class="sort-button">日付 新しい順 ↑↓</button>
+        </div>
+
+        <h2>新着の授業記録</h2>
+        <div class="card-grid">
+            <!-- ↓↓↓ Jekyllが自動生成したカード（サンプルデータ） ↓↓↓ -->
+
+            <article class="card">
+                <!-- 詳細ページへのリンク（/lessons/math-equation.html は仮のパス） -->
+                <h3 class="card-title"><a href="/lessons/math-equation.html">[数学] 方程式の解き方</a></h3>
+                <p class="card-date">2023年10月27日</p>
+                <p class="card-summary">一次方程式の基本的な解き方と、移項の考え方について解説します。</p>
+                <div class="card-tags">
+                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
+                    <a href="/tags/前期/" class="tag">#前期</a>
+                    <a href="/tags/試験範囲/" class="tag">#試験範囲</a>
+                    <a href="/tags/復習重要/" class="tag">#復習重要</a>
+                </div>
+            </article>
+
+            <article class="card">
+                 <!-- 詳細ページへのリンク（/lessons/english-infinitive.html は仮のパス） -->
+                <h3 class="card-title"><a href="/lessons/english-infinitive.html">[英語] 不定詞の基本</a></h3>
+                <p class="card-date">2023年10月26日</p>
+                <p class="card-summary">不定詞の名詞的用法、形容詞的用法、副詞的用法の違いを学びます。</p>
+                <div class="card-tags">
+                     <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
+                    <a href="/tags/前期/" class="tag">#前期</a>
+                    <a href="/tags/文法/" class="tag">#文法</a>
+                </div>
+            </article>
+
+             <article class="card">
+                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
+                <h3 class="card-title"><a href="/lessons/history-kamakura.html">[歴史] 鎌倉時代の流れ</a></h3>
+                <p class="card-date">2023年10月25日</p>
+                <p class="card-summary">源頼朝による幕府開設から、元寇、そして幕府滅亡までの主な出来事を概観します。</p>
+                <div class="card-tags">
+                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
+                    <a href="/tags/前期/" class="tag">#前期</a>
+                    <a href="/tags/日本史/" class="tag">#日本史</a>
+                </div>
+            </article>
+
+            <!-- ↑↑↑ ここまでが自動生成されたカードのサンプル ↑↑↑ -->
+            <!-- 実際には授業記録のMarkdownファイルが増えれば、ここにカードが追加されます -->
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2023 あなたの名前 または 学校名</p>
+    </footer>
+
+    <!-- JavaScriptファイルへのリンクも本来はここに記述されます（検索、ソート等） -->
+
+</body>
+</html>
