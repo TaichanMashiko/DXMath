@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>乗法公式の展開</title>
+    <!-- MathJax の読み込みコード -->
+    <script>
+        MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+          },
+          svg: {
+            fontCache: 'global'
+          }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        /* preタグのスタイル修正 */
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-x: auto; /* 横スクロールを可能に */
+            font-size: 0.95em;
+            white-space: pre-wrap; /* 自動改行を許可 */
+            word-wrap: break-word; /* 長い単語の折り返し */
+        }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; /* 親要素のwhite-space設定を継承 */ }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        /* details内の要素のはみ出し防止 */
+        details > *:not(summary) {
+             padding: 1em;
+             border-top: 1px solid #eee;
+             overflow-wrap: break-word; /* URLや長い単語の折り返し */
+             word-wrap: break-word; /* 旧ブラウザ用 */
+             /* MathJax要素に対するはみ出し対策を試みる */
+             overflow-x: auto; /* はみ出した場合はスクロール */
+        }
+        /* MathJaxのコンテナに対しても設定を試みる（必要に応じて） */
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] {
+             overflow-x: auto;
+             max-width: 100%;
+        }
+
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+            padding: 1em 1.5em;
+            border-radius: 5px;
+            border-left-width: 5px;
+            border-left-style: solid;
+        }
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; } /* 水色系 */
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; } /* 緑色系 */
+        .example { background-color: #fff3e0; border-left-color: #ff9800; } /* オレンジ系 */
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; } /* ピンク系 */
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; } /* 黄色系 */
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; } /* 紫色系 */
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* 赤色系 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; } /* 赤色系 */
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; } /* 青色系 */
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; } /* 藍色系 */
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; } /* 青緑系 */
+
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%); /* 中央揃え */
+            bottom: 130%; /* 要素の上に表示、少し離す */
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            visibility: hidden; /* 初期状態は非表示 */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 100; /* 他の要素より手前に */
+            pointer-events: none; /* ツールチップ自体がマウスイベントを受けないように */
+        }
+        .tooltip:hover::after {
+            visibility: visible; /* ホバー時に表示 */
+            opacity: 1;
+        }
+
+        /* 難易度・重要度表示用（任意）*/
+        .difficulty, .importance {
+            display: inline-block;
+            font-size: 0.85em;
+            padding: 0.1em 0.5em;
+            margin-left: 0.5em;
+            border-radius: 3px;
+            vertical-align: middle; /* 見出しなどと高さを合わせる */
+        }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 星の色に合わせるなど */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            background-color: #f9f9f9; /* detailsの背景色 */
+        }
+        .toc-toggle summary {
+            padding: 0.8em 1em;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: transparent; /* 親要素の色を使う */
+            border-radius: 4px; /* 閉じたときの角丸 */
+            margin: 0; /* summaryのデフォルトマージン削除 */
+        }
+        details[open].toc-toggle > summary {
+             border-bottom: 1px solid #ccc; /* 開いたときの境界線 */
+             border-radius: 4px 4px 0 0; /* 開いたときの角丸 */
+        }
+        .toc-toggle summary h2 { /* summary内のh2のスタイル調整 */
+            display: inline; /* 横並びにする */
+            margin: 0;
+            border: none; /* h2のデフォルト下線を消す */
+            padding: 0;
+            font-size: 1.2em; /* 少し大きく */
+        }
+        .toc-toggle nav {
+            padding: 0 1.5em 1em 1.5em; /* 開いたときの内側のパディング */
+            /* border-top: 1px solid #eee; 上のsummaryとの境界線で代用 */
+            background-color: white; /* 中身は白い背景 */
+            border-radius: 0 0 4px 4px;
+        }
+        .toc-toggle nav h2 { /* nav内のh2（目次タイトル）は不要なので隠すか削除 */
+           display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>乗法公式の展開</h1>
+    <p>授業日: 2025年4月21日 | 担当: 益子泰地</p>
+    <section class="learning-goals">
+        <h2>本日の学習目標</h2>
+        <ul>
+            <li>中学で学習した乗法公式を復習し、確実に使えるようにする。</li>
+            <li>高校で学習する新しい乗法公式を理解し、展開計算に応用する。</li>
+            <li>置き換えなどの工夫を用いて、複雑な式の展開を効率的に行えるようにする。</li>
+            <li>式の形を見て、適切な乗法公式を選択できるようになる。</li>
+        </ul>
+    </section>
+
+    <details class="toc-toggle">
+        <summary><h2>目次 (クリックで開閉)</h2></summary>
+        <nav>
+            <h2>目次</h2> <!-- このH2はCSSで非表示 -->
+            <ul>
+                <li><a href="#intro">はじめに (小テストについて)</a></li>
+                <li><a href="#technique">展開の工夫</a></li>
+                <li><a href="#review">乗法公式の復習 (中学レベル)</a></li>
+                <li><a href="#mistakes1">よくある間違い (中学レベル)</a></li>
+                <li><a href="#quiz1">理解度チェッククイズ (1)</a></li>
+                <li><a href="#ex12">例題12 解説</a></li>
+                <li><a href="#highschool1">乗法公式 (高校レベル1): (ax+b)(cx+d)</a></li>
+                <li><a href="#mistakes2">よくある間違い (高校レベル1)</a></li>
+                <li><a href="#quiz2">理解度チェッククイズ (2)</a></li>
+                <li><a href="#ex13">例題13 解説</a></li>
+                <li><a href="#ex14">例題14 解説</a></li>
+                <li><a href="#highschool2">乗法公式 (高校レベル2): (a+b+c)²</a></li>
+                <li><a href="#mistakes3">よくある間違い (高校レベル2)</a></li>
+                <li><a href="#quiz3">理解度チェッククイズ (3)</a></li>
+                <li><a href="#ex15">例題15 解説</a></li>
+                <li><a href="#ex1">例題1 解説 ((a+b+c)²の証明)</a></li>
+                <li><a href="#guide">公式の使い分けガイド</a></li>
+                <li><a href="#supplement">補足</a></li>
+                <li><a href="#practice">練習問題</a></li>
+                <li><a href="#advanced-practice">発展問題</a></li>
+                <li><a href="#summary">まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <main>
+        <section id="intro">
+            <h2>はじめに (小テストについて)</h2>
+            <p>小テストはアチーブメントとして記録され、評定にも反映されます。マンスリーテストやウィークリーテストと同様に重要ですので、雑にやらず、丁寧に解いて提出してください。</p>
+            <div class="caution">
+                <h3>⚠️ 注意点: 計算の工夫</h3>
+                <p>例えば、問題の中に $(x-y+2)(x-y+3)$ のような式が出てくることがあります。これを単純に<span class="tooltip" data-tooltip="各項を順番に掛け合わせる方法">分配法則</span>を使って9回掛け算しても答えは出ますが、それでは工夫がありません。</p>
+                <p>このような場合、$x-y$ の部分を一つの塊（例えば $A$）と見て計算するなど、工夫することが大切です。テストや将来の受験で役立つのは、このような考え方です。単に答えを出して丸をもらうことだけを目的とせず、どうすれば効率的に解けるかを常に考えるようにしましょう。</p>
+            </div>
+        </section>
+
+        <section id="technique">
+            <h2>展開の工夫</h2>
+            <div class="example">
+                <h3>✍️ 具体例: $(x-y+2)(x-y+3)$</h3>
+                <p>この式の展開を考えます。</p>
+                <div class="tips">
+                    <h3>💡 Tips: 共通部分の置き換え</h3>
+                    <p>式の中に共通する部分 $x-y$ があります。これを $A$ と置いてみましょう。</p>
+                    <p>$(x-y+2)(x-y+3)$</p>
+                    <p>$= (A+2)(A+3)$</p>
+                    <p>こうすると、中学で習った<span class="tooltip" data-tooltip="4つの基本的な展開公式">(x+a)(x+b) の形">乗法公式</span>が使えます。</p>
+                    <p>$= A^2 + (2+3)A + 2 \times 3$</p>
+                    <p>$= A^2 + 5A + 6$</p>
+                    <p>最後に $A$ を元の $x-y$ に戻します。</p>
+                    <p>$= (x-y)^2 + 5(x-y) + 6$</p>
+                    <p>さらに展開して</p>
+                    <p>$= (x^2 - 2xy + y^2) + (5x - 5y) + 6$</p>
+                    <p>$= x^2 - 2xy + y^2 + 5x - 5y + 6$</p>
+                    <p>このように、工夫することで計算ミスを減らし、見通しよく展開できます。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="review">
+            <h2>乗法公式の復習 (中学レベル)</h2>
+            <p>ワークシート3ページ目の内容です。まずは中学で学習した基本的な乗法公式を確認しましょう。これらは<span class="tooltip" data-tooltip="式を展開して単項式の和の形にすること">展開</span>だけでなく、<span class="tooltip" data-tooltip="多項式をいくつかの因数の積の形に直すこと">因数分解</span>でも非常に重要です。</p>
+            <div class="definition">
+                <h3>📖 定義: 中学の乗法公式</h3>
+                <ol>
+                    <li>$(a+b)^2 = a^2 + 2ab + b^2$</li>
+                    <li>$(a-b)^2 = a^2 - 2ab + b^2$</li>
+                    <li>$(a+b)(a-b) = a^2 - b^2$</li>
+                    <li>$(x+a)(x+b) = x^2 + (a+b)x + ab$</li>
+                </ol>
+            </div>
+            <div class="caution">
+                <h3>⚠️ 注意点: $(x+3)^2$ のような計算</h3>
+                <p>$(x+3)^2$ を計算するときに、わざわざ $(x+3)(x+3)$ と書き直してから分配法則を使う人がいますが、これは非効率です。必ず乗法公式 $(a+b)^2 = a^2 + 2ab + b^2$ を使って、一気に $x^2 + 6x + 9$ と展開できるようにしましょう。</p>
+            </div>
+            <div class="tips">
+                <h3>💡 Tips: $(a \pm b)^2$ の真ん中の項の覚え方</h3>
+                <p>$(a+b)^2 = a^2 + 2ab + b^2$ の真ん中の項 $2ab$ は、元の式の $a$, $+b$, $2$ の3つのパーツを掛け合わせたものと覚えると便利です</p>
+                <p>同様に、$(a-b)^2 = a^2 - 2ab + b^2$ の真ん中の項 $-2ab$ は、元の式の $a$, $-b$, $2$ の3つのパーツを掛け合わせたものと考えられます</p>
+            </div>
+            <div class="tips">
+                <h3>💡 Tips: 各項の次数について</h3>
+                <p>$(a+b)^2$ や $(a-b)^2$ を展開した結果 $a^2 \pm 2ab + b^2$ の各<span class="tooltip" data-tooltip="式の中でプラスやマイナスで区切られたそれぞれの部分">項</span>（$a^2$, $\pm 2ab$, $b^2$）には、文字が必ず2つ掛け合わされています（$a^2 = a \times a$, $ab = a \times b$, $b^2 = b \times b$）。これは元の式が2乗だからです。これを意識すると、展開ミスに気づきやすくなります。</p>
+            </div>
+             <p>公式3 $(a+b)(a-b) = a^2 - b^2$ は「和と差の積は2乗の差」としてよく使われます</p>
+             <p>公式4 $(x+a)(x+b) = x^2 + (a+b)x + ab$ は、因数分解で「足して$(a+b)$、掛けて$ab$になる数を見つける」パターンの元になっています</p>
+        </section>
+
+        <section id="mistakes1" class="caution">
+            <h2>⚠️ よくある間違い (中学レベルの公式)</h2>
+            <ul>
+                <li>
+                    <strong>間違い例:</strong> $(x+5)^2 = x^2 + 25$
+                    <br>
+                    <strong>正しい計算:</strong> $(x+5)^2 = x^2 + 2 \cdot x \cdot 5 + 5^2 = x^2 + 10x + 25$
+                    <br>
+                    <strong>ポイント:</strong> 真ん中の $2ab$ の項 (この場合は $10x$) を忘れがちです。$(a+b)^2$ は $a^2+b^2$ ではありません！
+                </li>
+                <li>
+                    <strong>間違い例:</strong> $(x-3)^2 = x^2 - 6x - 9$
+                    <br>
+                    <strong>正しい計算:</strong> $(x-3)^2 = x^2 - 2 \cdot x \cdot 3 + (-3)^2 = x^2 - 6x + 9$
+                    <br>
+                    <strong>ポイント:</strong> 最後の項は $(-3)^2$ なので、必ずプラスになります。$(a-b)^2$ の最後の項は $+b^2$ です。
+                </li>
+                 <li>
+                    <strong>間違い例:</strong> $(2x+y)(2x-y) = 2x^2 - y^2$
+                    <br>
+                    <strong>正しい計算:</strong> $(2x+y)(2x-y) = (2x)^2 - y^2 = 4x^2 - y^2$
+                    <br>
+                    <strong>ポイント:</strong> $(a+b)(a-b)=a^2-b^2$ の $a$ にあたる部分が $2x$ なので、$(2x)^2$ を正しく計算する必要があります。係数も2乗するのを忘れないようにしましょう。
+                </li>
+            </ul>
+        </section>
+
+        <section id="quiz1" class="quiz">
+            <h2>🧐 理解度チェッククイズ (1)</h2>
+            <p>問: $(x-6)^2$ を展開した式として正しいものを選びなさい。</p>
+            <ol>
+                <li>ア) $x^2 - 36$</li>
+                <li>イ) $x^2 + 12x + 36$</li>
+                <li>ウ) $x^2 - 12x + 36$</li>
+                <li>エ) $x^2 - 12x - 36$</li>
+            </ol>
+            <details>
+                <summary>答え</summary>
+                <p>正解は <strong>ウ) $x^2 - 12x + 36$</strong> です</p>
+                <p>公式 $(a-b)^2 = a^2 - 2ab + b^2$ に $a=x$, $b=6$ を当てはめます。</p>
+                <p>$x^2 - 2(x)(6) + 6^2 = x^2 - 12x + 36$</p>
+            </details>
+        </section>
+
+        <section id="ex12">
+            <h2>例題12 解説</h2>
+            <div class="important">
+                <h3>⭐ 重要ポイント</h3>
+                <p>ここからの展開計算は、途中式を省略し、なるべく1行で答えを出せるように練習しましょう。</p>
+            </div>
+            <div class="example">
+                <h3>✍️ 例題12 (1) $(2x+3y)^2$ <span class="difficulty">(基礎)</span> <span class="importance">(★★☆)</span></h3>
+                <p>公式 $(a+b)^2 = a^2 + 2ab + b^2$ を使います。ここで $a=2x$, $b=3y$ と考えます。</p>
+                <p>$(2x)^2 + 2(2x)(3y) + (3y)^2$</p>
+                <p>$= 4x^2 + 12xy + 9y^2$</p>
+                <p>真ん中の項は、パーツ $2x$, $+3y$, $2$ を掛けて $12xy$ と素早く計算します。</p>
+            </div>
+            <div class="example">
+                <h3>✍️ 例題12 (2) $(5x-y)^2$ <span class="difficulty">(基礎)</span> <span class="importance">(★★☆)</span></h3>
+                <p>公式 $(a-b)^2 = a^2 - 2ab + b^2$ を使います。ここで $a=5x$, $b=y$ と考えます。</p>
+                 <p>$(5x)^2 - 2(5x)(y) + y^2$</p>
+                <p>$= 25x^2 - 10xy + y^2$</p>
+                 <p>真ん中の項は、パーツ $5x$, $-y$, $2$ を掛けて $-10xy$ と計算します。</p>
+            </div>
+            <div class="example">
+                <h3>✍️ 例題12 (3) $(4x+7y)(4x-7y)$ <span class="difficulty">(基礎)</span> <span class="importance">(★★☆)</span></h3>
+                 <p>公式 $(a+b)(a-b) = a^2 - b^2$ を使います。ここで $a=4x$, $b=7y$ と考えます。</p>
+                <p>$(4x)^2 - (7y)^2$</p>
+                <p>$= 16x^2 - 49y^2$</p>
+            </div>
+            <div class="example">
+                <h3>✍️ 例題12 (4) $(x+3)(x+6)$ <span class="difficulty">(基礎)</span> <span class="importance">(★★☆)</span></h3>
+                <p>公式 $(x+a)(x+b) = x^2 + (a+b)x + ab$ を使います。ここで $a=3$, $b=6$ と考えます。</p>
+                <p>$x^2 + (3+6)x + (3 \times 6)$</p>
+                <p>$= x^2 + 9x + 18$</p>
+            </div>
+        </section>
+
+        <section id="highschool1">
+            <h2>乗法公式 (高校レベル1): $(ax+b)(cx+d)$</h2>
+            <p>ここからは高校で新たに学ぶ乗法公式です。中学の公式4 $(x+a)(x+b)$ の $x$ の<span class="tooltip" data-tooltip="文字の前に掛けられている数字">係数</span>が1でない場合です。</p>
+            <div class="definition">
+                <h3>📖 定義: 高校の乗法公式 (1)</h3>
+                <p>$(ax+b)(cx+d) = acx^2 + (ad+bc)x + bd$</p>
+            </div>
+            <div class="tips">
+                <h3>💡 Tips: $(ax+b)(cx+d)$ の覚え方</h3>
+                <p>この公式は、以下の手順で覚えると計算しやすくなります。</p>
+                <ol>
+                    <li>**前々 (まえまえ):** 前の項どうしを掛ける → $acx^2$</li>
+                    <li>**中々 (なかなか) と 外々 (そとそと):** 内側の項どうし ($b$ と $cx$) と外側の項どうし ($ax$ と $d$) を掛けて足し合わせる → $(ad+bc)x$</li>
+                    <li>**後々 (あとあと):** 後ろの項どうしを掛ける → $bd$</li>
+                </ol>
+                <p>つまり、「前々、$x^2$。中々 と 外々 を足して、$x$。後々、定数項。」と覚えます。</p>
+            </div>
+        </section>
+
+        <section id="mistakes2" class="caution">
+            <h2>⚠️ よくある間違い (高校レベル1の公式)</h2>
+            <ul>
+                <li>
+                    <strong>間違い例:</strong> $(2x+3)(x+5) = 2x^2 + (3+5)x + 15 = 2x^2 + 8x + 15$
+                    <br>
+                    <strong>正しい計算:</strong> $(2x+3)(x+5) = (2x)(x) + (2x \cdot 5 + 3 \cdot x) + (3 \cdot 5) = 2x^2 + (10x+3x) + 15 = 2x^2 + 13x + 15$
+                    <br>
+                    <strong>ポイント:</strong> 真ん中の $x$ の係数は、単に定数項を足すのではなく、「内側(中々)の積 $3x$」と「外側(外々)の積 $10x$」を足し合わせる必要があります $(ad+bc)$。中学の $(x+a)(x+b)$ の公式と混同しないように注意しましょう。
+                </li>
+            </ul>
+        </section>
+
+        <section id="quiz2" class="quiz">
+            <h2>🧐 理解度チェッククイズ (2)</h2>
+            <p>問: $(3x+2)(2x-1)$ を展開した式として正しいものを選びなさい。</p>
+            <ol>
+                <li>ア) $6x^2 + x - 2$</li>
+                <li>イ) $6x^2 - x - 2$</li>
+                <li>ウ) $6x^2 + 7x - 2$</li>
+                <li>エ) $6x^2 + x + 2$</li>
+            </ol>
+            <details>
+                <summary>答え</summary>
+                <p>正解は <strong>ア) $6x^2 + x - 2$</strong> です</p>
+                <p>「前々、中々、外々、後々」で計算します。</p>
+                <ul>
+                    <li>前々: $(3x)(2x) = 6x^2$</li>
+                    <li>中々: $(2)(2x) = 4x$</li>
+                    <li>外々: $(3x)(-1) = -3x$</li>
+                    <li>中々 + 外々: $4x + (-3x) = x$</li>
+                    <li>後々: $(2)(-1) = -2$</li>
+                </ul>
+                <p>よって、$6x^2 + x - 2$ となります</p>
+            </details>
+        </section>
+
+        <section id="ex13">
+            <h2>例題13 解説</h2>
+            <div class="example">
+                 <h3>✍️ 例題13 (1) $(4x+5)(3x+2)$ <span class="difficulty">(標準)</span> <span class="importance">(★★★)</span></h3>
+                 <p>「前々、中々、外々、後々」の考え方で展開します。</p>
+                 <ul>
+                     <li>前々: $(4x)(3x) = 12x^2$</li>
+                     <li>中々: $(5)(3x) = 15x$</li>
+                     <li>外々: $(4x)(2) = 8x$</li>
+                     <li>中々 + 外々: $15x + 8x = 23x$</li>
+                     <li>後々: $(5)(2) = 10$</li>
+                 </ul>
+                 <p>よって、 $(4x+5)(3x+2) = 12x^2 + 23x + 10$</p>
+            </div>
+        </section>
+
+        <section id="ex14">
+            <h2>例題14 解説</h2>
+             <div class="example">
+                 <h3>✍️ 例題14 (1) $(3x-7y)(x+3y)$ <span class="difficulty">(標準)</span> <span class="importance">(★★★)</span></h3>
+                 <p>これも同様に「前々、中々、外々、後々」で展開します。文字が $y$ になっていますが、考え方は同じです。</p>
+                 <ul>
+                     <li>前々: $(3x)(x) = 3x^2$</li>
+                     <li>中々: $(-7y)(x) = -7xy$</li>
+                     <li>外々: $(3x)(3y) = 9xy$</li>
+                     <li>中々 + 外々: $-7xy + 9xy = 2xy$</li>
+                     <li>後々: $(-7y)(3y) = -21y^2$</li>
+                 </ul>
+                  <p>よって、 $(3x-7y)(x+3y) = 3x^2 + 2xy - 21y^2$</p>
+            </div>
+        </section>
+
+        <section id="highschool2">
+            <h2>乗法公式 (高校レベル2): $(a+b+c)^2$</h2>
+             <p>3つの項の和の2乗を展開する公式です。</p>
+            <div class="definition">
+                <h3>📖 定義: 高校の乗法公式 (2)</h3>
+                <p>$(a+b+c)^2 = a^2 + b^2 + c^2 + 2ab + 2bc + 2ca$</p>
+            </div>
+            <div class="tips">
+                <h3>💡 Tips: 輪環の順</h3>
+                <p>この公式の最後の $2ca$ の部分は、アルファベット順なら $2ac$ と書くのが普通ですが、$2ca$ と書かれることが多いです。これは「<span class="tooltip" data-tooltip="文字を円状に並べたときに隣り合う順序 (a→b→c→a...)">輪環の順</span>」と呼ばれる書き方で、$a \to b$, $b \to c$, $c \to a$ のように文字が循環するように項を並べることで、式全体が対称的で美しく見えるという考え方に基づいています。数学では、このように対称性を意識した表記が好まれることがあります。（もちろん $2ac$ と書いても間違いではありません）</p>
+            </div>
+        </section>
+
+        <section id="mistakes3" class="caution">
+            <h2>⚠️ よくある間違い (高校レベル2の公式)</h2>
+            <ul>
+                <li>
+                    <strong>間違い例:</strong> $(a+b-c)^2 = a^2+b^2+c^2 + 2ab + 2bc + 2ca$ (符号をそのままにしてしまう)
+                    <br>
+                    <strong>正しい計算:</strong> $(a+b-c)^2 = a^2 + b^2 + (-c)^2 + 2ab + 2b(-c) + 2(-c)a = a^2 + b^2 + c^2 + 2ab - 2bc - 2ca$
+                    <br>
+                    <strong>ポイント:</strong> 公式を適用する際は、各項の符号を含めて考えます。この場合、$c$ の代わりに $-c$ として公式に代入します。$(-c)^2 = c^2$ ですが、$2bc$ や $2ca$ の部分は符号がマイナスになります。
+                </li>
+                 <li>
+                    <strong>間違い例:</strong> $(a+b+c)^2 = a^2+b^2+c^2 + 2(ab+bc+ca)$ を $(a+b+c)^2 = a^2+b^2+c^2 + abc$ のように誤解する。
+                    <br>
+                    <strong>ポイント:</strong> $2ab, 2bc, 2ca$ はそれぞれ2つの文字の積の2倍であり、3つの文字の積ではありません。
+                </li>
+            </ul>
+        </section>
+
+        <section id="quiz3" class="quiz">
+            <h2>🧐 理解度チェッククイズ (3)</h2>
+            <p>問: $(x-y+z)^2$ を展開したときの $-2xy$ 以外の項をすべて含む選択肢を選びなさい。</p>
+            <ol>
+                <li>ア) $x^2+y^2+z^2 - 2yz + 2zx$</li>
+                <li>イ) $x^2+y^2+z^2 + 2yz - 2zx$</li>
+                <li>ウ) $x^2-y^2+z^2 - 2yz + 2zx$</li>
+                <li>エ) $x^2+y^2+z^2 - 2yz - 2zx$</li>
+            </ol>
+            <details>
+                <summary>答え</summary>
+                <p>正解は <strong>ア) $x^2+y^2+z^2 - 2yz + 2zx$</strong> です</p>
+                <p>公式 $(a+b+c)^2 = a^2+b^2+c^2+2ab+2bc+2ca$ に $a=x$, $b=-y$, $c=z$ を当てはめます。</p>
+                <p>$x^2+(-y)^2+z^2 + 2(x)(-y) + 2(-y)(z) + 2(z)(x)$</p>
+                <p>$= x^2+y^2+z^2 - 2xy - 2yz + 2zx$</p>
+                <p>このうち $-2xy$ 以外の項は $x^2, y^2, z^2, -2yz, +2zx$ なので、アが正解です</p>
+            </details>
+        </section>
+
+
+        <section id="ex15">
+            <h2>例題15 解説 (音声内の例題1に対応)</h2>
+             <div class="example">
+                 <h3>✍️ 例題15 (1) $(a+b+c)(a-b+c)$ <span class="difficulty">(標準)</span> <span class="importance">(★★★)</span></h3>
+                 <p>これは $(a+b+c)^2$ の公式を直接使う形ではありませんが、工夫によって中学の公式に持ち込めます。</p>
+                 <p>まず、項の順番を入れ替えて、共通の形が見えるようにします。</p>
+                 <p>$(a+c+b)(a+c-b)$</p>
+                 <p>ここで、$a+c$ を一つの塊 $A$ と見てみましょう。</p>
+                 <p>$= (A+b)(A-b)$</p>
+                 <p>これは中学の公式 $(□+△)(□-△) = □^2 - △^2$ の形です。</p>
+                 <p>$= A^2 - b^2$</p>
+                 <p>$A$ を $a+c$ に戻します。</p>
+                 <p>$= (a+c)^2 - b^2$</p>
+                 <p>最後に $(a+c)^2$ を展開します。</p>
+                 <p>$= (a^2 + 2ac + c^2) - b^2$</p>
+                 <p>$= a^2 - b^2 + c^2 + 2ac$ (順番を整理)</p>
+                 <p>※ここでも $2ac$ を輪環の順で $2ca$ と書くこともあります。</p>
+            </div>
+        </section>
+
+         <section id="ex1">
+            <h2>例題1 解説 ($(a+b+c)^2$の証明)</h2>
+             <div class="example">
+                 <h3>✍️ 例題1 (1) $(a+b+c)^2$ の証明</h3>
+                 <p>この公式は、置き換えを使って証明できます。</p>
+                 <p>$a+b = A$ と置いてみましょう。</p>
+                 <p>$(a+b+c)^2 = (A+c)^2$</p>
+                 <p>これは中学の公式 $(□+△)^2 = □^2 + 2□△ + △^2$ の形です。</p>
+                 <p>$= A^2 + 2Ac + c^2$</p>
+                 <p>$A$ を $a+b$ に戻します。</p>
+                 <p>$= (a+b)^2 + 2(a+b)c + c^2$</p>
+                 <p>さらに展開します。</p>
+                 <p>$= (a^2 + 2ab + b^2) + (2ac + 2bc) + c^2$</p>
+                 <p>最後に項の順番を整理します。</p>
+                 <p>$= a^2 + b^2 + c^2 + 2ab + 2bc + 2ac$</p>
+                 <p>このようにして、公式 $(a+b+c)^2 = a^2 + b^2 + c^2 + 2ab + 2bc + 2ca$ が導けます。</p>
+            </div>
+        </section>
+
+        <section id="guide" class="formula-guide">
+            <h2>🧭 公式の使い分けガイド</h2>
+            <p>どの展開公式を使えばよいか迷ったときは、式の形に注目してみましょう。</p>
+            <ul>
+                <li>
+                    <strong>$(□+△)^2$ または $(□-△)^2$ の形か？</strong>
+                    <p>→ $(a \pm b)^2 = a^2 \pm 2ab + b^2$ を使う。</p>
+                    <p>例: $(3x+5)^2$, $(a-4b)^2$</p>
+                </li>
+                 <li>
+                    <strong>$(□+△)(□-△)$ の形か？ (同じものの和と差の積)</strong>
+                    <p>→ $(a+b)(a-b) = a^2 - b^2$ を使う。</p>
+                    <p>例: $(2x+y)(2x-y)$, $(a+5)(a-5)$</p>
+                 </li>
+                 <li>
+                    <strong>$(x+a)(x+b)$ の形か？ (先頭の文字が同じで係数1)</strong>
+                    <p>→ $(x+a)(x+b) = x^2 + (a+b)x + ab$ を使う。</p>
+                    <p>例: $(x+2)(x+7)$, $(y-1)(y+4)$</p>
+                 </li>
+                 <li>
+                    <strong>$(ax+b)(cx+d)$ の形か？ (一次式 × 一次式)</strong>
+                    <p>→ $(ax+b)(cx+d) = acx^2 + (ad+bc)x + bd$ を使う。（前々、中々、外々、後々）</p>
+                    <p>例: $(3x+1)(2x+5)$, $(4a-3)(a-2)$</p>
+                 </li>
+                 <li>
+                    <strong>$(a+b+c)^2$ の形か？ (3つの項の和の2乗)</strong>
+                    <p>→ $(a+b+c)^2 = a^2+b^2+c^2+2ab+2bc+2ca$ を使う。</p>
+                    <p>例: $(x+y+z)^2$, $(2a-b+1)^2$</p>
+                 </li>
+                 <li>
+                    <strong>上記のどれにも当てはまらない、または複雑な形か？</strong>
+                    <p>→ 共通部分を見つけて置き換え（例: $x+y=A$）たり、項の順番を入れ替えて工夫できないか考える。それでもだめなら、最終手段として分配法則で地道に展開する。</p>
+                    <p>例: $(x+y+z)(x+y-z)$ → $(x+y)$を置き換え<br> $(a+b-1)(a+b-2)$ → $(a+b)$を置き換え</p>
+                 </li>
+            </ul>
+        </section>
+
+        <section id="supplement" class="supplement">
+            <h2>➕ 補足</h2>
+            <h3>展開の工夫の重要性</h3>
+            <p>授業で強調されていたように、複雑な式を展開する際には、共通部分を見つけて置き換えたり、項の順番を入れ替えたりする工夫が非常に重要です。これにより、見慣れた乗法公式の形に持ち込むことができ、計算ミスを減らし、効率的に計算を進めることができます。特に、項の数が多い場合や、複雑な係数が含まれる場合に有効です。</p>
+            <h3>公式を覚えることと理解すること</h3>
+            <p>乗法公式は暗記することも大切ですが、なぜその形になるのかを理解することも重要です。例えば $(a+b)^2$ が $a^2+2ab+b^2$ になるのは、$(a+b)(a+b)$ を分配法則で展開した結果です。$(a+b+c)^2$ の公式も、例題1のように置き換えを使えば、既知の公式から導き出せます。公式の成り立ちを理解しておくと、応用問題にも対応しやすくなります。</p>
+            <h3>「前々、中々、外々、後々」の考え方</h3>
+            <p>$(ax+b)(cx+d)$ の展開で紹介された「前々、中々、外々、後々」は、機械的な計算手順を示したものですが、これも元は分配法則に基づいています。</p>
+            <p>$(ax+b)(cx+d) = ax(cx+d) + b(cx+d)$</p>
+            <p>$= (acx^2 + adx) + (bcx + bd)$</p>
+            <p>$= acx^2 + (ad+bc)x + bd$</p>
+            <p>この過程を簡略化したものが「前々 ($acx^2$)、中々 ($bcx$)、外々 ($adx$)、後々 ($bd$)」となります。手順を覚えるだけでなく、分配法則とのつながりを意識すると理解が深まります。</p>
+        </section>
+
+        <section id="practice" class="practice-problems">
+            <h2>✏️ 練習問題</h2>
+            <div class="problem">
+                <p>問1. 次の式を展開しなさい。</p>
+                <p>(1) $(x-4y)^2$ <span class="difficulty">(基礎)</span></p>
+                <p>(2) $(3a+2b)(3a-2b)$ <span class="difficulty">(基礎)</span></p>
+                <p>(3) $(y+5)(y-3)$ <span class="difficulty">(基礎)</span></p>
+                <details>
+                    <summary>解答・解説</summary>
+                    <p>(1) $(x-4y)^2 = x^2 - 2(x)(4y) + (4y)^2 = x^2 - 8xy + 16y^2$ （公式: $(a-b)^2=a^2-2ab+b^2$）</p>
+                    <p>(2) $(3a+2b)(3a-2b) = (3a)^2 - (2b)^2 = 9a^2 - 4b^2$ （公式: $(a+b)(a-b)=a^2-b^2$）</p>
+                    <p>(3) $(y+5)(y-3) = y^2 + (5-3)y + 5(-3) = y^2 + 2y - 15$ （公式: $(x+a)(x+b)=x^2+(a+b)x+ab$）</p>
+                </details>
+            </div>
+            <div class="problem">
+                <p>問2. 次の式を展開しなさい。</p>
+                <p>(1) $(2x+1)(3x+4)$ <span class="difficulty">(標準)</span></p>
+                <p>(2) $(5a-2b)(a-3b)$ <span class="difficulty">(標準)</span></p>
+                <details>
+                    <summary>解答・解説</summary>
+                    <p>(1) $(2x+1)(3x+4) = (2x)(3x) + (2x \cdot 4 + 1 \cdot 3x) + 1 \cdot 4 = 6x^2 + (8x+3x) + 4 = 6x^2 + 11x + 4$ （公式: $(ax+b)(cx+d)=acx^2+(ad+bc)x+bd$）</p>
+                    <p>(2) $(5a-2b)(a-3b) = (5a)(a) + \{ 5a(-3b) + (-2b)a \} + (-2b)(-3b) = 5a^2 + (-15ab-2ab) + 6b^2 = 5a^2 - 17ab + 6b^2$</p>
+                </details>
+            </div>
+             <div class="problem">
+                <p>問3. 次の式を展開しなさい。</p>
+                <p>(1) $(x+y-z)^2$ <span class="difficulty">(標準)</span></p>
+                <p>(2) $(2a-b+3c)^2$ <span class="difficulty">(標準)</span></p>
+                 <details>
+                    <summary>解答・解説</summary>
+                    <p>(1) $(x+y-z)^2 = x^2 + y^2 + (-z)^2 + 2(x)(y) + 2(y)(-z) + 2(-z)(x) = x^2 + y^2 + z^2 + 2xy - 2yz - 2zx$ （公式: $(a+b+c)^2 = a^2+b^2+c^2+2ab+2bc+2ca$ で $c$ を $-z$ と考える）</p>
+                    <p>(2) $(2a-b+3c)^2 = (2a)^2 + (-b)^2 + (3c)^2 + 2(2a)(-b) + 2(-b)(3c) + 2(3c)(2a) = 4a^2 + b^2 + 9c^2 - 4ab - 6bc + 12ca$</p>
+                </details>
+            </div>
+             <div class="problem">
+                <p>問4. 工夫して次の式を展開しなさい。</p>
+                <p>$(x+y+1)(x+y-3)$ <span class="difficulty">(標準)</span></p>
+                 <details>
+                    <summary>解答・解説</summary>
+                    <p>$x+y=A$ と置くと</p>
+                    <p>$(A+1)(A-3) = A^2 + (1-3)A + 1(-3) = A^2 - 2A - 3$</p>
+                    <p>$A$ を $x+y$ に戻して</p>
+                    <p>$(x+y)^2 - 2(x+y) - 3 = (x^2+2xy+y^2) - (2x+2y) - 3 = x^2 + 2xy + y^2 - 2x - 2y - 3$</p>
+                </details>
+            </div>
+        </section>
+
+        <section id="advanced-practice" class="practice-problems">
+             <h2>🚀 発展問題</h2>
+             <div class="problem">
+                <p>問5. 工夫して次の式を展開しなさい。</p>
+                <p>(1) $(a+b-c+d)(a-b-c-d)$ <span class="difficulty">(応用)</span> <span class="importance">(★★★)</span></p>
+                <p>(2) $(x^2+x-1)(x^2-x+1)$ <span class="difficulty">(応用)</span> <span class="importance">(★★★)</span></p>
+                 <details>
+                    <summary>解答・解説</summary>
+                    <p>(1) 式を整理すると、$( (a-c) + (b+d) )( (a-c) - (b+d) )$ となる</p>
+                    <p>$a-c=X$, $b+d=Y$ と置くと、$(X+Y)(X-Y) = X^2 - Y^2$ となる</p>
+                    <p>元に戻すと、$(a-c)^2 - (b+d)^2$</p>
+                    <p>$= (a^2-2ac+c^2) - (b^2+2bd+d^2)$</p>
+                    <p>$= a^2-b^2+c^2-d^2-2ac-2bd$</p>
+                    <p>(2) 式を整理すると、$( x^2 + (x-1) )( x^2 - (x-1) )$ となる</p>
+                    <p>$x-1=A$ と置くと、$(x^2+A)(x^2-A) = (x^2)^2 - A^2$ となる</p>
+                    <p>元に戻すと、$x^4 - (x-1)^2$</p>
+                    <p>$= x^4 - (x^2-2x+1)$</p>
+                    <p>$= x^4 - x^2 + 2x - 1$</p>
+                 </details>
+             </div>
+             <div class="problem">
+                 <p>問6. 次の式を展開しなさい。</p>
+                 <p>$(x+1)^2(x-1)^2(x^2+1)^2$ <span class="difficulty">(応用)</span> <span class="importance">(★★★)</span></p>
+                 <details>
+                     <summary>解答・解説</summary>
+                     <p>まず、 $(x+1)^2(x-1)^2 = \{ (x+1)(x-1) \}^2$ と変形できる</p>
+                     <p>$(x+1)(x-1) = x^2-1$ なので、与式は $(x^2-1)^2(x^2+1)^2$ となる</p>
+                     <p>さらに、$(x^2-1)^2(x^2+1)^2 = \{ (x^2-1)(x^2+1) \}^2$ と変形できる</p>
+                     <p>$(x^2-1)(x^2+1) = (x^2)^2 - 1^2 = x^4-1$ なので、与式は $(x^4-1)^2$ となる</p>
+                     <p>最後にこれを展開して、$(x^4-1)^2 = (x^4)^2 - 2(x^4)(1) + 1^2 = x^8 - 2x^4 + 1$</p>
+                 </details>
+             </div>
+        </section>
+
+
+        <section id="summary" class="summary">
+            <h2>🔖 まとめ</h2>
+            <p>今回の授業では、式の展開における重要な乗法公式について学びました。</p>
+            <ul>
+                <li><strong>中学の復習:</strong> $(a \pm b)^2$, $(a+b)(a-b)$, $(x+a)(x+b)$ の公式を確認し、素早く計算できるように練習しました。</li>
+                <li><strong>展開の工夫:</strong> 共通部分を置き換えることで、複雑な展開を簡単な公式に帰着させる方法を学びました。</li>
+                <li><strong>高校の公式 (1):</strong> $(ax+b)(cx+d) = acx^2 + (ad+bc)x + bd$ を「前々、中々、外々、後々」で計算する方法を学びました。</li>
+                 <li><strong>高校の公式 (2):</strong> $(a+b+c)^2 = a^2 + b^2 + c^2 + 2ab + 2bc + 2ca$ を学び、輪環の順についても触れました。</li>
+                 <li><strong>公式の選択:</strong> 式の形を見て、適切な公式や工夫を選ぶことの重要性を確認しました。</li>
+                 <li><strong>よくある間違い:</strong> 各公式で間違いやすいポイントを確認し、正確な計算を目指すことの重要性を学びました。</li>
+            </ul>
+             <p>これらの公式や工夫は、今後の因数分解や方程式、関数などの学習の基礎となります。確実に身につけ、スムーズに計算できるように繰り返し練習しましょう。</p>
+        </section>
+    </main>
+</body>
+</html>
