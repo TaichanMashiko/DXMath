@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>式の展開 (計算の工夫)</title>
+    <!-- MathJax の読み込みコード -->
+    <script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']],
+            processEscapes: true
+        },
+        svg: {
+            fontCache: 'global'
+        }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        /* preタグのスタイル修正 */
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-x: auto; /* 横スクロールを可能に */
+            font-size: 0.95em;
+            white-space: pre-wrap; /* 自動改行を許可 */
+            word-wrap: break-word; /* 長い単語の折り返し */
+        }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; /* 親要素のwhite-space設定を継承 */ }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        /* details内の要素のはみ出し防止 */
+        details > *:not(summary) {
+             padding: 1em;
+             border-top: 1px solid #eee;
+             overflow-wrap: break-word; /* URLや長い単語の折り返し */
+             word-wrap: break-word; /* 旧ブラウザ用 */
+             overflow-x: auto; /* はみ出した場合はスクロール */
+        }
+        /* MathJaxのコンテナに対しても設定を試みる（必要に応じて） */
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] {
+             overflow-x: auto;
+             max-width: 100%;
+        }
+
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+            padding: 1em 1.5em;
+            border-radius: 5px;
+            border-left-width: 5px;
+            border-left-style: solid;
+        }
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; } /* 水色系 */
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; } /* 緑色系 */
+        .example { background-color: #fff3e0; border-left-color: #ff9800; } /* オレンジ系 */
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; } /* ピンク系 */
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; } /* 黄色系 */
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; } /* 紫色系 */
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* 赤色系 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; } /* 赤色系 */
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; } /* 青色系 */
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; } /* 藍色系 */
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; } /* 青緑系 */
+
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%); /* 中央揃え */
+            bottom: 130%; /* 要素の上に表示、少し離す */
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            visibility: hidden; /* 初期状態は非表示 */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 100; /* 他の要素より手前に */
+            pointer-events: none; /* ツールチップ自体がマウスイベントを受けないように */
+        }
+        .tooltip:hover::after {
+            visibility: visible; /* ホバー時に表示 */
+            opacity: 1;
+        }
+
+        /* 難易度・重要度表示用 */
+        .difficulty, .importance {
+            display: inline-block;
+            font-size: 0.85em;
+            padding: 0.1em 0.5em;
+            margin-left: 0.5em;
+            border-radius: 3px;
+            vertical-align: middle; /* 見出しなどと高さを合わせる */
+        }
+        .difficulty { background-color: #eee; color: #333; } /* 難易度用スタイル */
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用スタイル */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            background-color: #f9f9f9; /* detailsの背景色 */
+        }
+        .toc-toggle summary {
+            padding: 0.8em 1em;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: transparent; /* 親要素の色を使う */
+            border-radius: 4px; /* 閉じたときの角丸 */
+            margin: 0; /* summaryのデフォルトマージン削除 */
+        }
+        details[open].toc-toggle > summary {
+             border-bottom: 1px solid #ccc; /* 開いたときの境界線 */
+             border-radius: 4px 4px 0 0; /* 開いたときの角丸 */
+        }
+        .toc-toggle summary h2 { /* summary内のh2のスタイル調整 */
+            display: inline; /* 横並びにする */
+            margin: 0;
+            border: none; /* h2のデフォルト下線を消す */
+            padding: 0;
+            font-size: 1.2em; /* 少し大きく */
+        }
+        .toc-toggle nav {
+            padding: 0 1.5em 1em 1.5em; /* 開いたときの内側のパディング */
+            /* border-top: 1px solid #eee; 上のsummaryとの境界線で代用 */
+            background-color: white; /* 中身は白い背景 */
+            border-radius: 0 0 4px 4px;
+        }
+        .toc-toggle nav h2 { /* nav内のh2（目次タイトル）は不要なので隠すか削除 */
+           display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>式の展開 (計算の工夫)</h1>
+    <ul>
+        <li><strong>授業日:</strong> (日付不明)</li>
+        <li><strong>単元名:</strong> 式の展開 (計算の工夫)</li>
+        <li><strong>講師名:</strong> 益子泰地</li>
+        <li><strong>学習目標:</strong> 計算の工夫を用いて、複雑な式の展開を効率的に行えるようになる。</li>
+    </ul>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">導入：計算の工夫</a></li>
+                <li><a href="#tips1">💡 計算の工夫 (1) 掛け算</a></li>
+                <li><a href="#tips2">💡 計算の工夫 (2) 展開公式の利用</a></li>
+                <li><a href="#example1">✍️ 例題2 (1)</a></li>
+                <li><a href="#quiz1">理解度チェック (1)</a></li>
+                <li><a href="#example2">✍️ 例題2 (2)</a></li>
+                <li><a href="#quiz2">理解度チェック (2)</a></li>
+                <li><a href="#caution1">⚠️ 計算の工夫における注意点</a></li>
+                <li><a href="#practice1">✏️ 練習問題 1</a></li>
+                <li><a href="#practice2">✏️ 練習問題 2</a></li>
+                <li><a href="#advanced-practice1">✏️ 発展問題 1</a></li>
+                <li><a href="#advanced-practice2">✏️ 発展問題 2</a></li>
+                <li><a href="#formula-guide1">ガイド：展開の工夫の選択</a></li>
+                <li><a href="#summary1">🔖 まとめ</a></li>
+                <li><a href="#future">今後の学習：因数分解</a></li>
+                <li><a href="#supplement-class-format">➕ 補足: 授業形式の変更予告</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">導入：計算の工夫</h2>
+    <p>本日の授業では、例題2「展開をせよ」から始めます。</p>
+    <p>前回、式の展開には計算の工夫が必要な場合があることを学びました。今回は、さらに別の工夫の仕方について解説します。</p>
+
+    <h2 id="tips1">💡 計算の工夫 (1) 掛け算 <span class="importance">★★☆</span></h2>
+    <p>まず、「計算の工夫」とは具体的にどのようなことか、簡単な例で説明します。計算に時間がかかる、あるいは苦手意識がある生徒は特に参考にしてください。</p>
+    <p>例として、次の掛け算を考えます。</p>
+    $$ 58 \times 5 $$
+    <p>この計算を素早く行う方法として、一つの工夫が考えられます。$58$ を $29 \times 2$ と<span class="tooltip" data-tooltip="数を素数の積の形で表すこと">分解</span>し、$2$ と $5$ を先に掛ける方法です。</p>
+    $$ 58 \times 5 = (29 \times 2) \times 5 = 29 \times (2 \times 5) = 29 \times 10 = 290 $$
+    <p>このように、$2 \times 5 = 10$ という計算しやすい形を作ることで、計算全体が簡単になります。</p>
+
+    <div class="supplement">
+        <h4>➕ 補足: 10を作る工夫</h4>
+        <p>掛け算の中に 2 と 5 のペアを見つけると、$2 \times 5 = 10$ となり、計算が非常に楽になります。これは他の計算でも応用できるテクニックです。</p>
+    </div>
+
+    <h2 id="tips2">💡 計算の工夫 (2) 展開公式の利用 <span class="importance">★★★</span></h2>
+    <p>また、既に学習した<span class="tooltip" data-tooltip="多項式をいくつかの因数の積の形に分解すること">因数分解</span>や展開公式の知識も、計算の工夫に役立ちます。例えば、次の計算を考えます。</p>
+    $$ 41 \times 39 $$
+    <p>この計算は、$41 = 40+1$、$39 = 40-1$ と変形することで、以下の展開公式を利用できます。</p>
+    <div class="theorem">
+        <h4>📜 展開公式: 和と差の積 <span class="importance">★★★</span></h4>
+        $$ (A+B)(A-B) = A^2 - B^2 $$
+    </div>
+    <p>この公式を用いると、</p>
+    $$ 41 \times 39 = (40+1)(40-1) = 40^2 - 1^2 = 1600 - 1 = 1599 $$
+    <p>と、比較的簡単に計算できます。</p>
+    <p>このような計算の工夫は、本題である式の展開においても同様に重要となります。</p>
+
+    <h2 id="example1">✍️ 例題2 (1) <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h2>
+    <p>それでは、例題2の(1)に取り組みます。</p>
+    <p>次の式を展開しなさい。</p>
+    $$ (x+2)(x+3)(x-2)(x-3) $$
+    <p>この式は4つの括弧の積であり、括弧の間は掛け算です。掛け算には<span class="tooltip" data-tooltip="a×b = b×a が成り立つ法則">交換法則</span>が成り立つため、計算の順番を自由に入れ替えることができます。</p>
+    <div class="caution">
+        <h4>⚠️ 注意: 交換法則 <span class="importance">★☆☆</span></h4>
+        <p>通常の数や文字式の掛け算では、順番を入れ替えても結果は変わりません。しかし、高校数学以降で学ぶ行列の掛け算など、順番を入れ替えると結果が変わる演算も存在するため、注意が必要です。</p>
+    </div>
+    <p>計算を効率化するため、順番を工夫します。特に、$(A+B)(A-B)=A^2-B^2$ の形を利用できる組み合わせを探すのが有効です。この式では、$(x+2)$ と $(x-2)$、および $(x+3)$ と $(x-3)$ のペアがこの形に該当します。</p>
+    $$ \underbrace{(x+2)(x-2)}_{\text{ペア1}} \times \underbrace{(x+3)(x-3)}_{\text{ペア2}} $$
+    <p>この順序で計算を進めると、</p>
+    $$ = (x^2 - 2^2) \times (x^2 - 3^2) $$
+    $$ = (x^2 - 4)(x^2 - 9) $$
+    <p>となります。続いて、この式を展開します。$x^2$ を一つの塊（例えば $X$）と見なし、$(X-4)(X-9)$ を展開する要領で計算します。</p>
+    $$ (x^2 - 4)(x^2 - 9) = (x^2)^2 + \{(-4)+(-9)\}x^2 + (-4)(-9) $$
+    $$ = x^4 - 13x^2 + 36 $$
+    <div class="supplement">
+      <h4>➕ 補足: 展開の方法</h4>
+      <p>$(x^2 - 4)(x^2 - 9)$ の展開は、展開公式 $(X-a)(X-b) = X^2 - (a+b)X + ab$ で $X=x^2, a=4, b=9$ と考えても良いし、分配法則を用いて $x^2(x^2-9) -4(x^2-9)$ と計算しても良いです。</p>
+    </div>
+    <p>したがって、最終的な答えは $x^4 - 13x^2 + 36$ となります。</p>
+
+    <div class="caution">
+        <h4>⚠️ 間違いやすいポイント</h4>
+        <ul>
+            <li><strong>組み合わせミス:</strong> $(x+2)(x+3)$ や $(x-2)(x-3)$ から計算すると、$(x^2+5x+6)(x^2-5x+6)$ となり、その後の展開が複雑になります。計算しやすい組み合わせを見つけることが重要です。</li>
+            <li><strong>符号ミス:</strong> $(x^2-4)(x^2-9)$ の展開で、係数 $(-4)+(-9)=-13$ や定数項 $(-4)\times(-9)=+36$ の符号を間違えないように注意しましょう。</li>
+        </ul>
+    </div>
+
+    <div class="quiz">
+        <h4>理解度チェック (1)</h4>
+        <ol>
+            <li>$(x+1)(x-2)(x+1)(x-2)$ を最も効率よく展開するための最初のステップとして適切なものはどれ？ <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></li>
+            <li>(a) $(x+1)(x-2)$ を計算する</li>
+            <li>(b) $(x+1)(x+1)$ と $(x-2)(x-2)$ を計算する</li>
+            <li>(c) $(x+1)$ と $(x+1)$、$(x-2)$ と $(x-2)$ を先にまとめる（$(x+1)^2 (x-2)^2$ とする）</li>
+        </ol>
+        <details>
+            <summary>解答・解説</summary>
+            <p><strong>解答:</strong> (c)</p>
+            <p><strong>解説:</strong> 同じ因子が2つずつあるため、$(x+1)(x+1)=(x+1)^2$ と $(x-2)(x-2)=(x-2)^2$ とまとめることができます。したがって、与式は $(x+1)^2 (x-2)^2$ と書けます。これが最も効率的な最初のステップです。
+            さらに指数法則 $(AB)^n = A^n B^n$ を利用して、$\{(x+1)(x-2)\}^2$ と変形し、中の $(x+1)(x-2)=x^2-x-2$ を先に計算してから2乗するのが効率的です。
+            $(x^2-x-2)^2 = \{(x^2-x)-2\}^2 = (x^2-x)^2 - 4(x^2-x) + 4 = (x^4-2x^3+x^2) - 4x^2 + 4x + 4 = x^4 - 2x^3 - 3x^2 + 4x + 4$
+             </p>
+        </details>
+    </div>
+
+
+    <h2 id="example2">✍️ 例題2 (2) <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h2>
+    <p>次に(2)のパターンです。</p>
+    $$ (a+b)^2 (a-b)^2 $$
+    <p>この式も工夫して展開できます。$(a+b)^2 = (a+b)(a+b)$, $(a-b)^2 = (a-b)(a-b)$ と考え、順番を入れ替えて和と差の積の形を作る方法があります。</p>
+    $$ (a+b)^2 (a-b)^2 = (a+b)(a+b)(a-b)(a-b) $$
+    $$ = \{ (a+b)(a-b) \} \times \{ (a+b)(a-b) \} $$
+    $$ = (a^2 - b^2)(a^2 - b^2) $$
+    $$ = (a^2 - b^2)^2 $$
+    <p>結果として $(a^2 - b^2)$ の2乗となります。</p>
+    <div class="supplement">
+        <h4>➕ 補足: 指数法則の利用 <span class="importance">★★☆</span></h4>
+        <p>より効率的な方法として、<span class="tooltip" data-tooltip="積のn乗は、それぞれのn乗の積に等しい">指数法則</span> $(xy)^n = x^n y^n$ を利用する方法があります。</p>
+        $$ (a+b)^2 (a-b)^2 = \{ (a+b)(a-b) \}^2 $$
+        <p>中括弧の中を先に計算すると $(a^2 - b^2)$ となるため、</p>
+        $$ = (a^2 - b^2)^2 $$
+        <p>となり、同じ結果がより早く得られます。</p>
+    </div>
+    <p>最後に $(a^2 - b^2)^2$ を、展開公式 $(X-Y)^2 = X^2 - 2XY + Y^2$ を用いて展開します。</p>
+    <div class="theorem">
+      <h4>📜 展開公式: 平方の公式 <span class="importance">★★★</span></h4>
+      $$ (X-Y)^2 = X^2 - 2XY + Y^2 $$
+      <p>（または $(X+Y)^2 = X^2 + 2XY + Y^2$）</p>
+    </div>
+    <p>この公式において $X=a^2, Y=b^2$ と考えると、</p>
+    $$ (a^2 - b^2)^2 = (a^2)^2 - 2(a^2)(b^2) + (b^2)^2 $$
+    $$ = a^4 - 2a^2b^2 + b^4 $$
+    <p>これが最終的な答えです。</p>
+
+    <div class="caution">
+        <h4>⚠️ 間違いやすいポイント</h4>
+        <ul>
+            <li><strong>符号と係数:</strong> $(a^2-b^2)^2$ の展開で、真ん中の項 $-2a^2b^2$ の係数 $2$ を忘れたり、符号を間違えたりしないように注意が必要です。</li>
+            <li><strong>指数の計算:</strong> $(a^2)^2 = a^{2\times 2} = a^4$, $(b^2)^2 = b^{2\times 2} = b^4$ です。指数法則 $ (a^m)^n = a^{mn} $ を正しく適用することが重要です。</li>
+        </ul>
+    </div>
+
+    <div class="quiz">
+        <h4>理解度チェック (2)</h4>
+        <ol>
+            <li>$(x^2-1)^2$ の展開結果として正しいものはどれ？ <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></li>
+            <li>(a) $x^4 - 1$</li>
+            <li>(b) $x^4 - 2x^2 + 1$</li>
+            <li>(c) $x^4 + 2x^2 + 1$</li>
+        </ol>
+        <details>
+            <summary>解答・解説</summary>
+            <p><strong>解答:</strong> (b)</p>
+            <p><strong>解説:</strong> $(X-Y)^2 = X^2 - 2XY + Y^2$ の公式で、$X=x^2, Y=1$ と考えます。</p>
+            $$ (x^2-1)^2 = (x^2)^2 - 2(x^2)(1) + 1^2 = x^4 - 2x^2 + 1 $$
+            <p>となります。</p>
+        </details>
+    </div>
+
+    <h2 id="caution1">⚠️ 計算の工夫における注意点</h2>
+    <div class="important">
+        <h4>⭐ 共通因数を最優先！ <span class="importance">★★★</span></h4>
+        <p>（これは主に<span class="tooltip" data-tooltip="多項式をいくつかの因数の積の形に分解すること">因数分解</span>の際に重要ですが、計算全般の基本です）<br>計算を工夫する際、特に因数分解では**最初に共通因数でくくる**ことを常に考えます。例えば、$2x^2 + 4x + 2$ という式では、まず共通因数 $2$ でくくり、$2(x^2+2x+1)$ と変形します。その上で括弧の中をさらに因数分解します（この場合は $2(x+1)^2$ となります）。<br>
+        展開の場合でも、計算の順番を工夫する前に、式全体に共通する要素がないか確認する視点は有効です。</p>
+    </div>
+    <div class="caution">
+      <h4>⚠️ 交換法則が使えない場合 <span class="importance">★☆☆</span></h4>
+      <p>掛け算の順番は自由に入れ替えられる（交換法則）と述べましたが、これは通常の数や文字式の掛け算の場合です。高校数学で学ぶ「行列」の掛け算など、順番を入れ替えると結果が変わる演算も存在します。常に順番が入れ替えられるわけではない、ということは留意しておきましょう。</p>
+    </div>
+
+
+    <h2 id="practice1">✏️ 練習問題 1</h2>
+    <p>次の式を展開しなさい。</p>
+    <p>(1) $(a+1)(a-5)(a+1)(a-5)$ <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></p>
+    <p>(2) $(2x+y)(2x-y)(x+3y)(x-3y)$ <span class="difficulty">★★★</span> <span class="importance">★★★</span></p>
+    <details>
+      <summary>解答・解説</summary>
+      <p><strong>(1) 解答:</strong> $a^4 - 8a^3 + 6a^2 + 40a + 25$ または $(a^2-4a-5)^2$</p>
+      <p><strong>解説:</strong><br>
+      与式 $= \{(a+1)(a-5)\} \times \{(a+1)(a-5)\}$<br>
+      $= (a^2 - 4a - 5)(a^2 - 4a - 5)$<br>
+      $= (a^2 - 4a - 5)^2$<br>
+      ここで $a^2-4a = A$ とおくと、<br>
+      $= (A-5)^2 = A^2 - 10A + 25$<br>
+      $A$ を元に戻して、<br>
+      $= (a^2-4a)^2 - 10(a^2-4a) + 25$<br>
+      $= (a^4 - 8a^3 + 16a^2) - 10a^2 + 40a + 25$<br>
+      $= a^4 - 8a^3 + 6a^2 + 40a + 25$
+      </p>
+      <p><strong>(2) 解答:</strong> $4x^4 - 37x^2y^2 + 9y^4$</p>
+      <p><strong>解説:</strong><br>
+      組み合わせを工夫します。<br>
+      与式 $= \{(2x+y)(2x-y)\} \times \{(x+3y)(x-3y)\}$<br>
+      $= ( (2x)^2 - y^2 ) \times ( x^2 - (3y)^2 )$<br>
+      $= (4x^2 - y^2)(x^2 - 9y^2)$<br>
+      これを展開します。<br>
+      $= 4x^2(x^2 - 9y^2) - y^2(x^2 - 9y^2)$<br>
+      $= 4x^4 - 36x^2y^2 - x^2y^2 + 9y^4$<br>
+      $= 4x^4 - 37x^2y^2 + 9y^4$
+      </p>
+    </details>
+
+    <h2 id="practice2">✏️ 練習問題 2</h2>
+    <p>次の式を展開しなさい。</p>
+    <p>(1) $(x+2y)^2 (x-2y)^2$ <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></p>
+    <p>(2) $\{(x+1)(x-1)\}^3$ <span class="difficulty">★★★</span> <span class="importance">★★★</span></p>
+    <details>
+      <summary>解答・解説</summary>
+      <p><strong>(1) 解答:</strong> $x^4 - 8x^2y^2 + 16y^4$</p>
+      <p><strong>解説:</strong><br>
+      指数法則を使います。<br>
+      与式 $= \{ (x+2y)(x-2y) \}^2$<br>
+      $= (x^2 - (2y)^2)^2$<br>
+      $= (x^2 - 4y^2)^2$<br>
+      $(X-Y)^2 = X^2 - 2XY + Y^2$ の公式で $X=x^2, Y=4y^2$ と考えて展開します。<br>
+      $= (x^2)^2 - 2(x^2)(4y^2) + (4y^2)^2$<br>
+      $= x^4 - 8x^2y^2 + 16y^4$
+      </p>
+      <p><strong>(2) 解答:</strong> $x^6 - 3x^4 + 3x^2 - 1$</p>
+      <p><strong>解説:</strong><br>
+      まず中括弧の中を計算します。<br>
+      与式 $= (x^2 - 1^2)^3 = (x^2 - 1)^3$<br>
+      $(X-Y)^3 = X^3 - 3X^2Y + 3XY^2 - Y^3$ の公式で $X=x^2, Y=1$ と考えて展開します。<br>
+      $= (x^2)^3 - 3(x^2)^2(1) + 3(x^2)(1)^2 - 1^3$<br>
+      $= x^6 - 3x^4 + 3x^2 - 1$
+      </p>
+    </details>
+
+    <h2 id="advanced-practice1">✏️ 発展問題 1</h2>
+    <p>$(x+y+1)(x+y-1)$ を展開せよ。 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></p>
+    <details>
+      <summary>解答・解説</summary>
+      <p><strong>解答:</strong> $x^2 + 2xy + y^2 - 1$</p>
+      <p><strong>解説:</strong><br>
+      共通の塊 $(x+y)$ を見つけて、これを $A$ と置き換えます。<br>
+      $A = x+y$ とおくと、<br>
+      与式 $= (A+1)(A-1)$<br>
+      これは和と差の積の形なので、<br>
+      $= A^2 - 1^2 = A^2 - 1$<br>
+      $A$ を元に戻して、<br>
+      $= (x+y)^2 - 1$<br>
+      $= (x^2 + 2xy + y^2) - 1$<br>
+      $= x^2 + 2xy + y^2 - 1$
+      </p>
+    </details>
+
+    <h2 id="advanced-practice2">✏️ 発展問題 2</h2>
+    <p>$(x^2+x+1)(x^2-x+1)$ を展開せよ。 <span class="difficulty">★★★</span> <span class="importance">★★★</span></p>
+    <details>
+      <summary>解答・解説</summary>
+      <p><strong>解答:</strong> $x^4 + x^2 + 1$</p>
+      <p><strong>解説:</strong><br>
+      この式は少し工夫して、和と差の積の形 $(A+B)(A-B)$ を見つけます。<br>
+      与式 $= \{ (x^2+1) + x \} \{ (x^2+1) - x \}$<br>
+      ここで $A = x^2+1, B = x$ と考えると、<br>
+      $= A^2 - B^2$<br>
+      $= (x^2+1)^2 - x^2$<br>
+      $= ( (x^2)^2 + 2(x^2)(1) + 1^2 ) - x^2$<br>
+      $= (x^4 + 2x^2 + 1) - x^2$<br>
+      $= x^4 + x^2 + 1$
+      </p>
+      <div class="tips">
+        <h4>💡 Tips: 別の見方</h4>
+        <p>この展開は、$x^3-1=(x-1)(x^2+x+1)$ や $x^3+1=(x+1)(x^2-x+1)$ という因数分解の公式に関連しています。直接展開する以外にも、これらの公式との関連を考えることで理解が深まる場合があります。</p>
+    </div>
+    </details>
+
+     <h2 id="formula-guide1">ガイド：展開の工夫の選択</h2>
+    <div class="formula-guide">
+        <p>複雑な式の展開では、計算を楽にするために工夫が重要です。どの工夫を使うか判断するためのヒントをいくつか紹介します。</p>
+        <ul>
+            <li>
+                <strong>共通の塊を見つける (置き換え)</strong>
+                <p>式の中に同じ部分式（例: $x+y$, $a^2-b^2$ など）が繰り返し現れる場合、それを一つの文字（例: $A$）で置き換えると、見通しが良くなり、基本的な展開公式が使えることがあります。<br>
+                例: $(x+y+1)(x+y-1) \rightarrow A=x+y$ とおく</p>
+            </li>
+            <li>
+                <strong>和と差の積 $(A+B)(A-B)$ を見つける</strong>
+                <p>この形は $A^2-B^2$ と非常にシンプルになるため、最優先で見つけたい形です。括弧の順番を入れ替えたり、項の組み合わせを変えたりすることで、この形が現れることがあります。<br>
+                例: $(x+2)(x+3)(x-2)(x-3) \rightarrow (x+2)(x-2)$ と $(x+3)(x-3)$<br>
+                例: $(x^2+x+1)(x^2-x+1) \rightarrow (x^2+1)+x$ と $(x^2+1)-x$</p>
+            </li>
+            <li>
+                <strong>指数法則 $(xy)^n = x^n y^n$ を利用する</strong>
+                <p>同じ指数を持つ式の積（例: $(a+b)^2 (a-b)^2$）は、先に中の式を掛けてから累乗する（例: $\{(a+b)(a-b)\}^2$）と計算が楽になることがあります。<br>
+                例: $(a+b)^2 (a-b)^2 \rightarrow \{(a+b)(a-b)\}^2 = (a^2-b^2)^2$</p>
+            </li>
+            <li>
+                <strong>計算順序の選択</strong>
+                <p>特に4つ以上の式の積の場合、どのペアから計算すると後が楽になるかを考えます。上記の「和と差の積」が作れるペアを優先するのが基本です。</p>
+            </li>
+        </ul>
+    </div>
+
+
+    <h2 id="summary1">🔖 まとめ</h2>
+    <div class="summary">
+        <p>本授業では、式の展開を効率的に行うための計算の工夫について学習しました。</p>
+        <ul>
+            <li>掛け算における工夫として、$2 \times 5 = 10$ を作る方法が紹介されました。</li>
+            <li>展開公式、特に和と差の積 $(A+B)(A-B)=A^2-B^2$ は、数の計算や複雑な式の展開に応用可能です。</li>
+            <li>複数の式の積を展開する際は、計算が簡略化される組み合わせや順序を選ぶことが重要です。特に $(A+B)(A-B)$ の形になる組み合わせを優先すると良いでしょう。</li>
+            <li>指数法則 $(xy)^n = x^n y^n$ を利用し、$(A)^n (B)^n = (AB)^n$ のように変形することで、計算が容易になる場合があります。</li>
+        </ul>
+        <p>これらの計算の工夫を習得することで、計算ミスを減らし、より複雑な問題にも対応できるようになることが期待されます。</p>
+    </div>
+
+    <h2 id="future">今後の学習：因数分解</h2>
+    <p>今回の展開の計算は、次に学習する<span class="tooltip" data-tooltip="多項式をいくつかの因数の積の形に分解すること">因数分解</span>の基礎となります。展開の計算方法とその工夫をしっかりと理解しておくことが、因数分解の学習をスムーズに進める上で重要です。</p>
+
+    <div class="supplement" id="supplement-class-format">
+        <h4>➕ 補足: 授業形式の変更予告</h4>
+        <p>今後の授業について、教室が変更される可能性がある旨の説明がありました。大教室に変更された場合、座席は自由となり、以下のような形式での授業実施が検討されています。</p>
+        <ul>
+            <li>授業内容を集中して聞きたい生徒、講師との対話を希望する生徒は前方の席へ。</li>
+            <li>自身のペースで演習に取り組みたい生徒、授業内容を既に理解している生徒は後方の席へ。</li>
+        </ul>
+        <p>前方の席では、講師から質問される機会があるかもしれません。教室移動の具体的な時期は、追って連絡されます。</p>
+    </div>
+
+</body>
+</html>
