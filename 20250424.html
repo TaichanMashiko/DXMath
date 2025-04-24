@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>因数分解（中学復習と高校導入）</title>
+    <!-- KaTeX の読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCETAMKNO8ltcmkw9HNteexyP9" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmNOspsvMJ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+        onload="renderMathInElement(document.body);"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; }
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        /* preタグのスタイル修正 */
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-x: auto; /* 横スクロールを可能に */
+            font-size: 0.95em;
+            white-space: pre-wrap; /* 自動改行を許可 */
+            word-wrap: break-word; /* 長い単語の折り返し */
+        }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; /* 親要素のwhite-space設定を継承 */ }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        /* details内の要素のはみ出し防止 */
+        details > *:not(summary) {
+             padding: 1em;
+             border-top: 1px solid #eee;
+             overflow-wrap: break-word; /* URLや長い単語の折り返し */
+             word-wrap: break-word; /* 旧ブラウザ用 */
+             overflow-x: auto; /* はみ出した場合はスクロール */
+        }
+        /* MathJaxのコンテナに対しても設定を試みる（必要に応じて） */
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] {
+             overflow-x: auto;
+             max-width: 100%;
+        }
+
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em;
+            margin-bottom: 1.5em;
+            padding: 1em 1.5em;
+            border-radius: 5px;
+            border-left-width: 5px;
+            border-left-style: solid;
+        }
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; } /* 水色系 */
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; } /* 緑色系 */
+        .example { background-color: #fff3e0; border-left-color: #ff9800; } /* オレンジ系 */
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; } /* ピンク系 */
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; } /* 黄色系 */
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; } /* 紫色系 */
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* 赤色系 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; } /* 赤色系 */
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; } /* 青色系 */
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; } /* 藍色系 */
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; } /* 青緑系 */
+
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%); /* 中央揃え */
+            bottom: 130%; /* 要素の上に表示、少し離す */
+            background-color: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            white-space: nowrap;
+            visibility: hidden; /* 初期状態は非表示 */
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 100; /* 他の要素より手前に */
+            pointer-events: none; /* ツールチップ自体がマウスイベントを受けないように */
+        }
+        .tooltip:hover::after {
+            visibility: visible; /* ホバー時に表示 */
+            opacity: 1;
+        }
+
+        /* 難易度・重要度表示用 */
+        .difficulty, .importance {
+            display: inline-block;
+            font-size: 0.85em;
+            padding: 0.1em 0.5em;
+            margin-left: 0.5em;
+            border-radius: 3px;
+            vertical-align: middle; /* 見出しなどと高さを合わせる */
+        }
+        .difficulty { background-color: #eee; color: #333; } /* 難易度用スタイル */
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用スタイル */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle {
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 1.5em;
+            background-color: #f9f9f9; /* detailsの背景色 */
+        }
+        .toc-toggle summary {
+            padding: 0.8em 1em;
+            cursor: pointer;
+            font-weight: bold;
+            background-color: transparent; /* 親要素の色を使う */
+            border-radius: 4px; /* 閉じたときの角丸 */
+            margin: 0; /* summaryのデフォルトマージン削除 */
+        }
+        details[open].toc-toggle > summary {
+             border-bottom: 1px solid #ccc; /* 開いたときの境界線 */
+             border-radius: 4px 4px 0 0; /* 開いたときの角丸 */
+        }
+        .toc-toggle summary h2 { /* summary内のh2のスタイル調整 */
+            display: inline; /* 横並びにする */
+            margin: 0;
+            border: none; /* h2のデフォルト下線を消す */
+            padding: 0;
+            font-size: 1.2em; /* 少し大きく */
+        }
+        .toc-toggle nav {
+            padding: 0 1.5em 1em 1.5em; /* 開いたときの内側のパディング */
+            /* border-top: 1px solid #eee; 上のsummaryとの境界線で代用 */
+            background-color: white; /* 中身は白い背景 */
+            border-radius: 0 0 4px 4px;
+        }
+        .toc-toggle nav h2 { /* nav内のh2（目次タイトル）は不要なので隠すか削除 */
+           display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>因数分解（中学復習と高校導入）</h1>
+
+    <div class="lecture-info">
+        <p><strong>授業日:</strong> 2023年10月27日</p> <!-- 例として日付を挿入 -->
+        <p><strong>単元名:</strong> 因数分解（中学復習と高校導入）</p>
+        <p><strong>講師名:</strong> 益子泰地</p>
+        <p><strong>本日の学習目標:</strong></p>
+        <ul>
+            <li>中学校で学習した因数分解の公式を復習し、確実に適用できるようにする。</li>
+            <li>共通因数でくくり出すことの重要性を再認識する。</li>
+            <li>高校で学習するたすき掛けを用いた因数分解の基本的な考え方を理解する。</li>
+        </ul>
+    </div>
+
+    <details class="toc-toggle" open>
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#review-junior-high">1. 中学校の因数分解の復習</a>
+                    <ul>
+                        <li><a href="#formula1">(1) 公式: \(a^2 + 2ab + b^2 = (a+b)^2\)</a></li>
+                        <li><a href="#formula2">(2) 公式: \(a^2 - 2ab + b^2 = (a-b)^2\)</a></li>
+                        <li><a href="#formula3">(3) 公式: \(a^2 - b^2 = (a+b)(a-b)\)</a></li>
+                        <li><a href="#formula4">(4) 公式: \(x^2 + (a+b)x + ab = (x+a)(x+b)\)</a></li>
+                        <li><a href="#practice-importance">因数分解の練習の重要性</a></li>
+                        <li><a href="#common-factor">最優先事項: 共通因数でくくる</a></li>
+                        <li><a href="#example18">例題18</a></li>
+                        <li><a href="#example19">例題19</a></li>
+                    </ul>
+                </li>
+                <li><a href="#intro-high-school">2. 高校の因数分解（導入）</a>
+                    <ul>
+                        <li><a href="#formula5">(1) 公式: \(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)</a></li>
+                        <li><a href="#tasukigake">たすき掛けの考え方（中々外々）</a></li>
+                        <li><a href="#alternative-method">講師の方法（たすき掛けを使わない）</a></li>
+                        <li><a href="#example20">例題20</a></li>
+                        <li><a href="#practice1">問い1 (1)</a></li>
+                        <li><a href="#high-school-summary">高校レベルの因数分解のポイント</a></li>
+                    </ul>
+                </li>
+                 <li><a href="#additional-contents">3. AIによる追加コンテンツ</a>
+                    <ul>
+                       <li><a href="#mistake-points">間違いやすいポイント</a></li>
+                       <li><a href="#formula-guide-ai">公式の使い分けガイド</a></li>
+                       <li><a href="#practice-problems-ai">練習問題</a></li>
+                       <li><a href="#advanced-problems-ai">発展問題</a></li>
+                       <li><a href="#quiz-ai">理解度チェッククイズ</a></li>
+                   </ul>
+               </li>
+                <li><a href="#summary">4. 本日のまとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="review-junior-high">1. 中学校の因数分解の復習</h2>
+
+    <p><span class="importance">◆◆◆</span> 因数分解は、今後の数学学習の基礎となる非常に重要な単元です。中学校で学んだ内容を確実に身につけておくことが大切です。</p>
+
+    <h3 id="formula1">(1) 公式: \(a^2 + 2ab + b^2 = (a+b)^2\)</h3>
+    <div class="theorem">📜 <strong>公式1</strong> <span class="importance">◆◆◇</span>
+        <p>\(a^2 + 2ab + b^2 = (a+b)^2\)</p>
+        <p>式の形を見て、特に真ん中の項 \(2ab\) が、両端の項の平方根 \(a\) と \(b\) の積の2倍になっているかを確認します。</p>
+    </div>
+
+    <h3 id="formula2">(2) 公式: \(a^2 - 2ab + b^2 = (a-b)^2\)</h3>
+    <div class="theorem">📜 <strong>公式2</strong> <span class="importance">◆◆◇</span>
+        <p>\(a^2 - 2ab + b^2 = (a-b)^2\)</p>
+        <p>公式1と同様に、真ん中の項 \(-2ab\) が、両端の項の平方根 \(a\) と \(b\) の積の \(-2\) 倍になっているかを確認します。</p>
+    </div>
+
+    <h3 id="formula3">(3) 公式: \(a^2 - b^2 = (a+b)(a-b)\)</h3>
+    <div class="theorem">📜 <strong>公式3</strong> <span class="importance">◆◆◇</span>
+        <p>\(a^2 - b^2 = (a+b)(a-b)\)</p>
+        <p>この公式は、項が2つしかなく、「<span class="tooltip" data-tooltip="ある数の2乗から別の数の2乗を引く形のこと">2乗引く2乗</span>」の形になっているときに適用できます。</p>
+    </div>
+
+    <h3 id="formula4">(4) 公式: \(x^2 + (a+b)x + ab = (x+a)(x+b)\)</h3>
+    <div class="theorem">📜 <strong>公式4</strong> <span class="importance">◆◆◇</span>
+        <p>\(x^2 + (a+b)x + ab = (x+a)(x+b)\)</p>
+        <p>上記の公式1〜3が使えない場合に適用を考えます。「掛けて<span class="tooltip" data-tooltip="多項式において、文字を含まない項のこと">定数項</span> (\(ab\))」「足して \(x\) の係数 (\(a+b\))」となる2つの数 \(a, b\) を見つけます。</p>
+    </div>
+
+    <div class="caution">⚠️ <strong>注意</strong> <span class="importance">◆◆◇</span>
+        <p>上記4つの公式は、因数分解の基本です。式の形を素早く見抜き、適切な公式を適用できるように繰り返し練習することが重要です。</p>
+    </div>
+
+    <h3 id="practice-importance">因数分解の練習の重要性</h3>
+    <div class="tips">💡 <strong>Tips</strong> <span class="importance">◆◆◇</span>
+        <p>因数分解は、理屈で考えるよりも、多くの問題を解くことで「体で覚える」ことが効果的です。繰り返し練習することで、式の形を見た瞬間にどの公式を使うべきか、あるいはどの組み合わせを探すべきかが直感的にわかるようになります。目標としては、頭で考える前に手が動くレベルを目指しましょう。</p>
+    </div>
+
+    <h3 id="common-factor">最優先事項: 共通因数でくくる</h3>
+    <div class="important">⭐ <strong>重要ポイント</strong> <span class="importance">◆◆◆</span>
+        <p>どのような因数分解の問題においても、**最初に考えるべきことは<span class="tooltip" data-tooltip="式の中の各項に共通して含まれる因数">共通因数</span>がないか確認し、あればそれでくくり出すこと**です。これを怠ると、因数分解ができなかったり、複雑になったりします。</p>
+        <p>共通因数とは、式の中の各項に共通して含まれる数字や文字のことです。</p>
+    </div>
+
+    <h3 id="example18">✍️ 例題18</h3> <span class="difficulty">★☆☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>(1) \(x^2 + 6xy + 9y^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \(x^2 + 2 \cdot x \cdot (3y) + (3y)^2\)</p>
+        <p>これは公式1 \(a^2 + 2ab + b^2 = (a+b)^2\) の形（\(a=x, b=3y\)）なので、</p>
+        <p>\((x+3y)^2\)</p>
+    </details>
+
+    <p>(2) \(9x^2 - 24xy + 16y^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \((3x)^2 - 2 \cdot (3x) \cdot (4y) + (4y)^2\)</p>
+        <p>これは公式2 \(a^2 - 2ab + b^2 = (a-b)^2\) の形（\(a=3x, b=4y\)）なので、</p>
+        <p>\((3x-4y)^2\)</p>
+    </details>
+
+    <p>(3) \(36x^2 - 25y^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \((6x)^2 - (5y)^2\)</p>
+        <p>これは公式3 \(a^2 - b^2 = (a+b)(a-b)\) の形（\(a=6x, b=5y\)）なので、</p>
+        <p>\((6x+5y)(6x-5y)\)</p>
+    </details>
+
+    <p>(4) \(x^2 - 9x - 22\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>掛けて \(-22\)、足して \(-9\) になる2つの数を探します。</p>
+        <p>組み合わせは \(-11\) と \(+2\) です。（\(-11 \times 2 = -22\), \(-11 + 2 = -9\)）</p>
+        <p>これは公式4 \(x^2 + (a+b)x + ab = (x+a)(x+b)\) の形（\(a=-11, b=2\)）なので、</p>
+        <p>\((x-11)(x+2)\)</p>
+    </details>
+
+     <div class="tips">💡 <strong>Tips: 検算のすすめ</strong> <span class="importance">◆◆◇</span>
+         <p>因数分解を行った後は、その結果を展開してみて、元の式に戻るか確認する（検算する）習慣をつけましょう。これにより、計算ミスを防ぐことができます。</p>
+         <p>例: \((x-11)(x+2) = x^2 + 2x - 11x - 22 = x^2 - 9x - 22\) （元の式に戻ったのでOK）</p>
+     </div>
+
+    <h3 id="example19">✍️ 例題19</h3> <span class="difficulty">★★☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(9x^3y - 16xy^3\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>まず、共通因数 \(xy\) でくくり出します。</p>
+        <p>\(xy(9x^2 - 16y^2)\)</p>
+        <p>次に、括弧の中 \(9x^2 - 16y^2\) を見ます。これは \((3x)^2 - (4y)^2\) の形なので、公式3 \(a^2 - b^2 = (a+b)(a-b)\) を使ってさらに因数分解できます。</p>
+        <p>\(xy\{(3x)+(4y)\}\{(3x)-(4y)\}\)</p>
+        <p>\(xy(3x+4y)(3x-4y)\)</p>
+    </details>
+
+    <div class="caution">⚠️ <strong>注意: 共通因数の見落とし</strong> <span class="importance">◆◆◆</span>
+        <p>例題19のように、最初に共通因数でくくり出すことを見落とすと、その後の因数分解ができなくなります。常に最初に共通因数がないかを確認してください。</p>
+    </div>
+
+    <h2 id="intro-high-school">2. 高校の因数分解（導入）</h2>
+
+    <p>ここからは、高校で学習する、\(x^2\) の係数が1ではない場合の因数分解について学びます。</p>
+
+    <h3 id="formula5">(1) 公式: \(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)</h3>
+    <div class="theorem">📜 <strong>公式5</strong> <span class="importance">◆◆◆</span>
+        <p>\(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)</p>
+        <p>この公式は、<span class="tooltip" data-tooltip="係数を斜め（たすき）に掛けて足し合わせ、真ん中の項の係数を作る因数分解の方法">たすき掛け</span>と呼ばれる方法を用いて適用します。</p>
+    </div>
+
+    <h3 id="tasukigake">たすき掛けの考え方（中々外々）</h3> <span class="importance">◆◆◆</span>
+    <p>式 \(acx^2 + (ad+bc)x + bd\) を \((ax+b)(cx+d)\) の形に因数分解することを考えます。</p>
+    <ol>
+        <li>\(x^2\) の係数 \(ac\) を \(a \times c\) となるように分解します。</li>
+        <li>定数項 \(bd\) を \(b \times d\) となるように分解します。</li>
+        <li>これらの数を次のように配置し、斜め（たすき）に掛け合わせます。
+            <pre>
+  a     b  →  c × b = bc  (中々)
+    ＼／
+  c     d  →  a × d = ad  (外々)
+            ---------
+            ad + bc</pre>
+        </li>
+        <li>掛け合わせた結果の和 (\(ad+bc\)) が、元の式の \(x\) の係数と一致すれば、因数分解は \((ax+b)(cx+d)\) となります。</li>
+        <li>一致しない場合は、\(a, c\) や \(b, d\) の組み合わせ、あるいは \(b, d\) の符号を変えて試します。</li>
+    </ol>
+
+    <h3 id="alternative-method">講師の方法（たすき掛けを使わない）</h3> <span class="importance">◆◆◇</span>
+    <p>たすき掛けを図で書かずに、頭の中で「なかなか外々」を計算する方法もあります。</p>
+    <ol>
+        <li>最初の項 \(acx^2\) から、\((ax \quad )(cx \quad )\) の形を仮定します。（\(a, c\) の組み合わせが複数ある場合は、試行錯誤が必要です）</li>
+        <li>最後の項 \(bd\) を \(b \times d\) となる組み合わせを考えます。</li>
+        <li>仮定した括弧に \(b, d\) を配置し、展開したときの \(x\) の項（中々 \(bcx\) と 外々 \(adx\)）を計算します。</li>
+        <li>\(bcx + adx = (ad+bc)x\) が、元の式の \(x\) の係数と一致するか確認します。</li>
+        <li>一致しない場合は、\(b, d\) の配置を入れ替えたり、符号を変えたり、あるいは最初の \(a, c\) の組み合わせを変えて試します。</li>
+    </ol>
+
+    <div class="tips">💡 <strong>Tips: 符号の予測</strong> <span class="importance">◆◆◇</span>
+        <p>たすき掛けや講師の方法で組み合わせを探す際、真ん中の \(x\) の係数の符号がヒントになります。例えば、\(x\) の係数が正の場合、絶対値が大きい方の積（\(ad\) または \(bc\)）が正になるように \(b, d\) の符号を考えると、試行錯誤の回数を減らせることがあります。</p>
+    </div>
+
+    <h3 id="example20">✍️ 例題20</h3> <span class="difficulty">★★☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(3x^2 + 2x - 5\)</p>
+    <details>
+        <summary>解答（講師の方法）</summary>
+        <p>1. 最初の項 \(3x^2\) より、\((3x \quad)(x \quad)\) の形を仮定します。</p>
+        <p>2. 最後の項 \(-5\) より、掛けて \(-5\) になる組み合わせは \((+1, -5)\) または \((-1, +5)\) です。</p>
+        <p>3. 真ん中の項 \(+2x\) が正なので、絶対値の大きい \(+5\) を含む \((-1, +5)\) の組み合わせを試します。</p>
+        <p>4. 配置を試します。</p>
+        <ul>
+            <li>\((3x-1)(x+5)\) の場合:<br>
+                中々: \(-1 \times x = -x\)<br>
+                外々: \(3x \times 5 = 15x\)<br>
+                和: \(-x + 15x = 14x\)。元の \(2x\) と一致しません。</li>
+            <li>\((3x+5)(x-1)\) の場合:<br>
+                中々: \(5 \times x = 5x\)<br>
+                外々: \(3x \times (-1) = -3x\)<br>
+                和: \(5x - 3x = 2x\)。元の \(2x\) と一致しました。</li>
+        </ul>
+        <p>したがって、答えは \((3x+5)(x-1)\) です。</p>
+    </details>
+    <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>掛けて \(3\) になる組み合わせ (\(1, 3\)) と、掛けて \(-5\) になる組み合わせを考えます。</p>
+        <p>試行1:</p>
+        <pre>
+  1    -1  →  3 × (-1) = -3
+    ＼／
+  3     5  →  1 × 5   =  5
+            ---------
+                    2 </pre>
+        <p>\(x\) の係数 \(2\) と一致しました。</p>
+        <p>よって、\((1x - 1)(3x + 5) = (x-1)(3x+5)\) となります。</p>
+         <p>（別解）</p>
+        <p>試行2:</p>
+        <pre>
+  3     5  →  1 × 5 =  5
+    ＼／
+  1    -1  →  3 × (-1) = -3
+            ---------
+                    2 </pre>
+        <p>\(x\) の係数 \(2\) と一致しました。</p>
+        <p>よって、\((3x + 5)(1x - 1) = (3x+5)(x-1)\) となります。</p>
+        <p>どちらのたすき掛けからでも同じ結果が得られます。</p>
+    </details>
+
+
+    <h3 id="practice1">✏️ 問い1 (1)</h3> <span class="difficulty">★☆☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(2x^2 + 3x + 1\)</p>
+    <details>
+        <summary>解答（講師の方法）</summary>
+        <p>1. 最初の項 \(2x^2\) より、\((2x \quad)(x \quad)\) の形を仮定します。</p>
+        <p>2. 最後の項 \(+1\) より、掛けて \(+1\) になる組み合わせは \((+1, +1)\) しかありません。（真ん中が正なので \((-1, -1)\) は考えません）</p>
+        <p>3. 配置は \((2x+1)(x+1)\) の一通りです。</p>
+        <p>4. 確認します。</p>
+        <ul>
+            <li>\((2x+1)(x+1)\) の場合:<br>
+                中々: \(1 \times x = x\)<br>
+                外々: \(2x \times 1 = 2x\)<br>
+                和: \(x + 2x = 3x\)。元の \(3x\) と一致しました。</li>
+        </ul>
+        <p>したがって、答えは \((2x+1)(x+1)\) です。</p>
+    </details>
+     <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>掛けて \(2\) になる組み合わせ (\(1, 2\)) と、掛けて \(1\) になる組み合わせ (\(1, 1\)) を考えます。</p>
+        <pre>
+  1     1  →  2 × 1 = 2
+    ＼／
+  2     1  →  1 × 1 = 1
+            ---------
+                   3 </pre>
+        <p>\(x\) の係数 \(3\) と一致しました。</p>
+        <p>よって、\((1x + 1)(2x + 1) = (x+1)(2x+1)\) となります。</p>
+    </details>
+
+
+    <h3 id="high-school-summary">高校レベルの因数分解のポイント</h3> <span class="importance">◆◆◆</span>
+    <ul>
+        <li>\(x^2\) の係数が1でない場合、たすき掛け（またはそれに類する方法）を使います。</li>
+        <li>組み合わせを見つける試行錯誤が必要になりますが、練習すれば素早くできるようになります。</li>
+        <li>常に共通因数でくくり出すことを最初に考えます。</li>
+        <li>検算（展開）して確認する習慣をつけましょう。</li>
+    </ul>
+
+    <h2 id="additional-contents">3. AIによる追加コンテンツ</h2>
+
+    <h3 id="mistake-points">⚠️ 間違いやすいポイント</h3> <span class="importance">◆◆◇</span>
+    <ol>
+        <li><strong>共通因数の見落とし:</strong> 最も多い間違いの一つです。因数分解を始める前に、必ず全ての項に共通する因数がないか確認しましょう。
+            <ul><li>例: \(4x^2y - 6xy^2\) で共通因数 \(2xy\) を見落とすと、正しく \(2xy(2x - 3y)\) とできません。</li></ul>
+        </li>
+        <li><strong>符号のミス:</strong> 特に \((a-b)^2\) や \(a^2-b^2\)、たすき掛けでの符号の扱いに注意が必要です。
+            <ul><li>例: \(x^2 - 9\) を \((x-3)^2\) と間違える（正しくは \((x+3)(x-3)\)）。</li>
+                <li>例: \(x^2 - 5x + 6\) で掛けて \(+6\)、足して \(-5\) になるのは \((-2, -3)\) なのに \((+2, +3)\) や \((+2, -3)\) などと間違える。</li>
+            </ul>
+        </li>
+        <li><strong>公式の混同:</strong> 似ている公式を混同しないように、それぞれの公式が適用できる条件（項の数、形）を正確に覚えましょう。
+             <ul><li>例: \(a^2-b^2\) と \((a-b)^2\) の混同。</li></ul>
+        </li>
+        <li><strong>たすき掛けの計算ミス:</strong> 斜めに掛ける計算や、その後の足し算でミスをすることがあります。丁寧に確認しましょう。
+             <ul><li>対策: 図を書いて視覚的に確認する、または頭の中での「中々外々」計算を声に出して確認するなど。</li></ul>
+        </li>
+        <li><strong>因数分解の途中終了:</strong> 共通因数でくくり出した後や、一度公式を適用した後、さらに因数分解できる場合があるのに、そこで止めてしまうことがあります。
+            <ul><li>例: 例題19で \(xy(9x^2 - 16y^2)\) で止めてしまう。最後まで因数分解できないか確認しましょう。</li></ul>
+        </li>
+    </ol>
+
+    <h3 id="formula-guide-ai">📖 公式の使い分けガイド</h3> <span class="importance">◆◆◇</span>
+    <p>どの因数分解公式を使うべきか迷ったときは、以下の手順で考えてみましょう。</p>
+    <ul>
+        <li><strong>Step 1: 共通因数</strong> <span class="importance">◆◆◆</span>
+            <ul><li>まず、全ての項に共通する因数があれば、それでくくり出します。</li></ul>
+        </li>
+        <li><strong>Step 2: 項の数を確認</strong>
+            <ul>
+                <li><strong>項が2つ の場合:</strong>
+                    <ul><li>「2乗 - 2乗」の形 (\(A^2 - B^2\)) になっていれば、公式3 \(A^2 - B^2 = (A+B)(A-B)\) を使います。</li></ul>
+                </li>
+                <li><strong>項が3つ の場合:</strong>
+                     <ul>
+                        <li>\(x^2\) (または文字の2乗) の係数が <strong>1</strong> の場合:
+                            <ul>
+                            <li>両端が<span class="tooltip" data-tooltip="整数を2乗して得られる数のこと（例: 1, 4, 9, 16...）">平方数</span>になっていて、真ん中が \( \pm 2ab \) なら、公式1または2 (\((a \pm b)^2\)) を疑います。</li>
+                             <li>そうでなければ、公式4 (\(x^2+(a+b)x+ab=(x+a)(x+b)\)) を使います。掛けて定数項、足して \(x\) の係数になる組み合わせを探します。</li>
+                             </ul>
+                        </li>
+                        <li>\(x^2\) (または文字の2乗) の係数が <strong>1以外</strong> の場合:
+                           <ul><li>高校レベルの公式5（たすき掛け） \(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\) を使います。</li></ul>
+                       </li>
+                   </ul>
+               </li>
+               <li><strong>項が4つ以上の場合:</strong> (今後の学習範囲)
+                   <ul><li>適切な文字について整理する、組み合わせを工夫するなどの方法があります。</li></ul>
+               </li>
+           </ul>
+       </li>
+       <li><strong>Step 3: 最後まで確認</strong>
+           <ul><li>因数分解した後、各因数がさらに因数分解できないか確認します。</li></ul>
+       </li>
+   </ul>
+
+
+    <h3 id="practice-problems-ai">✏️ 練習問題</h3>
+    <p>以下の式を因数分解しなさい。</p>
+
+    <p><strong>問題 1</strong> <span class="difficulty">★☆☆</span></p>
+    <p>\(x^2 + 10x + 25\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \(x^2 + 2 \cdot x \cdot 5 + 5^2\)</p>
+        <p>公式1 \(a^2 + 2ab + b^2 = (a+b)^2\) の形なので、</p>
+        <p>\((x+5)^2\)</p>
+    </details>
+
+    <p><strong>問題 2</strong> <span class="difficulty">★☆☆</span></p>
+    <p>\(4a^2 - 9b^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \((2a)^2 - (3b)^2\)</p>
+        <p>公式3 \(A^2 - B^2 = (A+B)(A-B)\) の形なので、</p>
+        <p>\((2a+3b)(2a-3b)\)</p>
+    </details>
+
+    <p><strong>問題 3</strong> <span class="difficulty">★☆☆</span></p>
+    <p>\(y^2 - y - 12\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>掛けて \(-12\)、足して \(-1\) になる2つの数を探します。</p>
+        <p>組み合わせは \(-4\) と \(+3\) です。</p>
+        <p>公式4 \(y^2 + (a+b)y + ab = (y+a)(y+b)\) の形なので、</p>
+        <p>\((y-4)(y+3)\)</p>
+    </details>
+
+    <p><strong>問題 4</strong> <span class="difficulty">★★☆</span></p>
+    <p>\(3x^2 - 14x + 8\)</p>
+    <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>掛けて \(3\) (\(1, 3\))、掛けて \(+8\) (例: \(-2, -4\)) の組み合わせを探します。（真ん中がマイナスなので、\(8\) の方は負×負を考えます）</p>
+         <pre>
+  1    -4  →  3 × (-4) = -12
+    ＼／
+  3    -2  →  1 × (-2) =  -2
+            ---------
+                   -14 </pre>
+        <p>\(x\) の係数 \(-14\) と一致しました。</p>
+        <p>よって、\((x-4)(3x-2)\)</p>
+    </details>
+
+    <p><strong>問題 5</strong> <span class="difficulty">★★☆</span></p>
+    <p>\(5x^2 + 13xy - 6y^2\)</p>
+     <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>\(x\) についての式とみて、掛けて \(5\) (\(1, 5\))、掛けて \(-6y^2\) (例: \(+3y, -2y\)) の組み合わせを探します。</p>
+         <pre>
+  1     3y  →  5 × (3y) =  15y
+    ＼／
+  5    -2y →  1 × (-2y) = -2y
+            ---------
+                     13y </pre>
+        <p>\(xy\) の係数 \(13y\) と一致しました。</p>
+        <p>よって、\((x+3y)(5x-2y)\)</p>
+    </details>
+
+    <h3 id="advanced-problems-ai">✏️ 発展問題</h3>
+
+    <p><strong>問題 1</strong> <span class="difficulty">★★★</span></p>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(x^4 - 13x^2 + 36\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>この式は \(x^2\) を一つの塊と見ると、二次式の因数分解の形になっています。</p>
+        <p>\(X = x^2\) とおくと、与式は \(X^2 - 13X + 36\) となります。</p>
+        <p>これを \(X\) について因数分解します。掛けて \(+36\)、足して \(-13\) になる組み合わせは \(-4\) と \(-9\) です。</p>
+        <p>\(X^2 - 13X + 36 = (X-4)(X-9)\)</p>
+        <p>ここで、\(X\) を \(x^2\) に戻します。</p>
+        <p>\((x^2-4)(x^2-9)\)</p>
+        <p>さらに、それぞれの括弧の中が \(A^2 - B^2\) の形になっているため、因数分解を続けます。</p>
+        <p>\(x^2-4 = x^2 - 2^2 = (x+2)(x-2)\)</p>
+        <p>\(x^2-9 = x^2 - 3^2 = (x+3)(x-3)\)</p>
+        <p>したがって、最終的な答えは</p>
+        <p>\((x+2)(x-2)(x+3)(x-3)\)</p>
+    </details>
+    <div class="tips">💡 <strong>Tips: 置き換え</strong> <span class="importance">◆◆◇</span>
+        <p>発展問題1のように、複雑な式でも、一部を別の文字（例: \(X\)）に置き換えることで、見慣れた形に変形できる場合があります。因数分解が終わったら、置き換えた文字を元に戻すのを忘れないようにしましょう。</p>
+    </div>
+
+    <p><strong>問題 2</strong> <span class="difficulty">★★★</span></p>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(2(x+y)^2 - 5(x+y) - 3\)</p>
+     <details>
+        <summary>解答</summary>
+        <p>\(X = x+y\) とおくと、与式は \(2X^2 - 5X - 3\) となります。</p>
+        <p>これを \(X\) についてたすき掛けで因数分解します。</p>
+        <pre>
+  1    -3  →  2 × (-3) = -6
+    ＼／
+  2     1  →  1 × 1  =  1
+            ---------
+                  -5 </pre>
+        <p>\(X\) の係数 \(-5\) と一致したので、\((X-3)(2X+1)\) となります。</p>
+        <p>\(X\) を \(x+y\) に戻します。</p>
+        <p>\(\{ (x+y) - 3 \} \{ 2(x+y) + 1 \}\)</p>
+        <p>\((x+y-3)(2x+2y+1)\)</p>
+    </details>
+
+
+    <h3 id="quiz-ai">🤔 理解度チェッククイズ</h3>
+
+    <div class="quiz">
+    <p><strong>問1:</strong> 式 \(x^2 - 8x + 16\) を因数分解する際に、最初に使うべき公式はどれ？ <span class="importance">◆◆◇</span></p>
+    <ol>
+        <li>(ア) \(a^2 + 2ab + b^2 = (a+b)^2\)</li>
+        <li>(イ) \(a^2 - 2ab + b^2 = (a-b)^2\)</li>
+        <li>(ウ) \(a^2 - b^2 = (a+b)(a-b)\)</li>
+        <li>(エ) \(x^2 + (a+b)x + ab = (x+a)(x+b)\)</li>
+    </ol>
+    <details>
+        <summary>解答と解説</summary>
+        <p><strong>解答:</strong> (イ)</p>
+        <p><strong>解説:</strong> \(x^2\) は \(x\) の2乗、\(16\) は \(4^2\) です。真ん中の項は \(-8x = -2 \cdot x \cdot 4\) となっているので、\(a^2 - 2ab + b^2\) の形 (\(a=x, b=4\)) に当てはまります。よって、\((x-4)^2\) と因数分解できます。</p>
+    </details>
+    </div>
+
+    <div class="quiz">
+    <p><strong>問2:</strong> 式 \(6x^2 + 5x - 4\) を因数分解するためにたすき掛けを行う場合、掛けて \(6\) になる組み合わせと、掛けて \(-4\) になる組み合わせを考えます。適切な組み合わせを選び、\(x\) の係数が \(+5\) になるのはどれ？ <span class="importance">◆◆◆</span></p>
+    <pre>
+(ア)   1    -1       (イ)   2     1       (ウ)   3     4
+       ＼／              ＼／              ＼／
+     6     4            3    -4            2    -1
+</pre>
+    <ol>
+        <li>(ア)</li>
+        <li>(イ)</li>
+        <li>(ウ)</li>
+    </ol>
+     <details>
+        <summary>解答と解説</summary>
+        <p><strong>解答:</strong> (ウ)</p>
+        <p><strong>解説:</strong></p>
+        <ul>
+            <li>(ア) \(1 \times 4 + 6 \times (-1) = 4 - 6 = -2\)。 \(+5\) になりません。</li>
+            <li>(イ) \(2 \times (-4) + 3 \times 1 = -8 + 3 = -5\)。 \(+5\) になりません。</li>
+            <li>(ウ) \(3 \times (-1) + 2 \times 4 = -3 + 8 = 5\)。 \(+5\) に一致します。</li>
+        </ul>
+        <p>したがって、\((3x+4)(2x-1)\) と因数分解できます。</p>
+    </details>
+    </div>
+
+
+    <h2 id="summary">4. 本日のまとめ 🔖</h2>
+    <div class="summary">
+        <p><span class="importance">◆◆◆</span> 本日の授業では、まず中学校で学習した基本的な因数分解の公式4つを復習しました。</p>
+        <ul>
+            <li>\(a^2 + 2ab + b^2 = (a+b)^2\)</li>
+            <li>\(a^2 - 2ab + b^2 = (a-b)^2\)</li>
+            <li>\(a^2 - b^2 = (a+b)(a-b)\)</li>
+            <li>\(x^2 + (a+b)x + ab = (x+a)(x+b)\)</li>
+        </ul>
+        <p><span class="importance">◆◆◆</span> そして、因数分解を行う上で最も重要な**「共通因数でくくり出す」**ことを再確認しました。これは常に最初に試みるべき手順です。</p>
+        <p><span class="importance">◆◆◆</span> さらに、高校で学習する \(x^2\) の係数が1でない場合の因数分解として、**たすき掛け**（\(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)）の考え方を学びました。係数の組み合わせを見つける練習が必要ですが、非常に重要な手法です。</p>
+        <p>因数分解は練習量が重要です。様々なパターンの問題を解き、素早く正確に計算できるようにしましょう。検算の習慣も大切です。</p>
+    </div>
+
+</body>
+</html>
