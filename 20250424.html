@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>無限等比級数</title>
-    <!-- MathJax の読み込みコード -->
+    <title>因数分解（中学復習と高校導入）</title>
+    <!-- KaTeX の読み込み -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1tBCETAMKNO8ltcmkw9HNteexyP9" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmNOspsvMJ" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
     <script>
-        MathJax = {
-          tex: {
-            inlineMath: [['$', '$'], ['\\(', '\\)']],
-            displayMath: [['$$', '$$'], ['\\[', '\\]']],
-            processEscapes: true
-          },
-          svg: {
-            fontCache: 'global'
-          }
-        };
-    </script>
-    <script type="text/javascript" id="MathJax-script" async
-        src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                // KaTeX設定オプション
+                delimiters: [
+                    {left: "$$", right: "$$", display: true},
+                    {left: "\\[", right: "\\]", display: true},
+                    {left: "$", right: "$", display: false},
+                    {left: "\\(", right: "\\)", display: false}
+                ]
+            });
+        });
     </script>
     <style>
         /* 基本的なページスタイル */
@@ -53,8 +54,15 @@
              word-wrap: break-word; /* 旧ブラウザ用 */
              overflow-x: auto; /* はみ出した場合はスクロール */
         }
-        /* MathJaxのコンテナに対しても設定を試みる（必要に応じて） */
-        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] {
+        /* MathJax/KaTeXのコンテナに対しても設定を試みる（必要に応じて） */
+        .katex-display > .katex, .katex { /* KaTeXのクラスに適用 */
+             overflow-x: auto;
+             overflow-y: hidden; /* 縦は不要な場合 */
+             max-width: 100%;
+             display: block; /* ブロック要素として扱い、幅を制御 */
+             text-align: left; /* 左揃えに */
+        }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { /* MathJax用 */
              overflow-x: auto;
              max-width: 100%;
         }
@@ -85,7 +93,7 @@
         .caution { background-color: #ffebee; border-left-color: #f44336; } /* 赤色系 */
         .summary { background-color: #e3f2fd; border-left-color: #2196f3; } /* 青色系 */
         .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; } /* 藍色系 */
-        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; /* 青緑系 */ }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; } /* 青緑系 */
 
 
         /* ツールチップ */
@@ -173,362 +181,504 @@
     </style>
 </head>
 <body>
-    <h1>無限等比級数</h1>
+    <h1>因数分解（中学復習と高校導入）</h1>
 
-    <p><strong>授業日:</strong> 2023年10月27日 (推定)</p>
-    <p><strong>単元名:</strong> 無限等比級数</p>
-    <p><strong>講師名:</strong> 益子泰地</p>
-    <p><strong>本日の学習目標 (推定):</strong></p>
-    <ul>
-        <li>無限等比級数の収束条件を理解し、適用できるようになる。</li>
-        <li>収束する場合の無限等比級数の和を求められるようになる。</li>
-        <li>無限級数の性質を理解し、計算に応用できるようになる。</li>
-    </ul>
+    <div class="lecture-info">
+        <p><strong>授業日:</strong> 2023年10月27日</p> <!-- 例として日付を挿入 -->
+        <p><strong>単元名:</strong> 因数分解（中学復習と高校導入）</p>
+        <p><strong>講師名:</strong> 益子泰地</p>
+        <p><strong>本日の学習目標:</strong></p>
+        <ul>
+            <li>中学校で学習した因数分解の公式を復習し、確実に適用できるようにする。</li>
+            <li>共通因数でくくり出すことの重要性を再認識する。</li>
+            <li>高校で学習するたすき掛けを用いた因数分解の基本的な考え方を理解する。</li>
+        </ul>
+    </div>
 
-    <details class="toc-toggle">
+    <details class="toc-toggle" open>
         <summary><h2>目次</h2></summary>
         <nav>
             <ul>
-                <li><a href="#section1">1. 無限等比級数とは</a></li>
-                <li><a href="#section2">2. 無限等比級数の収束条件</a></li>
-                <li><a href="#section3">3. 例題7: 収束条件の応用</a>
+                <li><a href="#review-junior-high">1. 中学校の因数分解の復習</a>
                     <ul>
-                        <li><a href="#example7-1">3.1 問題</a></li>
-                        <li><a href="#example7-2">3.2 解説</a></li>
-                        <li><a href="#quiz1">3.3 理解度チェック</a></li>
+                        <li><a href="#formula1">(1) 公式: \(a^2 + 2ab + b^2 = (a+b)^2\)</a></li>
+                        <li><a href="#formula2">(2) 公式: \(a^2 - 2ab + b^2 = (a-b)^2\)</a></li>
+                        <li><a href="#formula3">(3) 公式: \(a^2 - b^2 = (a+b)(a-b)\)</a></li>
+                        <li><a href="#formula4">(4) 公式: \(x^2 + (a+b)x + ab = (x+a)(x+b)\)</a></li>
+                        <li><a href="#practice-importance">因数分解の練習の重要性</a></li>
+                        <li><a href="#common-factor">最優先事項: 共通因数でくくる</a></li>
+                        <li><a href="#example18">例題18</a></li>
+                        <li><a href="#example19">例題19</a></li>
                     </ul>
                 </li>
-                <li><a href="#section4">4. 無限級数の性質</a></li>
-                <li><a href="#section5">5. 例題8: 無限級数の計算</a>
+                <li><a href="#intro-high-school">2. 高校の因数分解（導入）</a>
                     <ul>
-                        <li><a href="#example8-1">5.1 問題</a></li>
-                        <li><a href="#example8-2">5.2 解説</a></li>
-                        <li><a href="#quiz2">5.3 理解度チェック</a></li>
+                        <li><a href="#formula5">(1) 公式: \(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)</a></li>
+                        <li><a href="#tasukigake">たすき掛けの考え方（中々外々）</a></li>
+                        <li><a href="#alternative-method">講師の方法（たすき掛けを使わない）</a></li>
+                        <li><a href="#example20">例題20</a></li>
+                        <li><a href="#practice1">問い1 (1)</a></li>
+                        <li><a href="#high-school-summary">高校レベルの因数分解のポイント</a></li>
                     </ul>
                 </li>
-                <li><a href="#section6">6. 公式の使い分けガイド</a></li>
-                <li><a href="#section7">7. 練習問題</a></li>
-                <li><a href="#section8">8. 発展問題</a></li>
-                <li><a href="#section9">9. まとめ</a></li>
+                 <li><a href="#additional-contents">3. AIによる追加コンテンツ</a>
+                    <ul>
+                       <li><a href="#mistake-points">間違いやすいポイント</a></li>
+                       <li><a href="#formula-guide-ai">公式の使い分けガイド</a></li>
+                       <li><a href="#practice-problems-ai">練習問題</a></li>
+                       <li><a href="#advanced-problems-ai">発展問題</a></li>
+                       <li><a href="#quiz-ai">理解度チェッククイズ</a></li>
+                   </ul>
+               </li>
+                <li><a href="#summary">4. 本日のまとめ</a></li>
             </ul>
         </nav>
     </details>
 
-    <section id="section1">
-        <h2>1. 無限等比級数とは 📖 <span class="importance">★★★</span></h2>
-        <div class="definition">
-            <p><span class="tooltip" data-tooltip="初項 a に公比 r を次々にかけて得られる数列 a, ar, ar^2, ...">等比数列</span>の項を無限に足し合わせたものを<span class="tooltip" data-tooltip="等比数列の項を無限に足し合わせた級数。a + ar + ar^2 + ...">無限等比級数</span>といいます。</p>
-            <p>具体的には、初項 $a$、公比 $r$ の無限等比級数は以下のように表されます。</p>
-            $$ a + ar + ar^2 + ar^3 + \dots + ar^{n-1} + \dots = \sum_{n=1}^{\infty} ar^{n-1} $$
-        </div>
-        <div class="supplement">
-            ➕ <strong>補足: Σ記号について</strong>
-            <p>Σ (シグマ) は、数列の和を表す記号です。 $\sum_{n=1}^{\infty} ar^{n-1}$ は、「$n=1$ から始めて $n$ を $2, 3, \dots$ と無限に大きくしながら $ar^{n-1}$ を計算し、それらをすべて足し合わせる」という意味になります。</p>
-        </div>
-    </section>
+    <h2 id="review-junior-high">1. 中学校の因数分解の復習</h2>
 
-    <section id="section2">
-        <h2>2. 無限等比級数の収束条件 📜 <span class="importance">★★★</span></h2>
-        <p>無限等比級数が<span class="tooltip" data-tooltip="無限級数の和が有限な値に近づくこと。">収束</span>するための条件は、以下のいずれかの場合です。</p>
-        <div class="theorem">
-            <p>初項 $a$、公比 $r$ の無限等比級数 $\sum_{n=1}^{\infty} ar^{n-1}$ が収束するための条件は、</p>
-            <ol>
-                <li><strong>初項 $a = 0$</strong></li>
-                <li><strong>公比 $r$ の<span class="tooltip" data-tooltip="数直線上で、原点からその数までの距離。r の絶対値は |r| と表す。">絶対値</span>が 1 より小さい ($|r| < 1$)</strong></li>
-            </ol>
-            <p>のいずれかが成り立つことです。</p>
-            <p>特に、$a \neq 0$ かつ $|r| < 1$ のとき、その和 $S$ は以下の公式で求められます。</p>
-            $$ S = \frac{a}{1-r} $$
-        </div>
-        <div class="important">
-            ⭐ <strong>重要ポイント</strong>
-            <ul>
-                <li>$|r| \ge 1$ の場合 (ただし $a \neq 0$)、無限等比級数は<span class="tooltip" data-tooltip="無限級数の和が有限な値に収束しないこと。無限大になる、振動するなど。">発散</span>します。</li>
-                <li>収束条件を考える際は、初項が 0 の場合と、公比の絶対値が 1 より小さい場合の 2 パターンを分けて考える必要があります。</li>
+    <p><span class="importance">◆◆◆</span> 因数分解は、今後の数学学習の基礎となる非常に重要な単元です。中学校で学んだ内容を確実に身につけておくことが大切です。</p>
+
+    <h3 id="formula1">(1) 公式: \(a^2 + 2ab + b^2 = (a+b)^2\)</h3>
+    <div class="theorem">📜 <strong>公式1</strong> <span class="importance">◆◆◇</span>
+        <p>\(a^2 + 2ab + b^2 = (a+b)^2\)</p>
+        <p>式の形を見て、特に真ん中の項 \(2ab\) が、両端の項の平方根 \(a\) と \(b\) の積の2倍になっているかを確認します。</p>
+    </div>
+
+    <h3 id="formula2">(2) 公式: \(a^2 - 2ab + b^2 = (a-b)^2\)</h3>
+    <div class="theorem">📜 <strong>公式2</strong> <span class="importance">◆◆◇</span>
+        <p>\(a^2 - 2ab + b^2 = (a-b)^2\)</p>
+        <p>公式1と同様に、真ん中の項 \(-2ab\) が、両端の項の平方根 \(a\) と \(b\) の積の \(-2\) 倍になっているかを確認します。</p>
+    </div>
+
+    <h3 id="formula3">(3) 公式: \(a^2 - b^2 = (a+b)(a-b)\)</h3>
+    <div class="theorem">📜 <strong>公式3</strong> <span class="importance">◆◆◇</span>
+        <p>\(a^2 - b^2 = (a+b)(a-b)\)</p>
+        <p>この公式は、項が2つしかなく、「<span class="tooltip" data-tooltip="ある数の2乗から別の数の2乗を引く形のこと">2乗引く2乗</span>」の形になっているときに適用できます。</p>
+    </div>
+
+    <h3 id="formula4">(4) 公式: \(x^2 + (a+b)x + ab = (x+a)(x+b)\)</h3>
+    <div class="theorem">📜 <strong>公式4</strong> <span class="importance">◆◆◇</span>
+        <p>\(x^2 + (a+b)x + ab = (x+a)(x+b)\)</p>
+        <p>上記の公式1〜3が使えない場合に適用を考えます。「掛けて<span class="tooltip" data-tooltip="多項式において、文字を含まない項のこと">定数項</span> (\(ab\))」「足して \(x\) の係数 (\(a+b\))」となる2つの数 \(a, b\) を見つけます。</p>
+    </div>
+
+    <div class="caution">⚠️ <strong>注意</strong> <span class="importance">◆◆◇</span>
+        <p>上記4つの公式は、因数分解の基本です。式の形を素早く見抜き、適切な公式を適用できるように繰り返し練習することが重要です。</p>
+    </div>
+
+    <h3 id="practice-importance">因数分解の練習の重要性</h3>
+    <div class="tips">💡 <strong>Tips</strong> <span class="importance">◆◆◇</span>
+        <p>因数分解は、理屈で考えるよりも、多くの問題を解くことで「体で覚える」ことが効果的です。繰り返し練習することで、式の形を見た瞬間にどの公式を使うべきか、あるいはどの組み合わせを探すべきかが直感的にわかるようになります。目標としては、頭で考える前に手が動くレベルを目指しましょう。</p>
+    </div>
+
+    <h3 id="common-factor">最優先事項: 共通因数でくくる</h3>
+    <div class="important">⭐ <strong>重要ポイント</strong> <span class="importance">◆◆◆</span>
+        <p>どのような因数分解の問題においても、**最初に考えるべきことは<span class="tooltip" data-tooltip="式の中の各項に共通して含まれる因数">共通因数</span>がないか確認し、あればそれでくくり出すこと**です。これを怠ると、因数分解ができなかったり、複雑になったりします。</p>
+        <p>共通因数とは、式の中の各項に共通して含まれる数字や文字のことです。</p>
+    </div>
+
+    <h3 id="example18">✍️ 例題18</h3> <span class="difficulty">★☆☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>(1) \(x^2 + 6xy + 9y^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \(x^2 + 2 \cdot x \cdot (3y) + (3y)^2\)</p>
+        <p>これは公式1 \(a^2 + 2ab + b^2 = (a+b)^2\) の形（\(a=x, b=3y\)）なので、</p>
+        <p>\((x+3y)^2\)</p>
+    </details>
+
+    <p>(2) \(9x^2 - 24xy + 16y^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \((3x)^2 - 2 \cdot (3x) \cdot (4y) + (4y)^2\)</p>
+        <p>これは公式2 \(a^2 - 2ab + b^2 = (a-b)^2\) の形（\(a=3x, b=4y\)）なので、</p>
+        <p>\((3x-4y)^2\)</p>
+    </details>
+
+    <p>(3) \(36x^2 - 25y^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \((6x)^2 - (5y)^2\)</p>
+        <p>これは公式3 \(a^2 - b^2 = (a+b)(a-b)\) の形（\(a=6x, b=5y\)）なので、</p>
+        <p>\((6x+5y)(6x-5y)\)</p>
+    </details>
+
+    <p>(4) \(x^2 - 9x - 22\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>掛けて \(-22\)、足して \(-9\) になる2つの数を探します。</p>
+        <p>組み合わせは \(-11\) と \(+2\) です。（\(-11 \times 2 = -22\), \(-11 + 2 = -9\)）</p>
+        <p>これは公式4 \(x^2 + (a+b)x + ab = (x+a)(x+b)\) の形（\(a=-11, b=2\)）なので、</p>
+        <p>\((x-11)(x+2)\)</p>
+    </details>
+
+     <div class="tips">💡 <strong>Tips: 検算のすすめ</strong> <span class="importance">◆◆◇</span>
+         <p>因数分解を行った後は、その結果を展開してみて、元の式に戻るか確認する（検算する）習慣をつけましょう。これにより、計算ミスを防ぐことができます。</p>
+         <p>例: \((x-11)(x+2) = x^2 + 2x - 11x - 22 = x^2 - 9x - 22\) （元の式に戻ったのでOK）</p>
+     </div>
+
+    <h3 id="example19">✍️ 例題19</h3> <span class="difficulty">★★☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(9x^3y - 16xy^3\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>まず、共通因数 \(xy\) でくくり出します。</p>
+        <p>\(xy(9x^2 - 16y^2)\)</p>
+        <p>次に、括弧の中 \(9x^2 - 16y^2\) を見ます。これは \((3x)^2 - (4y)^2\) の形なので、公式3 \(a^2 - b^2 = (a+b)(a-b)\) を使ってさらに因数分解できます。</p>
+        <p>\(xy\{(3x)+(4y)\}\{(3x)-(4y)\}\)</p>
+        <p>\(xy(3x+4y)(3x-4y)\)</p>
+    </details>
+
+    <div class="caution">⚠️ <strong>注意: 共通因数の見落とし</strong> <span class="importance">◆◆◆</span>
+        <p>例題19のように、最初に共通因数でくくり出すことを見落とすと、その後の因数分解ができなくなります。常に最初に共通因数がないかを確認してください。</p>
+    </div>
+
+    <h2 id="intro-high-school">2. 高校の因数分解（導入）</h2>
+
+    <p>ここからは、高校で学習する、\(x^2\) の係数が1ではない場合の因数分解について学びます。</p>
+
+    <h3 id="formula5">(1) 公式: \(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)</h3>
+    <div class="theorem">📜 <strong>公式5</strong> <span class="importance">◆◆◆</span>
+        <p>\(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)</p>
+        <p>この公式は、<span class="tooltip" data-tooltip="係数を斜め（たすき）に掛けて足し合わせ、真ん中の項の係数を作る因数分解の方法">たすき掛け</span>と呼ばれる方法を用いて適用します。</p>
+    </div>
+
+    <h3 id="tasukigake">たすき掛けの考え方（中々外々）</h3> <span class="importance">◆◆◆</span>
+    <p>式 \(acx^2 + (ad+bc)x + bd\) を \((ax+b)(cx+d)\) の形に因数分解することを考えます。</p>
+    <ol>
+        <li>\(x^2\) の係数 \(ac\) を \(a \times c\) となるように分解します。</li>
+        <li>定数項 \(bd\) を \(b \times d\) となるように分解します。</li>
+        <li>これらの数を次のように配置し、斜め（たすき）に掛け合わせます。
+            <pre>
+  a     b  →  c × b = bc  (中々)
+    \／
+  c     d  →  a × d = ad  (外々)
+            ---------
+            ad + bc</pre>
+        </li>
+        <li>掛け合わせた結果の和 (\(ad+bc\)) が、元の式の \(x\) の係数と一致すれば、因数分解は \((ax+b)(cx+d)\) となります。</li>
+        <li>一致しない場合は、\(a, c\) や \(b, d\) の組み合わせ、あるいは \(b, d\) の符号を変えて試します。</li>
+    </ol>
+
+    <h3 id="alternative-method">講師の方法（たすき掛けを使わない）</h3> <span class="importance">◆◆◇</span>
+    <p>たすき掛けを図で書かずに、頭の中で「なかなか外々」を計算する方法もあります。</p>
+    <ol>
+        <li>最初の項 \(acx^2\) から、\((ax \quad )(cx \quad )\) の形を仮定します。（\(a, c\) の組み合わせが複数ある場合は、試行錯誤が必要です）</li>
+        <li>最後の項 \(bd\) を \(b \times d\) となる組み合わせを考えます。</li>
+        <li>仮定した括弧に \(b, d\) を配置し、展開したときの \(x\) の項（中々 \(bcx\) と 外々 \(adx\)）を計算します。</li>
+        <li>\(bcx + adx = (ad+bc)x\) が、元の式の \(x\) の係数と一致するか確認します。</li>
+        <li>一致しない場合は、\(b, d\) の配置を入れ替えたり、符号を変えたり、あるいは最初の \(a, c\) の組み合わせを変えて試します。</li>
+    </ol>
+
+    <div class="tips">💡 <strong>Tips: 符号の予測</strong> <span class="importance">◆◆◇</span>
+        <p>たすき掛けや講師の方法で組み合わせを探す際、真ん中の \(x\) の係数の符号がヒントになります。例えば、\(x\) の係数が正の場合、絶対値が大きい方の積（\(ad\) または \(bc\)）が正になるように \(b, d\) の符号を考えると、試行錯誤の回数を減らせることがあります。</p>
+    </div>
+
+    <h3 id="example20">✍️ 例題20</h3> <span class="difficulty">★★☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(3x^2 + 2x - 5\)</p>
+    <details>
+        <summary>解答（講師の方法）</summary>
+        <p>1. 最初の項 \(3x^2\) より、\((3x \quad)(x \quad)\) の形を仮定します。</p>
+        <p>2. 最後の項 \(-5\) より、掛けて \(-5\) になる組み合わせは \((+1, -5)\) または \((-1, +5)\) です。</p>
+        <p>3. 真ん中の項 \(+2x\) が正なので、絶対値の大きい \(+5\) を含む \((-1, +5)\) の組み合わせを試します。</p>
+        <p>4. 配置を試します。</p>
+        <ul>
+            <li>\((3x-1)(x+5)\) の場合:<br>
+                中々: \(-1 \times x = -x\)<br>
+                外々: \(3x \times 5 = 15x\)<br>
+                和: \(-x + 15x = 14x\)。元の \(2x\) と一致しません。</li>
+            <li>\((3x+5)(x-1)\) の場合:<br>
+                中々: \(5 \times x = 5x\)<br>
+                外々: \(3x \times (-1) = -3x\)<br>
+                和: \(5x - 3x = 2x\)。元の \(2x\) と一致しました。</li>
+        </ul>
+        <p>したがって、答えは \((3x+5)(x-1)\) です。</p>
+    </details>
+    <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>掛けて \(3\) になる組み合わせ (\(1, 3\)) と、掛けて \(-5\) になる組み合わせを考えます。</p>
+        <p>試行1:</p>
+        <pre>
+  1    -1  →  3 × (-1) = -3
+    \／
+  3     5  →  1 × 5   =  5
+            ---------
+                    2 </pre>
+        <p>\(x\) の係数 \(2\) と一致しました。</p>
+        <p>よって、\((1x - 1)(3x + 5) = (x-1)(3x+5)\) となります。</p>
+         <p>（別解）</p>
+        <p>試行2:</p>
+        <pre>
+  3     5  →  1 × 5 =  5
+    \／
+  1    -1  →  3 × (-1) = -3
+            ---------
+                    2 </pre>
+        <p>\(x\) の係数 \(2\) と一致しました。</p>
+        <p>よって、\((3x + 5)(1x - 1) = (3x+5)(x-1)\) となります。</p>
+        <p>どちらのたすき掛けからでも同じ結果が得られます。</p>
+    </details>
+
+
+    <h3 id="practice1">✏️ 問い1 (1)</h3> <span class="difficulty">★☆☆</span>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(2x^2 + 3x + 1\)</p>
+    <details>
+        <summary>解答（講師の方法）</summary>
+        <p>1. 最初の項 \(2x^2\) より、\((2x \quad)(x \quad)\) の形を仮定します。</p>
+        <p>2. 最後の項 \(+1\) より、掛けて \(+1\) になる組み合わせは \((+1, +1)\) しかありません。（真ん中が正なので \((-1, -1)\) は考えません）</p>
+        <p>3. 配置は \((2x+1)(x+1)\) の一通りです。</p>
+        <p>4. 確認します。</p>
+        <ul>
+            <li>\((2x+1)(x+1)\) の場合:<br>
+                中々: \(1 \times x = x\)<br>
+                外々: \(2x \times 1 = 2x\)<br>
+                和: \(x + 2x = 3x\)。元の \(3x\) と一致しました。</li>
+        </ul>
+        <p>したがって、答えは \((2x+1)(x+1)\) です。</p>
+    </details>
+     <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>掛けて \(2\) になる組み合わせ (\(1, 2\)) と、掛けて \(1\) になる組み合わせ (\(1, 1\)) を考えます。</p>
+        <pre>
+  1     1  →  2 × 1 = 2
+    \／
+  2     1  →  1 × 1 = 1
+            ---------
+                   3 </pre>
+        <p>\(x\) の係数 \(3\) と一致しました。</p>
+        <p>よって、\((1x + 1)(2x + 1) = (x+1)(2x+1)\) となります。</p>
+    </details>
+
+
+    <h3 id="high-school-summary">高校レベルの因数分解のポイント</h3> <span class="importance">◆◆◆</span>
+    <ul>
+        <li>\(x^2\) の係数が1でない場合、たすき掛け（またはそれに類する方法）を使います。</li>
+        <li>組み合わせを見つける試行錯誤が必要になりますが、練習すれば素早くできるようになります。</li>
+        <li>常に共通因数でくくり出すことを最初に考えます。</li>
+        <li>検算（展開）して確認する習慣をつけましょう。</li>
+    </ul>
+
+    <h2 id="additional-contents">3. AIによる追加コンテンツ</h2>
+
+    <h3 id="mistake-points">⚠️ 間違いやすいポイント</h3> <span class="importance">◆◆◇</span>
+    <ol>
+        <li><strong>共通因数の見落とし:</strong> 最も多い間違いの一つです。因数分解を始める前に、必ず全ての項に共通する因数がないか確認しましょう。
+            <ul><li>例: \(4x^2y - 6xy^2\) で共通因数 \(2xy\) を見落とすと、正しく \(2xy(2x - 3y)\) とできません。</li></ul>
+        </li>
+        <li><strong>符号のミス:</strong> 特に \((a-b)^2\) や \(a^2-b^2\)、たすき掛けでの符号の扱いに注意が必要です。
+            <ul><li>例: \(x^2 - 9\) を \((x-3)^2\) と間違える（正しくは \((x+3)(x-3)\)）。</li>
+                <li>例: \(x^2 - 5x + 6\) で掛けて \(+6\)、足して \(-5\) になるのは \((-2, -3)\) なのに \((+2, +3)\) や \((+2, -3)\) などと間違える。</li>
             </ul>
-        </div>
-        <div class="caution">
-            ⚠️ <strong>間違いやすいポイント</strong>
+        </li>
+        <li><strong>公式の混同:</strong> 似ている公式を混同しないように、それぞれの公式が適用できる条件（項の数、形）を正確に覚えましょう。
+             <ul><li>例: \(a^2-b^2\) と \((a-b)^2\) の混同。</li></ul>
+        </li>
+        <li><strong>たすき掛けの計算ミス:</strong> 斜めに掛ける計算や、その後の足し算でミスをすることがあります。丁寧に確認しましょう。
+             <ul><li>対策: 図を書いて視覚的に確認する、または頭の中での「中々外々」計算を声に出して確認するなど。</li></ul>
+        </li>
+        <li><strong>因数分解の途中終了:</strong> 共通因数でくくり出した後や、一度公式を適用した後、さらに因数分解できる場合があるのに、そこで止めてしまうことがあります。
+            <ul><li>例: 例題19で \(xy(9x^2 - 16y^2)\) で止めてしまう。最後まで因数分解できないか確認しましょう。</li></ul>
+        </li>
+    </ol>
+
+    <h3 id="formula-guide-ai">📖 公式の使い分けガイド</h3> <span class="importance">◆◆◇</span>
+    <p>どの因数分解公式を使うべきか迷ったときは、以下の手順で考えてみましょう。</p>
+    <ul>
+        <li><strong>Step 1: 共通因数</strong> <span class="importance">◆◆◆</span>
+            <ul><li>まず、全ての項に共通する因数があれば、それでくくり出します。</li></ul>
+        </li>
+        <li><strong>Step 2: 項の数を確認</strong>
             <ul>
-                <li><strong>公比の条件 $|r| < 1$ の見落とし:</strong> 収束する場合の和の公式 $\frac{a}{1-r}$ は、 $|r| < 1$ のときにのみ適用可能です。この条件を確認せずに公式を使ってしまう間違いがあります。</li>
-                <li><strong>絶対値の扱い:</strong> $|r| < 1$ は $-1 < r < 1$ と同値です。不等式を解く際に、この変形を正しく行う必要があります。例えば、 $|x-1| < 1$ を解く場合、$-1 < x-1 < 1$ となり、各辺に 1 を加えて $0 < x < 2$ となります。</li>
-                <li><strong>初項 $a=0$ の場合の考慮漏れ:</strong> 公比 $r$ の値に関わらず、初項 $a=0$ であれば級数のすべての項が 0 となり、和は 0 に収束します。このケースを忘れないようにしましょう。</li>
-            </ul>
-        </div>
-    </section>
-
-    <section id="section3">
-        <h2>3. 例題7: 収束条件の応用 ✍️</h2>
-        <section id="example7-1">
-            <h3>3.1 問題 <span class="difficulty">★★☆</span></h3>
-            <div class="example">
-                <p>初項 $x$、公比 $x-1$ の無限等比級数について、収束するような実数 $x$ の値の範囲を求めよ。また、そのときの和を求めよ。</p>
-            </div>
-        </section>
-        <section id="example7-2">
-            <h3>3.2 解説</h3>
-            <details>
-                <summary>解答・解説を表示</summary>
-                <p>無限等比級数が収束するための条件は、初項が 0 または公比の絶対値が 1 より小さいことです。</p>
-                <p>この問題では、初項は $a = x$、公比は $r = x-1$ です。</p>
-                <p><strong>(i) 初項 $a = 0$ の場合</strong></p>
-                <p>$x = 0$</p>
-                <p>このとき、級数の各項はすべて 0 となるため、和は 0 に収束します。</p>
-                <p><strong>(ii) 公比 $r$ の絶対値が 1 より小さい ($|r| < 1$) の場合</strong></p>
-                <p>$|x-1| < 1$</p>
-                <p>この絶対値不等式を解くと、</p>
-                $$ -1 < x-1 < 1 $$
-                <p>各辺に 1 を加えて、</p>
-                $$ 0 < x < 2 $$
-                <p>この範囲のとき、級数は収束します。</p>
-                <p><strong>収束する $x$ の範囲</strong></p>
-                <p>(i), (ii) より、この無限等比級数が収束するための $x$ の値の範囲は、</p>
-                $$ x=0 \quad \text{または} \quad 0 < x < 2 $$
-                <p><strong>収束するときの和</strong></p>
-                <ul>
-                    <li>$x=0$ のとき、和は $S = 0$ です。</li>
-                    <li>$0 < x < 2$ ($a \neq 0$ かつ $|r|<1$) のとき、和の公式 $S = \frac{a}{1-r}$ を用いて、
-                        $$ S = \frac{x}{1-(x-1)} = \frac{x}{1-x+1} = \frac{x}{2-x} $$
-                    </li>
-                </ul>
-                <p>したがって、</p>
-                <ul>
-                    <li>$x=0$ のとき、和は $0$</li>
-                    <li>$0 < x < 2$ のとき、和は $\frac{x}{2-x}$</li>
-                </ul>
-                <p>となります。</p>
-            </details>
-        </section>
-        <section id="quiz1">
-             <h3>3.3 理解度チェック ✏️</h3>
-             <div class="quiz">
-                 <p><strong>問題:</strong> 初項 $2x$、公比 $x$ の無限等比級数が収束するための $x$ の値の範囲として正しいものを一つ選びなさい。</p>
-                 <ol>
-                     <li>(A) $0 < x < 1$</li>
-                     <li>(B) $-1 < x < 1$</li>
-                     <li>(C) $x=0$ または $-1 < x < 1$</li>
-                     <li>(D) $x=0$ または $0 \le x < 1$</li>
-                 </ol>
-                 <details>
-                     <summary>解答・解説を表示</summary>
-                     <p><strong>解答:</strong> (C)</p>
-                     <p><strong>解説:</strong></p>
-                     <p>収束条件は、初項が 0 または公比の絶対値が 1 より小さいことです。</p>
-                     <ol>
-                         <li>初項 $2x = 0$ のとき、$x=0$。</li>
-                         <li>公比 $|x| < 1$ のとき、$-1 < x < 1$。</li>
-                     </ol>
-                     <p>よって、収束する範囲は $x=0$ または $-1 < x < 1$ となります。</p>
-                 </details>
-             </div>
-         </section>
-    </section>
-
-    <section id="section4">
-        <h2>4. 無限級数の性質 📜 <span class="importance">★★☆</span></h2>
-        <p>収束する無限級数には、以下のような性質があります。これは無限等比級数に限らず、一般の無限級数で成り立ちます。</p>
-        <div class="theorem">
-            <p>無限級数 $\sum_{n=1}^{\infty} a_n = S$, $\sum_{n=1}^{\infty} b_n = T$ がそれぞれ収束するとき、以下の性質が成り立ちます。（$k$ は定数）</p>
-            <ol>
-                <li>$\sum_{n=1}^{\infty} k a_n = k \sum_{n=1}^{\infty} a_n = kS$</li>
-                <li>$\sum_{n=1}^{\infty} (a_n + b_n) = \sum_{n=1}^{\infty} a_n + \sum_{n=1}^{\infty} b_n = S + T$</li>
-                <li>$\sum_{n=1}^{\infty} (a_n - b_n) = \sum_{n=1}^{\infty} a_n - \sum_{n=1}^{\infty} b_n = S - T$</li>
-            </ol>
-        </div>
-        <div class="tips">
-            💡 <strong>Tips: 性質の意味</strong>
-            <ul>
-                <li>性質1は、級数の各項を定数倍してから和をとっても、先に和を求めてから定数倍しても結果は同じであることを意味します。</li>
-                <li>性質2, 3は、2つの収束する級数の和や差は、それぞれの級数の和や差に等しいことを意味します。つまり、Σ記号は足し算・引き算について分配法則のように扱うことができます。</li>
-            </ul>
-        </div>
-        <div class="caution">
-            ⚠️ <strong>注意</strong>
-            <p>この性質は、元の級数 $\sum a_n$ と $\sum b_n$ が **収束する場合にのみ** 成り立ちます。発散する級数に対しては、これらの性質を安易に適用することはできません。</p>
-        </div>
-    </section>
-
-    <section id="section5">
-        <h2>5. 例題8: 無限級数の計算 ✍️</h2>
-        <section id="example8-1">
-            <h3>5.1 問題 <span class="difficulty">★★☆</span></h3>
-            <div class="example">
-                <p>次の無限級数の和を求めよ。</p>
-                $$ \sum_{n=1}^{\infty} \left( \frac{3}{2^n} + \frac{2}{3^n} \right) $$
-            </div>
-        </section>
-        <section id="example8-2">
-            <h3>5.2 解説</h3>
-            <details>
-                <summary>解答・解説を表示</summary>
-                <p>無限級数の性質を利用して、与えられた級数を2つの無限級数の和に分解します。</p>
-                $$ \sum_{n=1}^{\infty} \left( \frac{3}{2^n} + \frac{2}{3^n} \right) = \sum_{n=1}^{\infty} \frac{3}{2^n} + \sum_{n=1}^{\infty} \frac{2}{3^n} $$
-                <p>それぞれの級数が収束するかどうかを確認し、収束する場合はその和を求めます。</p>
-                <p><strong>(i) $\sum_{n=1}^{\infty} \frac{3}{2^n}$ について</strong></p>
-                <p>これは、$\frac{3}{2^n} = 3 \left(\frac{1}{2}\right)^n$ と考えられます。$n=1, 2, 3, \dots$ とすると、</p>
-                $$ \frac{3}{2}, \frac{3}{4}, \frac{3}{8}, \dots $$
-                <p>これは、初項 $a_1 = \frac{3}{2}$、公比 $r_1 = \frac{1}{2}$ の無限等比級数です。</p>
-                <p>公比の絶対値は $|r_1| = |\frac{1}{2}| = \frac{1}{2} < 1$ なので、この級数は収束します。</p>
-                <p>その和 $S_1$ は、</p>
-                $$ S_1 = \frac{a_1}{1-r_1} = \frac{3/2}{1 - 1/2} = \frac{3/2}{1/2} = 3 $$
-                <p><strong>(ii) $\sum_{n=1}^{\infty} \frac{2}{3^n}$ について</strong></p>
-                <p>これは、$\frac{2}{3^n} = 2 \left(\frac{1}{3}\right)^n$ と考えられます。$n=1, 2, 3, \dots$ とすると、</p>
-                $$ \frac{2}{3}, \frac{2}{9}, \frac{2}{27}, \dots $$
-                <p>これは、初項 $a_2 = \frac{2}{3}$、公比 $r_2 = \frac{1}{3}$ の無限等比級数です。</p>
-                <p>公比の絶対値は $|r_2| = |\frac{1}{3}| = \frac{1}{3} < 1$ なので、この級数は収束します。</p>
-                <p>その和 $S_2$ は、</p>
-                $$ S_2 = \frac{a_2}{1-r_2} = \frac{2/3}{1 - 1/3} = \frac{2/3}{2/3} = 1 $$
-                <p><strong>求める和</strong></p>
-                <p>したがって、元の無限級数の和は、</p>
-                $$ \sum_{n=1}^{\infty} \left( \frac{3}{2^n} + \frac{2}{3^n} \right) = S_1 + S_2 = 3 + 1 = 4 $$
-                <p>となります。</p>
-            </details>
-        </section>
-         <section id="quiz2">
-             <h3>5.3 理解度チェック ✏️</h3>
-             <div class="quiz">
-                 <p><strong>問題:</strong> 無限級数 $\sum_{n=1}^{\infty} \left( \frac{1}{4^n} - \frac{1}{5^n} \right)$ の和として正しいものを一つ選びなさい。</p>
-                 <ol>
-                     <li>(A) $\frac{1}{12}$</li>
-                     <li>(B) $\frac{1}{20}$</li>
-                     <li>(C) $\frac{7}{12}$</li>
-                     <li>(D) $\frac{9}{20}$</li>
-                 </ol>
-                 <details>
-                     <summary>解答・解説を表示</summary>
-                     <p><strong>解答:</strong> (A)</p>
-                     <p><strong>解説:</strong></p>
-                     <p>級数を分解します: $\sum_{n=1}^{\infty} \frac{1}{4^n} - \sum_{n=1}^{\infty} \frac{1}{5^n}$</p>
-                     <p>$\sum_{n=1}^{\infty} \frac{1}{4^n}$ は初項 $\frac{1}{4}$、公比 $\frac{1}{4}$ の無限等比級数で、和は $\frac{1/4}{1-1/4} = \frac{1/4}{3/4} = \frac{1}{3}$ です。</p>
-                     <p>$\sum_{n=1}^{\infty} \frac{1}{5^n}$ は初項 $\frac{1}{5}$、公比 $\frac{1}{5}$ の無限等比級数で、和は $\frac{1/5}{1-1/5} = \frac{1/5}{4/5} = \frac{1}{4}$ です。</p>
-                     <p>よって、求める和は $\frac{1}{3} - \frac{1}{4} = \frac{4-3}{12} = \frac{1}{12}$ となります。</p>
-                 </details>
-             </div>
-         </section>
-    </section>
-
-    <section id="section6">
-        <h2>6. 公式の使い分けガイド 🗺️</h2>
-        <div class="formula-guide">
-            <p>無限等比級数の問題では、主に2つのステップがあります。</p>
-            <ul>
-                <li>
-                    <strong>ステップ1: 収束するかどうかの判定</strong><span class="importance">★★★</span>
-                    <p>まず、与えられた無限等比級数が収束するかどうかを確認します。以下の条件をチェックします。</p>
-                    <ol>
-                        <li>初項 $a=0$ か？ → YESなら収束 (和は0)</li>
-                        <li>(初項 $a \neq 0$ の場合) 公比 $r$ について $|r| < 1$ (つまり $-1 < r < 1$) か？ → YESなら収束</li>
-                        <li>上記以外の場合 ($a \neq 0$ かつ $|r| \ge 1$) → 発散</li>
-                    </ol>
-                    <p><em>使う条件:</em> $a=0$ または $|r|<1$</p>
+                <li><strong>項が2つ の場合:</strong>
+                    <ul><li>「2乗 - 2乗」の形 (\(A^2 - B^2\)) になっていれば、公式3 \(A^2 - B^2 = (A+B)(A-B)\) を使います。</li></ul>
                 </li>
-                <li>
-                    <strong>ステップ2: (収束する場合) 和の計算</strong><span class="importance">★★☆</span>
-                    <p>ステップ1で収束すると判定された場合（かつ $a \neq 0, |r|<1$ の場合）、その和 $S$ を計算します。</p>
-                    <p><em>使う公式:</em> $S = \frac{a}{1-r}$</p>
-                </li>
-            </ul>
-            <p>文字（例: $x$）を含む級数の場合は、まずステップ1の条件から $x$ の範囲を求め、次にその範囲に応じてステップ2の公式を用いて和を $x$ の式で表します。</p>
-            <p>複数の級数の和や差の形になっている場合は、まずそれぞれの級数が収束するか（ステップ1）を確認し、両方収束する場合に限り、それぞれの和を計算（ステップ2）して最後に足し引きします（無限級数の性質を利用）。</p>
-        </div>
-    </section>
+                <li><strong>項が3つ の場合:</strong>
+                     <ul>
+                        <li>\(x^2\) (または文字の2乗) の係数が <strong>1</strong> の場合:
+                            <ul>
+                            <li>両端が<span class="tooltip" data-tooltip="整数を2乗して得られる数のこと（例: 1, 4, 9, 16...）">平方数</span>になっていて、真ん中が \( \pm 2ab \) なら、公式1または2 (\((a \pm b)^2\)) を疑います。</li>
+                             <li>そうでなければ、公式4 (\(x^2+(a+b)x+ab=(x+a)(x+b)\)) を使います。掛けて定数項、足して \(x\) の係数になる組み合わせを探します。</li>
+                             </ul>
+                        </li>
+                        <li>\(x^2\) (または文字の2乗) の係数が <strong>1以外</strong> の場合:
+                           <ul><li>高校レベルの公式5（たすき掛け） \(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\) を使います。</li></ul>
+                       </li>
+                   </ul>
+               </li>
+               <li><strong>項が4つ以上の場合:</strong> (今後の学習範囲)
+                   <ul><li>適切な文字について整理する、組み合わせを工夫するなどの方法があります。</li></ul>
+               </li>
+           </ul>
+       </li>
+       <li><strong>Step 3: 最後まで確認</strong>
+           <ul><li>因数分解した後、各因数がさらに因数分解できないか確認します。</li></ul>
+       </li>
+   </ul>
 
-     <section id="section7">
-        <h2>7. 練習問題 ✏️</h2>
-        <div class="practice-problems">
-            <p><strong>練習問題 1</strong> <span class="difficulty">★☆☆</span></p>
-            <p>次の無限等比級数の収束・発散を調べ、収束する場合はその和を求めよ。</p>
-            <p>(1) $1 + \frac{1}{3} + \frac{1}{9} + \dots$</p>
-            <p>(2) $2 - 4 + 8 - 16 + \dots$</p>
-            <details>
-                <summary>解答・解説を表示</summary>
-                <p><strong>(1)</strong></p>
-                <p>初項 $a=1$、公比 $r=\frac{1}{3}$ です。</p>
-                <p>$|r| = |\frac{1}{3}| = \frac{1}{3} < 1$ なので、この級数は収束します。</p>
-                <p>和は $S = \frac{a}{1-r} = \frac{1}{1 - 1/3} = \frac{1}{2/3} = \frac{3}{2}$ です。</p>
-                <p><strong>(2)</strong></p>
-                <p>初項 $a=2$、公比 $r=\frac{-4}{2} = -2$ です。</p>
-                <p>$|r| = |-2| = 2 \ge 1$ なので、この級数は発散します。</p>
-            </details>
-        </div>
-        <div class="practice-problems">
-            <p><strong>練習問題 2</strong> <span class="difficulty">★★☆</span></p>
-            <p>次の無限級数の和を求めよ。</p>
-            $$ \sum_{n=1}^{\infty} \left( \left(\frac{2}{3}\right)^n + 3 \left(-\frac{1}{2}\right)^n \right) $$
-            <details>
-                <summary>解答・解説を表示</summary>
-                <p>級数を分解します: $\sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n + \sum_{n=1}^{\infty} 3 \left(-\frac{1}{2}\right)^n$</p>
-                <p>$\sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n$ は初項 $\frac{2}{3}$、公比 $\frac{2}{3}$ ($|\frac{2}{3}| < 1$) の無限等比級数なので収束します。和は $\frac{2/3}{1 - 2/3} = \frac{2/3}{1/3} = 2$ です。</p>
-                <p>$\sum_{n=1}^{\infty} 3 \left(-\frac{1}{2}\right)^n$ は、初項 $3(-\frac{1}{2}) = -\frac{3}{2}$、公比 $-\frac{1}{2}$ ($|-\frac{1}{2}| < 1$) の無限等比級数なので収束します。和は $\frac{-3/2}{1 - (-1/2)} = \frac{-3/2}{3/2} = -1$ です。</p>
-                 <p>(別解: $\sum 3 (-\frac{1}{2})^n = 3 \sum (-\frac{1}{2})^n$ と考えて、$\sum (-\frac{1}{2})^n$ の和が $\frac{-1/2}{1-(-1/2)} = \frac{-1/2}{3/2} = -\frac{1}{3}$ なので、$3 \times (-\frac{1}{3}) = -1$ としても良いです。)</p>
-                <p>よって、求める和は $2 + (-1) = 1$ となります。</p>
-            </details>
-        </div>
-    </section>
 
-    <section id="section8">
-        <h2>8. 発展問題 ✏️</h2>
-        <div class="practice-problems">
-            <p><strong>発展問題 1</strong> <span class="difficulty">★★★</span></p>
-            <p>無限等比級数 $1 + (2x+1) + (2x+1)^2 + \dots$ が収束し、かつその和が $\frac{1}{3}$ となるような実数 $x$ の値を求めよ。</p>
-            <details>
-                <summary>解答・解説を表示</summary>
-                <p>この級数は、初項 $a=1$、公比 $r = 2x+1$ の無限等比級数です。</p>
-                <p>まず、級数が収束するための条件を求めます。初項 $a=1 \neq 0$ なので、公比の条件 $|r| < 1$ が必要です。</p>
-                $$ |2x+1| < 1 $$
-                $$ -1 < 2x+1 < 1 $$
-                <p>各辺から 1 を引くと、</p>
-                $$ -2 < 2x < 0 $$
-                <p>各辺を 2 で割ると、</p>
-                $$ -1 < x < 0 $$
-                <p>この範囲で級数は収束します。</p>
-                <p>次に、収束するときの和が $\frac{1}{3}$ となる条件を考えます。和の公式 $S = \frac{a}{1-r}$ を用いて、</p>
-                $$ S = \frac{1}{1-(2x+1)} = \frac{1}{1-2x-1} = \frac{1}{-2x} $$
-                <p>この和が $\frac{1}{3}$ に等しいので、</p>
-                $$ \frac{1}{-2x} = \frac{1}{3} $$
-                <p>分母を比較して、 $-2x = 3$</p>
-                $$ x = -\frac{3}{2} $$
-                <p>しかし、この値 $x = -\frac{3}{2}$ は、収束条件である $-1 < x < 0$ を満たしません。</p>
-                <p>したがって、この無限等比級数の和が $\frac{1}{3}$ となるような実数 $x$ は存在しません。</p>
-                 <p>（もし和が例えば $\frac{1}{1.5} = \frac{2}{3}$ となる $x$ を求める問題であれば、$x = -\frac{3}{4}$ となり、これは収束範囲内なので解が存在します。）</p>
-            </details>
-        </div>
-         <div class="practice-problems">
-            <p><strong>発展問題 2</strong> <span class="difficulty">★★★</span></p>
-            <p>無限級数 $\sum_{n=1}^{\infty} \frac{2^n + (-1)^{n+1}}{3^n}$ の和を求めよ。</p>
-            <details>
-                <summary>解答・解説を表示</summary>
-                <p>与えられた級数を分解します。</p>
-                $$ \sum_{n=1}^{\infty} \frac{2^n + (-1)^{n+1}}{3^n} = \sum_{n=1}^{\infty} \frac{2^n}{3^n} + \sum_{n=1}^{\infty} \frac{(-1)^{n+1}}{3^n} $$
-                <p>ここで、$\frac{(-1)^{n+1}}{3^n} = \frac{-(-1)^n}{3^n} = - \left(-\frac{1}{3}\right)^n$ と変形できます。</p>
-                $$ = \sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n - \sum_{n=1}^{\infty} \left(-\frac{1}{3}\right)^n $$
-                <p>それぞれの級数の和を計算します。</p>
-                <p>$\sum_{n=1}^{\infty} \left(\frac{2}{3}\right)^n$ は、初項 $\frac{2}{3}$、公比 $\frac{2}{3}$ の無限等比級数です。和は $\frac{2/3}{1 - 2/3} = \frac{2/3}{1/3} = 2$ です。</p>
-                <p>$\sum_{n=1}^{\infty} \left(-\frac{1}{3}\right)^n$ は、初項 $-\frac{1}{3}$、公比 $-\frac{1}{3}$ の無限等比級数です。和は $\frac{-1/3}{1 - (-1/3)} = \frac{-1/3}{1 + 1/3} = \frac{-1/3}{4/3} = -\frac{1}{4}$ です。</p>
-                <p>よって、求める和は、</p>
-                $$ 2 - \left(-\frac{1}{4}\right) = 2 + \frac{1}{4} = \frac{8+1}{4} = \frac{9}{4} $$
-                <p>となります。</p>
-            </details>
-        </div>
-    </section>
+    <h3 id="practice-problems-ai">✏️ 練習問題</h3>
+    <p>以下の式を因数分解しなさい。</p>
 
-    <section id="section9">
-        <h2>9. まとめ 🔖 <span class="importance">★★★</span></h2>
-        <div class="summary">
-            <ul>
-                <li>無限等比級数 $\sum_{n=1}^{\infty} ar^{n-1}$ が収束する条件は、$a=0$ または $|r|<1$ です。</li>
-                <li>$a \neq 0$ かつ $|r|<1$ のとき、収束する和は $S = \frac{a}{1-r}$ で与えられます。</li>
-                <li>$|r| \ge 1$ ($a \neq 0$) のときは発散します。</li>
-                <li>収束する無限級数は、定数倍や和・差について分解して計算することができます。
-                    <ul>
-                        <li>$\sum k a_n = k \sum a_n$</li>
-                        <li>$\sum (a_n \pm b_n) = \sum a_n \pm \sum b_n$</li>
-                    </ul>
-                </li>
-                <li>問題を解く際は、まず収束条件を確認し、収束する場合に和の公式を適用する手順が重要です。</li>
-            </ul>
-        </div>
-    </section>
+    <p><strong>問題 1</strong> <span class="difficulty">★☆☆</span></p>
+    <p>\(x^2 + 10x + 25\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \(x^2 + 2 \cdot x \cdot 5 + 5^2\)</p>
+        <p>公式1 \(a^2 + 2ab + b^2 = (a+b)^2\) の形なので、</p>
+        <p>\((x+5)^2\)</p>
+    </details>
+
+    <p><strong>問題 2</strong> <span class="difficulty">★☆☆</span></p>
+    <p>\(4a^2 - 9b^2\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>与式 = \((2a)^2 - (3b)^2\)</p>
+        <p>公式3 \(A^2 - B^2 = (A+B)(A-B)\) の形なので、</p>
+        <p>\((2a+3b)(2a-3b)\)</p>
+    </details>
+
+    <p><strong>問題 3</strong> <span class="difficulty">★☆☆</span></p>
+    <p>\(y^2 - y - 12\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>掛けて \(-12\)、足して \(-1\) になる2つの数を探します。</p>
+        <p>組み合わせは \(-4\) と \(+3\) です。</p>
+        <p>公式4 \(y^2 + (a+b)y + ab = (y+a)(y+b)\) の形なので、</p>
+        <p>\((y-4)(y+3)\)</p>
+    </details>
+
+    <p><strong>問題 4</strong> <span class="difficulty">★★☆</span></p>
+    <p>\(3x^2 - 14x + 8\)</p>
+    <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>掛けて \(3\) (\(1, 3\))、掛けて \(+8\) (例: \(-2, -4\)) の組み合わせを探します。（真ん中がマイナスなので、\(8\) の方は負×負を考えます）</p>
+         <pre>
+  1    -4  →  3 × (-4) = -12
+    \／
+  3    -2  →  1 × (-2) =  -2
+            ---------
+                   -14 </pre>
+        <p>\(x\) の係数 \(-14\) と一致しました。</p>
+        <p>よって、\((x-4)(3x-2)\)</p>
+    </details>
+
+    <p><strong>問題 5</strong> <span class="difficulty">★★☆</span></p>
+    <p>\(5x^2 + 13xy - 6y^2\)</p>
+     <details>
+        <summary>解答（たすき掛け）</summary>
+        <p>\(x\) についての式とみて、掛けて \(5\) (\(1, 5\))、掛けて \(-6y^2\) (例: \(+3y, -2y\)) の組み合わせを探します。</p>
+         <pre>
+  1     3y  →  5 × (3y) =  15y
+    \／
+  5    -2y →  1 × (-2y) = -2y
+            ---------
+                     13y </pre>
+        <p>\(xy\) の係数 \(13y\) と一致しました。</p>
+        <p>よって、\((x+3y)(5x-2y)\)</p>
+    </details>
+
+    <h3 id="advanced-problems-ai">✏️ 発展問題</h3>
+
+    <p><strong>問題 1</strong> <span class="difficulty">★★★</span></p>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(x^4 - 13x^2 + 36\)</p>
+    <details>
+        <summary>解答</summary>
+        <p>この式は \(x^2\) を一つの塊と見ると、二次式の因数分解の形になっています。</p>
+        <p>\(X = x^2\) とおくと、与式は \(X^2 - 13X + 36\) となります。</p>
+        <p>これを \(X\) について因数分解します。掛けて \(+36\)、足して \(-13\) になる組み合わせは \(-4\) と \(-9\) です。</p>
+        <p>\(X^2 - 13X + 36 = (X-4)(X-9)\)</p>
+        <p>ここで、\(X\) を \(x^2\) に戻します。</p>
+        <p>\((x^2-4)(x^2-9)\)</p>
+        <p>さらに、それぞれの括弧の中が \(A^2 - B^2\) の形になっているため、因数分解を続けます。</p>
+        <p>\(x^2-4 = x^2 - 2^2 = (x+2)(x-2)\)</p>
+        <p>\(x^2-9 = x^2 - 3^2 = (x+3)(x-3)\)</p>
+        <p>したがって、最終的な答えは</p>
+        <p>\((x+2)(x-2)(x+3)(x-3)\)</p>
+    </details>
+    <div class="tips">💡 <strong>Tips: 置き換え</strong> <span class="importance">◆◆◇</span>
+        <p>発展問題1のように、複雑な式でも、一部を別の文字（例: \(X\)）に置き換えることで、見慣れた形に変形できる場合があります。因数分解が終わったら、置き換えた文字を元に戻すのを忘れないようにしましょう。</p>
+    </div>
+
+    <p><strong>問題 2</strong> <span class="difficulty">★★★</span></p>
+    <p>次の式を因数分解しなさい。</p>
+    <p>\(2(x+y)^2 - 5(x+y) - 3\)</p>
+     <details>
+        <summary>解答</summary>
+        <p>\(X = x+y\) とおくと、与式は \(2X^2 - 5X - 3\) となります。</p>
+        <p>これを \(X\) についてたすき掛けで因数分解します。</p>
+        <pre>
+  1    -3  →  2 × (-3) = -6
+    \／
+  2     1  →  1 × 1  =  1
+            ---------
+                  -5 </pre>
+        <p>\(X\) の係数 \(-5\) と一致したので、\((X-3)(2X+1)\) となります。</p>
+        <p>\(X\) を \(x+y\) に戻します。</p>
+        <p>\{ (x+y) - 3 \} \{ 2(x+y) + 1 \}</p>
+        <p>\((x+y-3)(2x+2y+1)\)</p>
+    </details>
+
+
+    <h3 id="quiz-ai">🤔 理解度チェッククイズ</h3>
+
+    <div class="quiz">
+    <p><strong>問1:</strong> 式 \(x^2 - 8x + 16\) を因数分解する際に、最初に使うべき公式はどれ？ <span class="importance">◆◆◇</span></p>
+    <ol>
+        <li>(ア) \(a^2 + 2ab + b^2 = (a+b)^2\)</li>
+        <li>(イ) \(a^2 - 2ab + b^2 = (a-b)^2\)</li>
+        <li>(ウ) \(a^2 - b^2 = (a+b)(a-b)\)</li>
+        <li>(エ) \(x^2 + (a+b)x + ab = (x+a)(x+b)\)</li>
+    </ol>
+    <details>
+        <summary>解答と解説</summary>
+        <p><strong>解答:</strong> (イ)</p>
+        <p><strong>解説:</strong> \(x^2\) は \(x\) の2乗、\(16\) は \(4^2\) です。真ん中の項は \(-8x = -2 \cdot x \cdot 4\) となっているので、\(a^2 - 2ab + b^2\) の形 (\(a=x, b=4\)) に当てはまります。よって、\((x-4)^2\) と因数分解できます。</p>
+    </details>
+    </div>
+
+    <div class="quiz">
+    <p><strong>問2:</strong> 式 \(6x^2 + 5x - 4\) を因数分解するためにたすき掛けを行う場合、掛けて \(6\) になる組み合わせと、掛けて \(-4\) になる組み合わせを考えます。適切な組み合わせを選び、\(x\) の係数が \(+5\) になるのはどれ？ <span class="importance">◆◆◆</span></p>
+    <pre>
+(ア)   1    -1       (イ)   2     1       (ウ)   3     4
+       \／              \／              \／
+     6     4            3    -4            2    -1
+</pre>
+    <ol>
+        <li>(ア)</li>
+        <li>(イ)</li>
+        <li>(ウ)</li>
+    </ol>
+     <details>
+        <summary>解答と解説</summary>
+        <p><strong>解答:</strong> (ウ)</p>
+        <p><strong>解説:</strong></p>
+        <ul>
+            <li>(ア) \(1 \times 4 + 6 \times (-1) = 4 - 6 = -2\)。 \(+5\) になりません。</li>
+            <li>(イ) \(2 \times (-4) + 3 \times 1 = -8 + 3 = -5\)。 \(+5\) になりません。</li>
+            <li>(ウ) \(3 \times (-1) + 2 \times 4 = -3 + 8 = 5\)。 \(+5\) に一致します。</li>
+        </ul>
+        <p>したがって、\((3x+4)(2x-1)\) と因数分解できます。</p>
+    </details>
+    </div>
+
+
+    <h2 id="summary">4. 本日のまとめ 🔖</h2>
+    <div class="summary">
+        <p><span class="importance">◆◆◆</span> 本日の授業では、まず中学校で学習した基本的な因数分解の公式4つを復習しました。</p>
+        <ul>
+            <li>\(a^2 + 2ab + b^2 = (a+b)^2\)</li>
+            <li>\(a^2 - 2ab + b^2 = (a-b)^2\)</li>
+            <li>\(a^2 - b^2 = (a+b)(a-b)\)</li>
+            <li>\(x^2 + (a+b)x + ab = (x+a)(x+b)\)</li>
+        </ul>
+        <p><span class="importance">◆◆◆</span> そして、因数分解を行う上で最も重要な**「共通因数でくくり出す」**ことを再確認しました。これは常に最初に試みるべき手順です。</p>
+        <p><span class="importance">◆◆◆</span> さらに、高校で学習する \(x^2\) の係数が1でない場合の因数分解として、**たすき掛け**（\(acx^2 + (ad+bc)x + bd = (ax+b)(cx+d)\)）の考え方を学びました。係数の組み合わせを見つける練習が必要ですが、非常に重要な手法です。</p>
+        <p>因数分解は練習量が重要です。様々なパターンの問題を解き、素早く正確に計算できるようにしましょう。検算の習慣も大切です。</p>
+    </div>
 
 </body>
 </html>
