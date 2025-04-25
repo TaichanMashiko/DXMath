@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>因数分解（応用）</title> <!-- 単元名で置き換え -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>因数分解（応用）</h1>
+    <p>授業日: 2025年4月25日</p>
+    <p>学習目標: たすき掛けを用いた因数分解の応用的な問題（係数が複雑な場合、文字を含む場合）を解けるようになる。また、置き換えを利用した因数分解や、複雑な式の因数分解の工夫を理解する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#review">前回の復習：たすき掛けによる因数分解</a></li>
+                <li><a href="#example-21">例題：係数が複雑なたすき掛け ✍️</a>
+                    <ul>
+                        <li><a href="#process-21">たすき掛けの手順</a></li>
+                        <li><a href="#points-21">ポイントと注意点</a></li>
+                    </ul>
+                </li>
+                <li><a href="#practice-info">演習について ✏️</a></li>
+                <li><a href="#cross-multiplication-guide">たすき掛け攻略ガイド 🧭</a></li>
+                <li><a href="#common-mistakes">間違いやすいポイント ⚠️</a></li>
+                <li><a href="#standard-practice">標準的な練習問題 ✏️</a></li>
+                <li><a href="#advanced-practice">発展的な練習問題 ✏️</a></li>
+                <li><a href="#check-quiz-1">理解度チェッククイズ ❓</a></li>
+                <li><a href="#example-3">例題：置き換えを利用した因数分解 ✍️</a>
+                    <ul>
+                        <li><a href="#example-3-1">(1) \( (a+b)^2 - c^2 \)</a></li>
+                        <li><a href="#example-3-2">(2) \( x(x - 2y) + 5(x - 2y) + 6 \)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#tips-replace">置き換えのコツ 💡</a></li>
+                <li><a href="#check-quiz-2">理解度チェッククイズ ❓</a></li>
+                <li><a href="#example-4">例題：複雑な式の因数分解（次数整理）✍️</a>
+                    <ul>
+                        <li><a href="#process-4">次数に着目した整理の手順</a></li>
+                        <li><a href="#important-strategy">重要な戦略 ⭐</a></li>
+                    </ul>
+                </li>
+                <li><a href="#supplement-degree">補足：最低次数の文字で整理する理由 ➕</a></li>
+                <li><a href="#practice-problems-advanced">応用練習問題 ✏️</a></li>
+                <li><a href="#check-quiz-3">理解度チェッククイズ ❓</a></li>
+                <li><a href="#summary">授業全体の要約 🔖</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="review">前回の復習：たすき掛けによる因数分解</h2> <span class="importance">★★★</span>
+    <p>前回は、高校生レベルの<span class="tooltip" data-tooltip="整式を複数の整式の積の形に変形すること。">因数分解</span>として、<span class="tooltip" data-tooltip="2次の項、1次の項、定数項がある整式を因数分解する手法の一つ。係数の組み合わせを探す。">たすき掛け</span>を用いた方法を学びました。例として、以下の問題を考えます。</p>
+
+    <div class="example">
+        <p>式 \( 3x^2 + 2x - 5 \) を因数分解しなさい。</p>
+        <details>
+            <summary>考え方と解答</summary>
+            <ol>
+                <li>まず、\( 3x^2 \) の項に着目します。因数分解後の形は \( (3x + \square)(x + \triangle) \) のようになると予想されます。</li>
+                <li>次に、定数項 \(-5\) に着目します。かけて \(-5\) になる整数の組み合わせは、\((-1, 5)\) または \((1, -5)\) または \((5, -1)\) または \((-5, 1)\) です。（符号の組み合わせを考慮すると、\(1 \times (-5)\) または \(5 \times (-1)\) のパターンが考えられます。）</li>
+                <li>たすき掛けを行い、その和が \(x\) の係数である \(+2\) になる組み合わせを探します。
+                    <ul>
+                        <li>内側の積（中々）と外側の積（外々）の和が \(+2x\) になるように、手順2で見つけた数の組み合わせを \( \square \) と \( \triangle \) に当てはめます。</li>
+                        <li>今回は、\(+2x\) とプラスの係数にしたいので、絶対値の大きい \(5\) をプラスにする方が可能性が高いと考え、 \( (3x + 5)(x - 1) \) の組み合わせを試してみます。
+                            <ul>
+                                <li>中々: \( 5 \times x = 5x \)</li>
+                                <li>外々: \( 3x \times (-1) = -3x \)</li>
+                                <li>和: \( 5x + (-3x) = 2x \)</li>
+                            </ul>
+                            これは \(x\) の係数 \(+2x\) と一致します。
+                        </li>
+                         <li>もし \( (3x - 1)(x + 5) \) を試した場合：
+                            <ul>
+                                <li>中々: \( -1 \times x = -x \)</li>
+                                <li>外々: \( 3x \times 5 = 15x \)</li>
+                                <li>和: \( -x + 15x = 14x \) となり、\(2x\) になりません。</li>
+                             </ul>
+                         </li>
+                    </ul>
+                </li>
+                <li>したがって、正しい組み合わせは \( (3x + 5) \) と \( (x - 1) \) です。</li>
+            </ol>
+            <p>解答: \( (3x + 5)(x - 1) \)</p>
+        </details>
+    </div>
+
+    <h2 id="example-21">例題：係数が複雑なたすき掛け ✍️</h2> <span class="importance">★★★</span>
+    <p>次の例題は、たすき掛けの中でも少し難しいパターンです。係数の組み合わせが多くなるため、試行錯誤が必要になります。</p>
+
+    <div class="example">
+        <p>式 \( 8x^2 - 26xy + 15y^2 \) を因数分解しなさい。 <span class="difficulty">★★☆</span></p>
+        <h3 id="process-21">たすき掛けの手順</h3>
+        <ol>
+            <li>まず、式の形から \( (\square x + \triangle y)(\bigcirc x + \nabla y) \) の形になると予想します。</li>
+            <li>\(x^2\) の係数 \(8\) に着目します。かけて \(8\) になる組み合わせは \((1, 8)\) または \((2, 4)\) です。</li>
+            <li>\(y^2\) の係数 \(+15\) に着目します。かけて \(+15\) になる組み合わせは \((1, 15), (3, 5), (-1, -15), (-3, -5)\) です。</li>
+            <li>\(xy\) の係数 \(-26\) に着目します。これはたすき掛けの中々（内項の積）と外々（外項の積）の和が \(-26xy\) になることを意味します。
+                <ul>
+                    <li>和が負の数 (\(-26\)) であり、かつ \(y^2\) の係数が正 (\(+15\)) であることから、\(y\) の係数 (\(\triangle\) と \(\nabla\)) は両方とも負の数であると推測できます。（負 × 負 = 正）</li>
+                </ul>
+            </li>
+            <li>手順2と手順3の組み合わせの中から、たすき掛けの和が \(-26xy\) になるものを探します。
+                <ul>
+                    <li>例えば、\(x\) の係数に \((1, 8)\) を、\(y\) の係数に \((-1, -15)\) を試してみます。
+                        \( (x - y)(8x - 15y) \to -8xy - 15xy = -23xy \) (不適)
+                        \( (x - 15y)(8x - y) \to -120xy - xy = -121xy \) (不適)
+                    </li>
+                    <li>\(x\) の係数に \((2, 4)\) を、\(y\) の係数に \((-3, -5)\) を試してみます。 \(y\) の係数は両方負であることに注意します。
+                        \( (2x - 3y)(4x - 5y) \) を考えます。
+                        <ul>
+                            <li>中々: \( -3y \times 4x = -12xy \)</li>
+                            <li>外々: \( 2x \times (-5y) = -10xy \)</li>
+                            <li>和: \( -12xy - 10xy = -22xy \) (不適)</li>
+                        </ul>
+                    </li>
+                     <li> \( (2x - 5y)(4x - 3y) \) を考えます。
+                        <ul>
+                            <li>中々: \( -5y \times 4x = -20xy \)</li>
+                            <li>外々: \( 2x \times (-3y) = -6xy \)</li>
+                            <li>和: \( -20xy - 6xy = -26xy \) (適)</li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>したがって、正しい組み合わせが見つかりました。</li>
+        </ol>
+        <details>
+            <summary>解答</summary>
+            <p>\( (2x - 5y)(4x - 3y) \)</p>
+        </details>
+
+        <h3 id="points-21">ポイントと注意点</h3>
+        <div class="tips">💡
+            <p>係数が複雑な場合のたすき掛けは、組み合わせが多く試行錯誤が必要です。以下の点を意識すると効率が上がることがあります。</p>
+            <ul>
+                <li>真ん中の項（\(xy\) の係数）の符号と、最後の項（\(y^2\) の係数）の符号から、因数分解後の \(y\) の係数の符号を推測する。（例：最後が正で真ん中が負なら、両方負）</li>
+                <li>絶対値が大きい係数になる組み合わせを先に除外する。（例：\(1 \times 8\) と \(1 \times 15\) の組み合わせは、大きな係数が生まれやすい）</li>
+                <li>慣れてくると、いくつかの組み合わせを頭の中で試せるようになります。</li>
+            </ul>
+        </div>
+         <div class="caution">⚠️
+            <p>組み合わせを試す際には、数字だけでなく、\(x\) や \(y\) の文字も正しくつけて計算しましょう。</p>
+         </div>
+    </div>
+
+    <h2 id="practice-info">演習について ✏️</h2>
+    <p>このタイプの因数分解は、練習量が重要です。教科書の練習問題（p.16 の問25）や、問題集（プライムの30番など）を解いて、パターンに慣れるようにしましょう。特に、小テストだけでは練習量が不足する可能性があるので、各自で追加の演習を行うことを推奨します。</p>
+
+    <div class="formula-guide">🧭
+    <h3 id="cross-multiplication-guide">たすき掛け攻略ガイド</h3> <span class="importance">★★★</span>
+    <p>たすき掛けをスムーズに進めるための考え方を整理します。</p>
+    <ul>
+        <li><strong>1. 構造の予測:</strong>
+            式 \(ax^2 + bxy + cy^2\) の形であれば、\((\bigcirc x + \triangle y)(\Box x + \nabla y)\) の形を想定します。
+        </li>
+        <li><strong>2. 先頭と末尾の係数の組み合わせ:</strong>
+            \(x^2\) の係数 \(a\) を作る掛け算 (\(\bigcirc \times \Box\)) と、\(y^2\) の係数 \(c\) を作る掛け算 (\(\triangle \times \nabla\)) の組み合わせをリストアップします。
+        </li>
+        <li><strong>3. 符号の推測:</strong>
+            \(xy\) の係数 \(b\) と \(y^2\) の係数 \(c\) の符号に注目します。
+            <ul>
+                <li>\(c > 0\) かつ \(b > 0\) なら、\(\triangle\) と \(\nabla\) は両方正。</li>
+                <li>\(c > 0\) かつ \(b < 0\) なら、\(\triangle\) と \(\nabla\) は両方負。</li>
+                <li>\(c < 0\) なら、\(\triangle\) と \(\nabla\) は異符号。</li>
+            </ul>
+        </li>
+        <li><strong>4. たすき掛けの試行:</strong>
+            リストアップした組み合わせと符号の推測をもとに、中々 (\(\triangle y \times \Box x\)) と外々 (\(\bigcirc x \times \nabla y\)) の和が \(bxy\) になる組み合わせを探します。根気強く試すことが大切です。
+        </li>
+    </ul>
+    </div>
+
+    <div class="caution">⚠️
+    <h3 id="common-mistakes">間違いやすいポイント</h3> <span class="importance">★★☆</span>
+    <ul>
+        <li><strong>符号ミス:</strong> 特に、両方の係数が負になる場合に注意が必要です。符号を付け忘れたり、片方だけにつけてしまうミスがあります。</li>
+        <li><strong>組み合わせの見落とし:</strong> 係数の約数が多い場合、試すべき組み合わせが多くなり、正しい組み合わせを見落とすことがあります。</li>
+        <li><strong>中々と外々の計算ミス:</strong> たすきに掛け合わせる際の単純な計算ミス。</li>
+        <li><strong>文字の付け忘れ:</strong> \(x\) や \(y\) を付け忘れて係数だけで計算し、最後に \(xy\) の項が合っているか確認しない。</li>
+    </ul>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="standard-practice">標準的な練習問題</h3>
+    <p>以下の式を因数分解してください。</p>
+    <ol>
+        <li>\( 2x^2 + 7xy + 3y^2 \) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>\(x^2\) の係数は \(2 = 1 \times 2\)、\(y^2\) の係数は \(3 = 1 \times 3\)。\(xy\) の係数は \(+7\)。全て正なので、\(y\) の係数も正。</p>
+                <p>たすき掛け: \( (x+3y)(2x+y) \) を試す。</p>
+                <ul>
+                    <li>中々: \( 3y \times 2x = 6xy \)</li>
+                    <li>外々: \( x \times y = xy \)</li>
+                    <li>和: \( 6xy + xy = 7xy \) (適)</li>
+                </ul>
+                <p>解答: \( (x + 3y)(2x + y) \)</p>
+            </details>
+        </li>
+        <li>\( 6a^2 - ab - 12b^2 \) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>\(a^2\) の係数は \(6 = 1 \times 6 = 2 \times 3\)。\(b^2\) の係数は \(-12\)。\(ab\) の係数は \(-1\)。\(b^2\) の係数が負なので、\(b\) の係数は異符号。</p>
+                <p>かけて \(-12\) になる組み合わせは多いが、\(ab\) の係数が \(-1\) と小さいことから、\(a\) の係数を \(2, 3\) で試してみる。\(b\) の係数は \((3, -4)\) や \((4, -3)\) などが候補。</p>
+                <p>たすき掛け: \( (2a + 3b)(3a - 4b) \) を試す。</p>
+                <ul>
+                    <li>中々: \( 3b \times 3a = 9ab \)</li>
+                    <li>外々: \( 2a \times (-4b) = -8ab \)</li>
+                    <li>和: \( 9ab - 8ab = ab \) (符号が逆)</li>
+                </ul>
+                <p>符号を逆にして \( (2a - 3b)(3a + 4b) \) を試す。</p>
+                 <ul>
+                    <li>中々: \( -3b \times 3a = -9ab \)</li>
+                    <li>外々: \( 2a \times 4b = 8ab \)</li>
+                    <li>和: \( -9ab + 8ab = -ab \) (適)</li>
+                </ul>
+                <p>解答: \( (2a - 3b)(3a + 4b) \)</p>
+            </details>
+        </li>
+        <li>\( 4x^2 - 16xy + 15y^2 \) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+             <details>
+                <summary>解答と解説</summary>
+                <p>\(x^2\) の係数は \(4 = 1 \times 4 = 2 \times 2\)。\(y^2\) の係数は \(15 = 1 \times 15 = 3 \times 5\)。\(xy\) の係数は \(-16\)。\(y^2\) が正、\(xy\) が負なので、\(y\) の係数は両方負。</p>
+                <p>たすき掛け: \( (2x - 3y)(2x - 5y) \) を試す。</p>
+                <ul>
+                    <li>中々: \( -3y \times 2x = -6xy \)</li>
+                    <li>外々: \( 2x \times (-5y) = -10xy \)</li>
+                    <li>和: \( -6xy - 10xy = -16xy \) (適)</li>
+                </ul>
+                <p>解答: \( (2x - 3y)(2x - 5y) \)</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="advanced-practice">発展的な練習問題</h3>
+    <ol>
+        <li>\( 12x^2 - 11xy - 15y^2 \) <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>\(x^2\) の係数 \(12 = 1 \times 12 = 2 \times 6 = 3 \times 4\)。\(y^2\) の係数 \(-15 = 1 \times (-15) = ... = 3 \times (-5) = ...\)。\(xy\) の係数 \(-11\)。\(y^2\) が負なので、\(y\) の係数は異符号。</p>
+                <p>組み合わせが多いので試行錯誤が必要。\(x\) の係数 \((3, 4)\) と \(y\) の係数 \((?) \times (?)\) で \(-15\) になるものを試す。異符号で和が \(-11\) を目指す。</p>
+                 <p>たすき掛け: \( (3x - 5y)(4x + 3y) \) を試す。</p>
+                 <ul>
+                    <li>中々: \( -5y \times 4x = -20xy \)</li>
+                    <li>外々: \( 3x \times 3y = 9xy \)</li>
+                    <li>和: \( -20xy + 9xy = -11xy \) (適)</li>
+                </ul>
+                <p>解答: \( (3x - 5y)(4x + 3y) \)</p>
+            </details>
+        </li>
+        <li>\( (x+y)^2 + 5(x+y) + 6 \) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>この問題は、共通部分 \( (x+y) \) を見つけて、置き換えを利用すると簡単になります。\( A = x+y \) と置きます。</p>
+                <p>式は \( A^2 + 5A + 6 \) となります。</p>
+                <p>これを因数分解すると、かけて \(6\)、たして \(5\) になる組み合わせは \(2\) と \(3\) なので、</p>
+                <p>\( (A+2)(A+3) \) となります。</p>
+                <p>最後に \(A\) を \(x+y\) に戻します。</p>
+                <p>解答: \( (x + y + 2)(x + y + 3) \)</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="quiz">❓
+    <h3 id="check-quiz-1">理解度チェッククイズ</h3>
+    <ol>
+        <li>
+            式 \( 2x^2 + 5xy + 2y^2 \) を因数分解したときの正しい組み合わせはどれですか？
+            <ol type="a">
+                <li>\( (2x+y)(x+2y) \)</li>
+                <li>\( (2x+2y)(x+y) \)</li>
+                <li>\( (2x-y)(x-2y) \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は a. \( (2x+y)(x+2y) \) です。</p>
+                <p>たすき掛け: 中々 \( y \times x = xy \), 外々 \( 2x \times 2y = 4xy \)。和は \( xy + 4xy = 5xy \) となり、元の式の \(xy\) の係数と一致します。</p>
+            </details>
+        </li>
+        <li>
+            式 \( 6x^2 - 7x - 3 \) をたすき掛けで因数分解するとき、定数項 \(-3\) の組み合わせとして考えられるのはどれですか？（符号も考慮）
+             <ol type="a">
+                <li>\( (1, 3) \) または \( (-1, -3) \)</li>
+                <li>\( (1, -3) \) または \( (-1, 3) \)</li>
+                <li>\( (1, -1) \) または \( (3, -3) \)</li>
+            </ol>
+             <details>
+                <summary>解答と解説</summary>
+                <p>正解は b. \( (1, -3) \) または \( (-1, 3) \) です。</p>
+                <p>かけて \(-3\) になる整数の組み合わせを考えます。異符号の組み合わせになります。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <hr>
+
+    <h2 id="example-3">例題：置き換えを利用した因数分解 ✍️</h2> <span class="importance">★★☆</span>
+    <p>複雑な式でも、共通部分を見つけて一時的に別の文字に置き換えることで、見慣れた形にして因数分解できる場合があります。</p>
+
+    <div class="example">
+    <h3 id="example-3-1">(1) \( (a+b)^2 - c^2 \) <span class="difficulty">★☆☆</span></h3>
+        <p>この式は \( (\text{何か})^2 - (\text{別なもの})^2 \) の形をしています。これは和と差の積の公式 \( X^2 - Y^2 = (X+Y)(X-Y) \) が使える形です。</p>
+        <p>ここで、\( X = a+b \), \( Y = c \) と考えてみましょう。</p>
+        <details>
+            <summary>解答</summary>
+            <p>公式を適用すると、</p>
+            <p>\( ((a+b) + c)((a+b) - c) \)</p>
+            <p>括弧を整理して、</p>
+            <p>\( (a + b + c)(a + b - c) \)</p>
+        </details>
+    </div>
+
+    <div class="example">
+    <h3 id="example-3-2">(2) \( x(x - 2y) + 5(x - 2y) + 6 \) <span class="difficulty">★★☆</span></h3>
+        <p>この式には共通の塊 \( (x - 2y) \) があります。これを一時的に \( A \) と置き換えてみましょう。</p>
+        <p>すると、式は \( xA + 5A + 6 \) となります。おっと、これでは因数分解できませんね。授業の書き起こしでは \(x(x-2y)\) の部分が \(x-2y\) の二乗だったかもしれません。仮に問題が \( (x-2y)^2 + 5(x-2y) + 6 \) だったとして進めます。</p>
+        <p> \( A = x-2y \) と置くと、式は \( A^2 + 5A + 6 \) となります。</p>
+        <p>これは、かけて \(6\)、たして \(5\) になる組み合わせを探す、中学レベルの因数分解の問題になります。組み合わせは \(2\) と \(3\) です。</p>
+        <details>
+            <summary>解答 (問題が \( (x-2y)^2 + 5(x-2y) + 6 \) の場合)</summary>
+            <p>\( A^2 + 5A + 6 = (A+2)(A+3) \)</p>
+            <p>ここで、置き換えた \(A\) を元の \(x-2y\) に戻します。</p>
+            <p>\( ((x-2y)+2)((x-2y)+3) \)</p>
+            <p>括弧を整理して、</p>
+            <p>\( (x - 2y + 2)(x - 2y + 3) \)</p>
+        </details>
+         <p>（元の書き起こし通りの問題 \( x(x - 2y) + 5(x - 2y) + 6 \) の場合、展開して整理すると \( x^2 - 2xy + 5x - 10y + 6 \) となり、これは単純なたすき掛けや置き換えでは因数分解が難しい形です。授業の流れからすると、おそらく \( (x-2y)^2 \) のタイプミスだった可能性が高いです。）</p>
+    </div>
+
+    <div class="tips">💡
+    <h3 id="tips-replace">置き換えのコツ</h3> <span class="importance">★★☆</span>
+    <ul>
+        <li>式の中に全く同じ形のかたまり（多項式）が複数回現れている場合、置き換えが有効です。</li>
+        <li>置き換えることで、 \(A^2 + bA + c\) や \(X^2 - Y^2\) のような、基本的な因数分解公式が使える形になることが多いです。</li>
+        <li>因数分解が終わったら、必ず置き換えた文字を元の式に戻すのを忘れないようにしましょう。</li>
+    </ul>
+    </div>
+
+    <div class="quiz">❓
+    <h3 id="check-quiz-2">理解度チェッククイズ</h3>
+    <ol>
+        <li>
+            式 \( (x+1)^2 - 9 \) を因数分解するのに最も適した方法はどれですか？
+            <ol type="a">
+                <li>展開してから因数分解する。</li>
+                <li>\(A = x+1\) と置き換えて、\(A^2 - 3^2\) の形にして和と差の積を使う。</li>
+                <li>たすき掛けを使う。</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b です。</p>
+                <p>\(A=x+1\) と置くと \(A^2 - 3^2 = (A+3)(A-3)\)。Aを戻すと \( ((x+1)+3)((x+1)-3) = (x+4)(x-2) \) となります。</p>
+            </details>
+        </li>
+        <li>
+            式 \( (a-b)^2 + 7(a-b) + 10 \) を因数分解する際に、\( A = a-b \) と置き換えた後の式はどれですか？
+            <ol type="a">
+                <li>\( A^2 + 7A + 10 \)</li>
+                <li>\( A + 7A + 10 \)</li>
+                <li>\( A^2 + 7 + 10 \)</li>
+            </ol>
+             <details>
+                <summary>解答と解説</summary>
+                <p>正解は a です。</p>
+                <p>元の式の \( (a-b) \) を \(A\) に置き換えると、\( A^2 + 7A + 10 \) となります。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+     <hr>
+
+    <h2 id="example-4">例題：複雑な式の因数分解（次数整理）✍️</h2> <span class="importance">★★★</span>
+    <p>複数の文字を含み、一見して因数分解の方法が分かりにくい式は、特定の文字について次数が低い順（降べきの順）に整理することで、解法が見えてくることがあります。</p>
+
+    <div class="example">
+    <p>式 \( ab^2 - 4ab + 3a - b + 3 \) を因数分解しなさい。<span class="difficulty">★★★</span></p>
+        <h3 id="process-4">次数に着目した整理の手順</h3>
+        <ol>
+            <li>まず、式に含まれる各文字の最高次数を確認します。
+                <ul>
+                    <li>\(a\) について: 最高次数は 1次（\(ab^2, -4ab, 3a\)）。</li>
+                    <li>\(b\) について: 最高次数は 2次（\(ab^2\)）。</li>
+                </ul>
+            </li>
+            <li><span class="important">次数が最も低い文字について、式を整理します。</span> 今回は次数が低い \(a\) について整理します。 \(a\) が含まれる項と含まれない項に分けます。
+                <p>\( (b^2 - 4b + 3)a + (-b + 3) \)</p>
+            </li>
+            <li>各部分を因数分解します。
+                <ul>
+                    <li>\(a\) の係数部分: \( b^2 - 4b + 3 = (b-1)(b-3) \)</li>
+                    <li>\(a\) を含まない部分: \( -b + 3 = -(b-3) \)</li>
+                </ul>
+                <p>式は \( (b-1)(b-3)a - (b-3) \) となります。</p>
+            </li>
+            <li>式全体を見て、共通因数があればくくり出します。今回は \( (b-3) \) が共通因数です。
+                <p>\( (b-3) \{ (b-1)a - 1 \} \)</p>
+            </li>
+            <li>中括弧の中を整理します。
+                <p>\( (b-3)(ab - a - 1) \)</p>
+            </li>
+        </ol>
+         <details>
+            <summary>解答</summary>
+            <p>\( (b-3)(ab - a - 1) \)</p>
+        </details>
+
+        <h3 id="important-strategy">重要な戦略 ⭐</h3>
+        <p>複雑な多文字式の因数分解では、「<span class="important">最も次数が低い文字について整理する</span>」という方針が非常に有効です。これにより、共通因数が見つけやすくなったり、たすき掛けが適用できる形になったりすることが多くあります。</p>
+    </div>
+
+    <div class="supplement">➕
+    <h3 id="supplement-degree">補足：最低次数の文字で整理する理由</h3> <span class="importance">★★☆</span>
+    <p>なぜ最も次数が低い文字で整理すると因数分解しやすくなるのでしょうか？</p>
+    <p>例えば、ある文字 \(x\) について1次式として整理できた場合、式は \( (\text{〇〇})x + (\triangle\triangle) \) の形になります。もしこの \( (\text{〇〇}) \) と \( (\triangle\triangle) \) の部分に共通因数があれば、それを括り出すだけで因数分解が完了します。</p>
+    <p>もし \(x\) について2次式として整理した場合 \( (\text{〇〇})x^2 + (\triangle\triangle)x + (\Box\Box) \) の形になり、共通因数が見つからなければ、さらに係数部分 \( (\text{〇〇}), (\triangle\triangle), (\Box\Box) \) の関係を見てたすき掛けなどを考える必要があり、手順が複雑になる可能性があります。</p>
+    <p>最低次数の文字で整理することで、式全体の構造がシンプルになり、共通因数などの手がかりが見つけやすくなる傾向があるため、この方針が推奨されます。</p>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="practice-problems-advanced">応用練習問題</h3>
+     <ol>
+        <li>\( x^2 + xy - 2y^2 + 2x + 7y - 3 \) <span class="difficulty">★★★</span> <span class="importance">★★★</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>\(x\) についても \(y\) についても2次式なので、どちらで整理しても良いですが、ここでは \(x\) について整理します。</p>
+                <p>\( x^2 + (y+2)x + (-2y^2 + 7y - 3) \)</p>
+                <p>定数項部分 \( -2y^2 + 7y - 3 \) を因数分解します。マイナスでくくると見やすくなります。</p>
+                <p>\( -(2y^2 - 7y + 3) \)</p>
+                <p>たすき掛けで \( (2y-1)(y-3) \) と因数分解できます。よって、定数項部分は \( -(2y-1)(y-3) \) です。</p>
+                <p>元の式は \( x^2 + (y+2)x - (2y-1)(y-3) \) となります。</p>
+                <p>これは \(x\) についての2次式と見て、全体をたすき掛けします。かけて \( -(2y-1)(y-3) \)、たして \( y+2 \) になる組み合わせを探します。</p>
+                <p>組み合わせは \( (2y-1) \) と \( -(y-3) = -y+3 \) が考えられます。</p>
+                <p>和を計算すると \( (2y-1) + (-y+3) = y+2 \)。これは \(x\) の係数と一致します。</p>
+                <p>よって、\(x\) の係数を \(1, 1\)、定数項を \( (2y-1) \) と \( -(y-3) \) としてたすき掛けが成功します。</p>
+                <p>因数分解の結果は \( (x + (2y-1))(x - (y-3)) \)</p>
+                <p>括弧を整理して、</p>
+                <p>解答: \( (x + 2y - 1)(x - y + 3) \)</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="quiz">❓
+    <h3 id="check-quiz-3">理解度チェッククイズ</h3>
+    <ol>
+        <li>
+            式 \( a^2b + 2ab + a + 2 \) を因数分解する際、最初にどの文字について整理するのが最も効果的ですか？
+            <ol type="a">
+                <li>\(a\) について整理する（最高次数2）</li>
+                <li>\(b\) について整理する（最高次数1）</li>
+                <li>どちらでも変わらない</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b です。</p>
+                <p>最も次数が低い文字（今回は \(b\)、1次）について整理するのがセオリーです。\(b\) で整理すると \( (a^2+2a)b + (a+2) \)。\(a^2+2a = a(a+2)\) なので、\( a(a+2)b + (a+2) \)。共通因数 \( (a+2) \) でくくると \( (a+2)(ab+1) \) となります。</p>
+            </details>
+        </li>
+        <li>
+            最低次数の文字で整理する主な目的は何ですか？
+            <ol type="a">
+                <li>式の見た目をきれいにするため。</li>
+                <li>共通因数を見つけやすくしたり、後続の因数分解（たすき掛け等）をしやすくするため。</li>
+                <li>計算量を減らすため。</li>
+            </ol>
+             <details>
+                <summary>解答と解説</summary>
+                <p>正解は b です。</p>
+                <p>次数を低く保つことで、式の構造が単純化され、共通因数の発見やたすき掛けの適用などが容易になるためです。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <h2 id="summary">授業全体の要約 🔖</h2> <span class="importance">★★★</span>
+    <div class="summary">
+    <p>本日の授業では、因数分解の応用的なテクニックを学びました。</p>
+    <ul>
+        <li><strong>複雑なたすき掛け:</strong> \(x^2\) や定数項の係数が素数でなく、組み合わせが多い場合のたすき掛け方法を確認しました。係数の符号や大きさに注目し、試行錯誤する練習が必要です。</li>
+        <li><strong>置き換えの利用:</strong> 式の中に共通の塊がある場合、それを一時的に別の文字（例: \(A\)）に置き換えることで、基本的な因数分解公式が適用できる形に変形できます。因数分解後は必ず元の式に戻します。</li>
+        <li><strong>複雑な式の整理:</strong> 複数の文字を含む複雑な式は、まず各文字の最高次数を確認し、「最も次数が低い文字について整理する」ことが有効な戦略です。これにより共通因数が見つけやすくなります。</li>
+    </ul>
+    <p>これらのテクニックは、練習を重ねることでスムーズに使えるようになります。教科書や問題集を活用して、様々なパターンの問題に挑戦しましょう。</p>
+    </div>
+
+</body>
+</html>
