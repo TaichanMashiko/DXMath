@@ -71,11 +71,33 @@
         .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
         .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
         .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
-        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .important:not(blockquote) { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* span用 */
         .caution { background-color: #ffebee; border-left-color: #f44336; }
         .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
         .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
         .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* 引用符スタイルの修正 (importantクラス適用時) */
+        blockquote.important {
+            border-left-color: #f44336; /* importantのボーダー色 */
+            background-color: #ffebee; /* importantの背景色 */
+            font-weight: bold; /* importantの太字 (必要に応じて) */
+            padding: 1em 1.5em;
+            margin-left: 0; /* 左インデントをリセット */
+            margin-right: 0;
+            position: relative; /* アイコン配置のため */
+            padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+         blockquote.important::before {
+             content: '⭐'; /* importantと同じアイコン */
+             position: absolute; left: 1em; top: 0.9em; font-size: 1.1em; width: 1.5em; text-align: center;
+         }
+         blockquote.important p {
+             margin-bottom: 0; /* blockquote内のpタグのマージン調整 */
+         }
+         blockquote.important strong {
+             font-weight: bold; /* blockquote内のstrongタグは太字を維持 */
+         }
 
         /* ツールチップ */
         .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
@@ -157,7 +179,11 @@
     <div class="example">
         <p>式 \( ab^2 - 4ab + 3a - b + 3 \) を因数分解しなさい。<span class="difficulty">★★★</span></p>
         <h3 id="strategy-degree">基本戦略：<span class="tooltip" data-tooltip="式の中で、ある文字が最も多く掛けられている個数。">次数</span>に着目する</h3> <span class="importance">★★★</span>
-        <p>複数の文字を含む式を<span class="tooltip" data-tooltip="式を複数の式の積の形に変形すること。">因数分解</span>する際の基本的な戦略は、「<span class="important">最も次数の低い文字について整理する</span>」ことです。これにより、式全体の構造が見やすくなり、<span class="tooltip" data-tooltip="複数の項に共通して含まれる因数。">共通因数</span>を見つけたり、<span class="tooltip" data-tooltip="二次式を因数分解する手法の一つ。係数の組み合わせを探す。">たすき掛け</span>を適用しやすくなります。</p>
+        <p>複数の文字を含む式を<span class="tooltip" data-tooltip="式を複数の式の積の形に変形すること。">因数分解</span>する際の基本的な戦略は以下の通りです。</p>
+        <blockquote class="important">
+             <p><strong>最も次数の低い文字について整理する</strong></p>
+        </blockquote>
+        <p>これにより、式全体の構造が見やすくなり、<span class="tooltip" data-tooltip="複数の項に共通して含まれる因数。">共通因数</span>を見つけたり、<span class="tooltip" data-tooltip="二次式を因数分解する手法の一つ。係数の組み合わせを探す。">たすき掛け</span>を適用しやすくなります。</p>
         <ol>
             <li>各文字の最高次数を調べます。
                 <ul>
@@ -229,7 +255,7 @@
     <h3 id="check-quiz-1">理解度チェッククイズ1</h3>
     <ol>
         <li>
-            式 \( xy^2 + x - y^2 - 1 \) を因数分解する際、最初にどの文字について整理するのがセオリーですか？
+            式 \( xy^2 + x - y^2 - 1 \) を因数分解する際、最初にどの文字について整理するのが最も効果的ですか？
             <ol type="a">
                 <li>\(x\) について整理する</li>
                 <li>\(y\) について整理する</li>
