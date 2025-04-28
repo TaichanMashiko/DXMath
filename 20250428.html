@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>因数分解（応用：複数文字の整理）</title> <!-- 単元名で置き換え -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>因数分解（応用：複数文字の整理）</h1>
+    <p>授業日: 2025年4月28日</p>
+    <p>学習目標: 複数の文字を含む複雑な式について、次数に着目して整理し、因数分解できるようになる。また、輪環の順を用いた式の整理方法を理解する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#review-previous">前回の復習と本日のテーマ</a></li>
+                <li><a href="#example-4">応用例題4：最低次数の文字で整理 ✍️</a>
+                    <ul>
+                        <li><a href="#strategy-degree">基本戦略：次数に着目する</a></li>
+                        <li><a href="#steps-4">因数分解の手順</a></li>
+                        <li><a href="#caution-1">注意点 ⚠️</a></li>
+                    </ul>
+                </li>
+                <li><a href="#practice-1">練習問題1 ✏️</a></li>
+                <li><a href="#check-quiz-1">理解度チェッククイズ1 ❓</a></li>
+                <li><a href="#example-5">応用例題5：次数が同じ場合の整理 ✍️</a>
+                    <ul>
+                        <li><a href="#steps-5">因数分解の手順</a></li>
+                        <li><a href="#tips-1">整理のポイント 💡</a></li>
+                    </ul>
+                </li>
+                 <li><a href="#practice-2">練習問題2 ✏️</a></li>
+                 <li><a href="#check-quiz-2">理解度チェッククイズ2 ❓</a></li>
+                 <li><a href="#example-6">応用例題6：3文字の場合（輪環の順） ✍️</a>
+                     <ul>
+                         <li><a href="#steps-6">因数分解の手順（Aについて整理）</a></li>
+                         <li><a href="#important-rinkan">輪環の順について ⭐</a></li>
+                         <li><a href="#tips-rinkan">解答の書き方の工夫 💡</a></li>
+                     </ul>
+                 </li>
+                 <li><a href="#advanced-practice">発展的な練習問題 ✏️</a></li>
+                 <li><a href="#check-quiz-3">理解度チェッククイズ3 ❓</a></li>
+                 <li><a href="#summary">授業全体の要約 🔖</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="review-previous">前回の復習と本日のテーマ</h2>
+    <p>前回は、複数の文字を含む式の因数分解について、基本的な考え方を学びました。特に、式 \( ab^2 - 4ab + 3a - b + 3 \) のような式を扱いました。</p>
+    <p>本日は、さらに応用的な因数分解、特に次数が同じ場合の整理方法や、3つの文字が含まれる場合の因数分解について学習します。</p>
+
+    <h2 id="example-4">応用例題4：最低次数の文字で整理 ✍️</h2> <span class="importance">★★★</span>
+    <p>まず、前回の内容の復習も兼ねて、複数の文字を含む式の因数分解の基本戦略を確認します。</p>
+    <div class="example">
+        <p>式 \( ab^2 - 4ab + 3a - b + 3 \) を因数分解しなさい。<span class="difficulty">★★★</span></p>
+        <h3 id="strategy-degree">基本戦略：<span class="tooltip" data-tooltip="式の中で、ある文字が最も多く掛けられている個数。">次数</span>に着目する</h3> <span class="importance">★★★</span>
+        <p>複数の文字を含む式を<span class="tooltip" data-tooltip="式を複数の式の積の形に変形すること。">因数分解</span>する際の基本的な戦略は、「<span class="important">最も次数の低い文字について整理する</span>」ことです。これにより、式全体の構造が見やすくなり、<span class="tooltip" data-tooltip="複数の項に共通して含まれる因数。">共通因数</span>を見つけたり、<span class="tooltip" data-tooltip="二次式を因数分解する手法の一つ。係数の組み合わせを探す。">たすき掛け</span>を適用しやすくなります。</p>
+        <ol>
+            <li>各文字の最高次数を調べます。
+                <ul>
+                    <li>\(a\) の最高次数：1次</li>
+                    <li>\(b\) の最高次数：2次</li>
+                </ul>
+            </li>
+            <li>次数が最も低い文字（今回は \(a\)）について、<span class="tooltip" data-tooltip="式を特定の文字の次数の高い順または低い順に整理すること。">降べきの順</span>（または昇べきの順）に整理します。</li>
+        </ol>
+        <h3 id="steps-4">因数分解の手順</h3>
+        <ol>
+            <li>\(a\) について整理します（\(a\) がついている項とついていない項にまとめます）。
+                <p>\( (b^2 - 4b + 3)a + (-b + 3) \)</p>
+            </li>
+            <li>\(a\) の係数部分と定数項部分をそれぞれ因数分解します。
+                <ul>
+                    <li>\( b^2 - 4b + 3 = (b-1)(b-3) \)</li>
+                    <li>\( -b + 3 = -(b-3) \)</li>
+                </ul>
+                <p>よって、式は \( (b-1)(b-3)a - (b-3) \) となります。</p>
+            </li>
+            <li>式全体を見て、共通因数 \( (b-3) \) でくくります。
+                <p>\( (b-3) \{ (b-1)a - 1 \} \)</p>
+            </li>
+            <li>中括弧の中を展開して整理します。
+                <p>\( (b-3)(ab - a - 1) \)</p>
+            </li>
+        </ol>
+        <details>
+            <summary>解答</summary>
+            <p>\( (b-3)(ab - a - 1) \)</p>
+        </details>
+        <h3 id="caution-1">注意点 ⚠️</h3>
+         <div class="caution">
+             <ul>
+                <li>整理する文字を間違えないように、最初に各文字の最高次数をしっかり確認しましょう。</li>
+                <li>共通因数でくくる際、符号のミスに注意しましょう（特にマイナスでくくる場合）。</li>
+                <li>最後の整理（中括弧の中の展開）を忘れずに行いましょう。</li>
+             </ul>
+         </div>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="practice-1">練習問題1</h3>
+    <p>式 \( x^2 + xy + 2x - y - 3 \) を因数分解しなさい。<span class="difficulty">★★☆</span> <span class="importance">★★★</span></p>
+    <details>
+        <summary>解答と解説</summary>
+        <ol>
+            <li>次数を確認します。\(x\) は2次、\(y\) は1次です。</li>
+            <li>次数が低い \(y\) について整理します。
+                <p>\( (x-1)y + (x^2 + 2x - 3) \)</p>
+            </li>
+            <li>定数項部分 \( x^2 + 2x - 3 \) を因数分解します。
+                <p>\( x^2 + 2x - 3 = (x+3)(x-1) \)</p>
+                <p>よって、式は \( (x-1)y + (x+3)(x-1) \) となります。</p>
+            </li>
+            <li>共通因数 \( (x-1) \) でくくります。
+                <p>\( (x-1)(y + (x+3)) \)</p>
+            </li>
+            <li>括弧の中を整理します。
+                <p>\( (x-1)(x + y + 3) \)</p>
+            </li>
+        </ol>
+        <p>解答: \( (x-1)(x+y+3) \)</p>
+    </details>
+    </div>
+
+    <div class="quiz">❓
+    <h3 id="check-quiz-1">理解度チェッククイズ1</h3>
+    <ol>
+        <li>
+            式 \( xy^2 + x - y^2 - 1 \) を因数分解する際、最初にどの文字について整理するのがセオリーですか？
+            <ol type="a">
+                <li>\(x\) について整理する</li>
+                <li>\(y\) について整理する</li>
+                <li>どちらでもよい</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は a. \(x\) について整理する です。</p>
+                <p>\(x\) の最高次数は1次、\(y\) の最高次数は2次なので、次数が低い \(x\) について整理するのが基本戦略です。\(x\) で整理すると \( (y^2+1)x - (y^2+1) \)。共通因数 \( (y^2+1) \) でくくり \( (y^2+1)(x-1) \) となります。</p>
+            </details>
+        </li>
+        <li>
+            最も次数が低い文字について整理する最大のメリットは何ですか？
+            <ol type="a">
+                <li>計算ミスが減るから</li>
+                <li>式全体の構造が単純になり、共通因数が見つけやすくなるから</li>
+                <li>見た目がきれいになるから</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b です。</p>
+                <p>最低次数の文字で整理することで、係数部分や定数項部分がより簡単な形になりやすく、共通因数や次の因数分解の手がかり（たすき掛けなど）が見つけやすくなります。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+     <hr>
+
+    <h2 id="example-5">応用例題5：次数が同じ場合の整理 ✍️</h2> <span class="importance">★★★</span>
+    <p>すべての文字の次数が同じ場合は、どの文字について整理しても原理的には因数分解できます。一般的には、アルファベット順（例：\(a, b, c\) や \(x, y, z\)）の最初の文字で整理することが多いです。</p>
+
+    <div class="example">
+        <p>式 \( 2x^2 + 9xy + 4y^2 + 5x + 6y + 2 \) を因数分解しなさい。<span class="difficulty">★★★</span></p>
+        <h3 id="steps-5">因数分解の手順</h3>
+        <ol>
+            <li>各文字の次数を確認します。\(x\) も \(y\) も最高次数は2次です。</li>
+            <li>どちらの文字で整理してもよいですが、ここでは \(x\) について降べきの順に整理します。
+                <p>\( 2x^2 + (9y + 5)x + (4y^2 + 6y + 2) \)</p>
+                 <div class="tips">💡
+                    <p>\(x\) の項（\(9xy\) と \(5x\)）を \(x\) でくくり、\(x\) が含まれない項（\(4y^2, 6y, 2\)）をまとめます。</p>
+                 </div>
+            </li>
+            <li>定数項部分 \( 4y^2 + 6y + 2 \) を因数分解します。まず共通因数 \(2\) でくくります。
+                <p>\( 2(2y^2 + 3y + 1) \)</p>
+                <p>括弧の中をたすき掛けで因数分解します。かけて \(2\)、たして \(3\) になるのは \(1\) と \(2\) です。</p>
+                <p>\( 2y^2 + 3y + 1 = (2y+1)(y+1) \)</p>
+                <p>よって、定数項部分は \( 2(2y+1)(y+1) \) となります。</p>
+            </li>
+            <li>元の式に代入すると、
+                <p>\( 2x^2 + (9y + 5)x + 2(2y+1)(y+1) \)</p>
+                <p>これは \(x\) についての2次式と見ることができます。\( A x^2 + B x + C \) の形です。全体を \(x\) についてのたすき掛けで因数分解します。</p>
+                <ul>
+                    <li>\(x^2\) の係数は \(2 = 1 \times 2\)。</li>
+                    <li>定数項は \( 2(2y+1)(y+1) \)。この組み合わせを考えます。候補は多いですが、\( (2y+1) \) と \( 2(y+1) \)、または \( 2(2y+1) \) と \( (y+1) \) などが考えられます。</li>
+                    <li>たすき掛けの和が \(x\) の係数 \( (9y+5) \) になるように組み合わせを探します。</li>
+                </ul>
+                <p>試行錯誤の結果、以下の組み合わせでうまくいきます。</p>
+                <p> \( (x + (4y+2))(2x + (y+1)) \) の形を考えます。（これは、\(1x\) と \(2x\)、定数項を \(2(2y+1)=4y+2\) と \((y+1)\) に分解したたすき掛けです）</p>
+                <ul>
+                    <li>中々: \( (4y+2) \times 2x = (8y+4)x \)</li>
+                    <li>外々: \( x \times (y+1) = (y+1)x \)</li>
+                    <li>和: \( (8y+4)x + (y+1)x = (8y+4+y+1)x = (9y+5)x \)</li>
+                </ul>
+                <p>これは \(x\) の係数と一致します。</p>
+            </li>
+            <li>したがって、因数分解の結果は \( (x + 4y + 2)(2x + y + 1) \) となります。</li>
+        </ol>
+         <details>
+            <summary>解答</summary>
+            <p>\( (x + 4y + 2)(2x + y + 1) \)</p>
+        </details>
+
+        <h3 id="tips-1">整理のポイント 💡</h3>
+        <div class="tips">
+            <ul>
+                <li>次数が同じ場合は、どの文字で整理してもOKですが、迷ったらアルファベット順で整理するとよいでしょう。</li>
+                <li>整理した後の定数項部分がさらに因数分解できることが多いです。まずそこから手をつけるのが定石です。</li>
+                <li>全体を一つの文字（この場合は \(x\)）についての二次式とみなし、係数や定数項が複雑な多項式であっても、通常のたすき掛けと同じ要領で考えます。組み合わせを探す試行錯誤が重要です。</li>
+            </ul>
+        </div>
+         <div class="caution">⚠️
+         <h4>間違いやすいポイント</h4>
+            <ul>
+                <li>整理する際の符号ミスや項の移し忘れ。</li>
+                <li>定数項部分の因数分解でのミス。</li>
+                <li>全体をたすき掛けする際の係数（多項式）の組み合わせの見落としや計算ミス。特に、定数項部分をどのように2つの因数に分けるか（例: \(2(2y+1)\) と \((y+1)\) なのか、\((2y+1)\) と \(2(y+1)\) なのか）で結果が変わります。</li>
+            </ul>
+         </div>
+    </div>
+
+     <div class="practice-problems">✏️
+    <h3 id="practice-2">練習問題2</h3>
+    <p>式 \( a^2 + 3ab + 2b^2 - a - 3b - 2 \) を因数分解しなさい。<span class="difficulty">★★★</span> <span class="importance">★★★</span></p>
+    <details>
+        <summary>解答と解説</summary>
+        <ol>
+            <li>\(a\), \(b\) ともに2次式です。\(a\) について整理します。
+                <p>\( a^2 + (3b-1)a + (2b^2 - 3b - 2) \)</p>
+            </li>
+            <li>定数項部分 \( 2b^2 - 3b - 2 \) を因数分解します。たすき掛けを用いると、
+                <p>\( 2b^2 - 3b - 2 = (2b+1)(b-2) \)</p>
+                <p>元の式は \( a^2 + (3b-1)a + (2b+1)(b-2) \) となります。</p>
+            </li>
+            <li>全体を \(a\) についてのたすき掛けで因数分解します。かけて \( (2b+1)(b-2) \)、たして \( (3b-1) \) になる組み合わせを探します。
+                <p>組み合わせは \( (2b+1) \) と \( (b-2) \) です。</p>
+                <p>和を計算すると \( (2b+1) + (b-2) = 3b-1 \)。これは \(a\) の係数と一致します。</p>
+            </li>
+            <li>よって、\(a\) の係数を \(1, 1\)、定数項を \( (2b+1) \) と \( (b-2) \) としてたすき掛けが成功します。
+                <p>因数分解の結果は \( (a + (2b+1))(a + (b-2)) \)</p>
+            </li>
+            <li>括弧を整理します。
+                <p>\( (a + 2b + 1)(a + b - 2) \)</p>
+            </li>
+        </ol>
+        <p>解答: \( (a + 2b + 1)(a + b - 2) \)</p>
+    </details>
+    </div>
+
+     <div class="quiz">❓
+    <h3 id="check-quiz-2">理解度チェッククイズ2</h3>
+    <ol>
+        <li>
+            式 \( x^2 + 5xy + 6y^2 + x + 4y \) を因数分解する場合、まず \(x\) について整理するとどのようになりますか？
+            <ol type="a">
+                <li>\( x^2 + (5y+1)x + (6y^2 + 4y) \)</li>
+                <li>\( x^2 + 5xy + x + (6y^2 + 4y) \)</li>
+                <li>\( (x^2+x) + (5xy+4y) + 6y^2 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は a です。</p>
+                <p>\(x\) の2次の項、1次の項（\(5xy\) と \(x\) を \(x\) でくくる）、\(x\) を含まない項（定数項）の順に整理します。</p>
+            </details>
+        </li>
+        <li>
+            \( 2x^2 + (9y + 5)x + 2(2y+1)(y+1) \) を \(x\) についてたすき掛けする際、定数項 \(2(2y+1)(y+1)\) をどのように分解する組み合わせが考えられますか？（主なものを1つ選ぶ）
+            <ol type="a">
+                <li>\( 2 \) と \( (2y+1)(y+1) \)</li>
+                <li>\( (2y+1) \) と \( 2(y+1) \)</li>
+                <li>\( (2y+1)(2) \) と \( (y+1) \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b （または c、表記の違い）です。</p>
+                <p>定数項 \( 2(2y+1)(y+1) \) を二つの式の積に分解する方法は複数考えられます。例題では \( (4y+2) \) と \( (y+1) \) の組み合わせで成功しましたが、これは \( 2(y+1) \) と \( (2y+1) \) を \(x\) の係数 \(1, 2\) とたすき掛けする組み合わせの一つです。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <hr>
+
+    <h2 id="example-6">応用例題6：3文字の場合（輪環の順） ✍️</h2> <span class="importance">★★★</span>
+    <p>文字が3種類 (a, b, c) 登場し、式が対称的な形をしている場合も、次数に着目して整理する方針は有効です。特に、解答をきれいに書くために「<span class="tooltip" data-tooltip="複数の文字式で、a→b→c→a のように循環する順序で項を並べる習慣のこと。">輪環の順</span>」という考え方を用いることがあります。</p>
+
+     <div class="example">
+        <p>式 \( a^2(b-c) + b^2(c-a) + c^2(a-b) \) を因数分解しなさい。<span class="difficulty">★★★</span></p>
+        <h3 id="steps-6">因数分解の手順（Aについて整理）</h3>
+        <ol>
+            <li>まず、各文字の次数を確認します。\(a, b, c\) いずれも最高次数は2次です。</li>
+            <li>どの文字で整理してもよいですが、ここでは \(a\) について整理します。まず、式を展開します。
+                <p>\( a^2b - a^2c + b^2c - b^2a + c^2a - c^2b \)</p>
+            </li>
+             <li>\(a\) の次数ごとに項をまとめます（降べきの順）。
+                <p>\( (b-c)a^2 - (b^2-c^2)a + (b^2c - bc^2) \)</p>
+                <div class="tips">💡
+                    <p>\(a\) の係数は \( -b^2a + c^2a = -(b^2-c^2)a \) となります。</p>
+                    <p>\(a\) を含まない項は \( b^2c - c^2b = bc(b-c) \) です。</p>
+                 </div>
+            </li>
+            <li>係数や定数項部分をさらに因数分解します。
+                 <ul>
+                    <li>\(a\) の係数: \( -(b^2-c^2) = -(b-c)(b+c) \)</li>
+                    <li>定数項: \( b^2c - bc^2 = bc(b-c) \)</li>
+                 </ul>
+                 <p>式は \( (b-c)a^2 - (b-c)(b+c)a + bc(b-c) \) となります。</p>
+            </li>
+            <li>式全体を見ると、共通因数 \( (b-c) \) があります。これでくくります。
+                 <p>\( (b-c) \{ a^2 - (b+c)a + bc \} \)</p>
+            </li>
+            <li>中括弧の中 \( a^2 - (b+c)a + bc \) を \(a\) についての二次式とみて因数分解します。かけて \(bc\)、たして \( -(b+c) \) になる組み合わせは、 \(-b\) と \(-c\) です。
+                 <p>\( \{ a^2 - (b+c)a + bc \} = (a-b)(a-c) \)</p>
+            </li>
+             <li>したがって、全体の因数分解は以下のようになります。
+                 <p>\( (b-c)(a-b)(a-c) \)</p>
+            </li>
+        </ol>
+
+        <h3 id="important-rinkan">輪環の順について ⭐</h3> <span class="importance">★★☆</span>
+        <p>上記の \( (b-c)(a-b)(a-c) \) は正しい因数分解の結果ですが、複数の文字が対称的に含まれる式では、答えを「輪環の順」で書くことが慣例となっています。</p>
+        <div class="definition">📖
+        <p><strong>輪環の順 (りんかんのじゅん):</strong> \(a \to b \to c \to a\) のように、文字が循環するように項や因数を並べる順序のことです。例えば、\(a-b\), \(b-c\), \(c-a\) の順に並べます。</p>
+        </div>
+        <p>今回の結果 \( (b-c)(a-b)(a-c) \) を輪環の順に直してみましょう。</p>
+        <ul>
+            <li>\( (a-b) \) はOK。</li>
+            <li>\( (b-c) \) はOK。</li>
+            <li>\( (a-c) \) は \(c-a\) の形にしたい。\( (a-c) = -(c-a) \) と変形できます。</li>
+        </ul>
+        <p>よって、\( (b-c)(a-b)(a-c) = (a-b)(b-c)\{-(c-a)\} = -(a-b)(b-c)(c-a) \) となります。</p>
+        <details>
+            <summary>解答（輪環の順）</summary>
+            <p>\( -(a-b)(b-c)(c-a) \)</p>
+        </details>
+
+        <h3 id="tips-rinkan">解答の書き方の工夫 💡</h3>
+        <div class="tips">
+            <ul>
+                <li>輪環の順に整理すると、式の対称性が保たれ、見通しが良くなることがあります。特に指定がない場合でも、輪環の順で書くのが一般的です。</li>
+                <li>\( (a-c) \) を \( -(c-a) \) のように変形する際に、マイナス符号を全体の先頭に出すのを忘れないようにしましょう。</li>
+            </ul>
+        </div>
+         <div class="caution">⚠️
+         <h4>間違いやすいポイント</h4>
+            <ul>
+                <li>展開時の計算ミス、特に符号ミス。</li>
+                <li>整理する文字を決めた後、その文字が含まれる項と含まれない項を正しくグループ分けできない。</li>
+                <li>係数部分や定数項部分の因数分解ミス（例: \(b^2-c^2\) の因数分解）。</li>
+                <li>共通因数 \( (b-c) \) を見落とす、または括り出す際の計算ミス。</li>
+                <li>中括弧の中の最後の因数分解 \( a^2 - (b+c)a + bc = (a-b)(a-c) \) でのミス。</li>
+                <li>輪環の順に直す際の符号ミス。\( (a-c) = -(c-a) \) のマイナスを付け忘れるなど。</li>
+            </ul>
+         </div>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="advanced-practice">発展的な練習問題</h3>
+     <ol>
+        <li>\( x^3 + x^2y - xz^2 - yz^2 \) を因数分解しなさい。<span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <ol>
+                    <li>次数を確認: \(x\) は3次、\(y\) は1次、\(z\) は2次。最も次数が低い \(y\) で整理します。</li>
+                    <li>\(y\) で整理: \( (x^2 - z^2)y + (x^3 - xz^2) \)</li>
+                    <li>各部分を因数分解:
+                        <ul>
+                            <li>\(y\) の係数: \( x^2 - z^2 = (x-z)(x+z) \)</li>
+                            <li>定数項: \( x^3 - xz^2 = x(x^2 - z^2) = x(x-z)(x+z) \)</li>
+                        </ul>
+                        <p>式は \( (x-z)(x+z)y + x(x-z)(x+z) \) となります。</p>
+                    </li>
+                    <li>共通因数 \( (x-z)(x+z) \) でくくります。
+                        <p>\( (x-z)(x+z)(y+x) \)</p>
+                    </li>
+                    <li>整理して \( (x+y)(x+z)(x-z) \) (輪環の順ではありませんが、これでも正解)。</li>
+                </ol>
+                 <p>解答: \( (x+y)(x+z)(x-z) \)</p>
+            </details>
+        </li>
+        <li>\( ab(a-b) + bc(b-c) + ca(c-a) \) を因数分解しなさい。<span class="difficulty">★★★</span> <span class="importance">★★★</span>
+             <details>
+                <summary>解答と解説</summary>
+                 <ol>
+                    <li>展開して、\(a\) について整理します（どの文字も2次なので \(a\) で整理）。
+                        <p>\( a^2b - ab^2 + b^2c - bc^2 + c^2a - ca^2 \)</p>
+                        <p>\( (b-c)a^2 - (b^2-c^2)a + (b^2c - bc^2) \)</p>
+                        <p>これは応用例題6と全く同じ式になります。</p>
+                    </li>
+                    <li>共通因数 \( (b-c) \) でくくります。
+                         <p>\( (b-c) \{ a^2 - (b+c)a + bc \} \)</p>
+                    </li>
+                     <li>中括弧の中を因数分解します。
+                         <p>\( (b-c)(a-b)(a-c) \)</p>
+                     </li>
+                     <li>輪環の順に整理します。
+                          <p>\( -(a-b)(b-c)(c-a) \)</p>
+                     </li>
+                </ol>
+                <p>解答: \( -(a-b)(b-c)(c-a) \)</p>
+             </details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="quiz">❓
+    <h3 id="check-quiz-3">理解度チェッククイズ3</h3>
+    <ol>
+        <li>
+            式 \( x^2(y-z) + y^2(z-x) + z^2(x-y) \) を因数分解する際、最終的な答えを輪環の順で書くとどうなることが予想されますか？
+            <ol type="a">
+                <li>\( (x-y)(y-z)(z-x) \) の形</li>
+                <li>\( -(x-y)(y-z)(z-x) \) の形</li>
+                <li>\( (x+y)(y+z)(z+x) \) の形</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b です。</p>
+                <p>この式は応用例題6と非常によく似た構造（交代式と呼ばれる）をしており、因数分解すると \( -(x-y)(y-z)(z-x) \) となることが知られています。実際に \(x\) について整理して因数分解を進めると確認できます。</p>
+            </details>
+        </li>
+         <li>
+            \( (b-c)(a-b)(a-c) \) を輪環の順に直した形はどれですか？
+            <ol type="a">
+                <li>\( (a-b)(b-c)(a-c) \)</li>
+                <li>\( (a-b)(b-c)(c-a) \)</li>
+                <li>\( -(a-b)(b-c)(c-a) \)</li>
+            </ol>
+             <details>
+                <summary>解答と解説</summary>
+                <p>正解は c です。</p>
+                <p>\(a-b\), \(b-c\) は輪環の順ですが、\(a-c\) を輪環の順 \(c-a\) にするには、\(a-c = -(c-a)\) と変形する必要があります。そのため、全体にマイナスが付きます。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <h2 id="summary">授業全体の要約 🔖</h2> <span class="importance">★★★</span>
+     <div class="summary">
+        <p>本日の授業では、複数の文字を含む複雑な式の因数分解について、さらに応用的な手法を学びました。</p>
+        <ul>
+            <li><strong>因数分解の基本戦略（再確認）:</strong> 最も次数が低い文字について整理することが、共通因数を見つけたり、後続の処理（たすき掛けなど）をしやすくするための有効な手段です。</li>
+            <li><strong>次数が同じ場合:</strong> どの文字について整理しても原理的には可能ですが、アルファベット順の最初の文字で整理するのが一般的です。整理後、定数項部分を因数分解し、全体を一つの文字についての二次式と見てたすき掛けを試みます。</li>
+            <li><strong>3文字の場合と輪環の順:</strong> 3つの文字 (a, b, c) が含まれる対称的な式も、同様に一つの文字について整理することで因数分解できます。解答は \( -(a-b)(b-c)(c-a) \) のように、輪環の順で書くのが慣例です。</li>
+        </ul>
+        <p>これらの複雑な因数分解は、手順が多く計算も煩雑になりがちですが、基本的な考え方（次数で整理、共通因数、たすき掛け）の組み合わせです。多くの問題を解いて、手順に慣れることが重要です。</p>
+        <p>次回の授業までに、関連する演習問題に取り組んでおきましょう。</p>
+    </div>
+
+</body>
+</html>
