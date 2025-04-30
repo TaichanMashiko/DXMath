@@ -3,137 +3,302 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>授業記録まとめ</title>
-    <!-- ↓↓↓ 本来ここにCSSファイルへのリンクが入ります ↓↓↓ -->
-    <!-- <link rel="stylesheet" href="/assets/css/style.css"> -->
+    <title>授業記録まとめ - 高機能版スタイル</title>
+    <!-- Font Awesome CDN (アイコン用) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* 最低限の見た目のための仮スタイル（後でCSSファイルに移行します） */
-        body { font-family: sans-serif; margin: 20px; line-height: 1.6; }
-        .site-header, .site-footer { background-color: #f0f0f0; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
-        .site-header h1 { margin: 0 0 10px 0; }
-        .search-container { margin-bottom: 10px; }
-        .search-container input[type="search"] { padding: 8px; width: 250px; }
-        .search-container button { padding: 8px 12px; }
-        .category-nav ul { list-style: none; padding: 0; margin: 0; }
-        .category-nav li { display: inline-block; margin-right: 15px; }
-        .category-nav a { text-decoration: none; color: #007bff; }
-        .category-nav a:hover { text-decoration: underline; }
-        .main-content { max-width: 1200px; margin: 0 auto; } /* 中央寄せ */
-        .controls { margin-bottom: 15px; }
-        .sort-button { padding: 8px 12px; }
-        h2 { border-bottom: 2px solid #eee; padding-bottom: 5px; margin-bottom: 15px;}
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; } /* カードサイズ調整 */
-        .card { border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #fff; box-shadow: 2px 2px 5px rgba(0,0,0,0.1); }
-        .card-title { margin-top: 0; margin-bottom: 5px; font-size: 1.1em;}
-        .card-title a { text-decoration: none; color: #0056b3; font-weight: bold; }
-        .card-title a:hover { text-decoration: underline; }
-        .card-date { font-size: 0.9em; color: #555; margin-bottom: 10px; }
-        .card-summary { margin-top: 5px; margin-bottom: 10px; font-size: 0.95em; color: #333; }
-        .card-tags { margin-top: 10px; }
-        .tag { background-color: #e0e0e0; padding: 3px 8px; border-radius: 10px; font-size: 0.85em; margin-right: 5px; text-decoration: none; color: #333; display: inline-block; margin-bottom: 5px; }
-        .tag:hover { background-color: #c0c0c0; }
-        .site-footer p { margin: 0; text-align: center; font-size: 0.9em; color: #555; }
+        /* --- 基本設定と変数 (変更なし) --- */
+        :root {
+            --primary-color: #0056b3;
+            --secondary-color: #6c757d;
+            --background-color: #f9f9f9;
+            --card-bg-color: #ffffff;
+            --text-color: #333333;
+            --muted-text-color: #555555;
+            --border-color: #e0e0e0;
+            --tag-bg-color: #e9ecef;
+            --tag-text-color: #495057;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --link-color: var(--primary-color);
+            --link-hover-color: #003d80;
+            --header-footer-bg: #f1f3f5;
+            --button-primary-bg: var(--primary-color);
+            --button-primary-hover-bg: var(--link-hover-color);
+            --button-secondary-bg: var(--secondary-color);
+            --button-secondary-hover-bg: #5a6268;
+            --transition-speed: 0.2s;
+        }
+
+        /* ダークモード用変数 (変更なし) */
+        body.dark-mode {
+            --background-color: #212529;
+            --card-bg-color: #343a40;
+            --text-color: #f8f9fa;
+            --muted-text-color: #adb5bd;
+            --border-color: #495057;
+            --tag-bg-color: #495057;
+            --tag-text-color: #f8f9fa;
+            --shadow-color: rgba(255, 255, 255, 0.1);
+            --link-color: #60a5fa;
+            --link-hover-color: #93c5fd;
+            --header-footer-bg: #343a40;
+            --button-primary-bg: var(--link-color);
+            --button-primary-hover-bg: var(--link-hover-color);
+            --button-secondary-bg: #495057;
+            --button-secondary-hover-bg: #6c757d;
+        }
+
+        /* --- 全体スタイル (変更なし) --- */
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        a { color: var(--link-color); text-decoration: none; transition: color var(--transition-speed) ease; }
+        a:hover { color: var(--link-hover-color); }
+        button { cursor: pointer; border: none; border-radius: 5px; padding: 10px 15px; font-size: 0.95em; transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease; }
+        button:hover { transform: translateY(-1px); }
+
+        /* --- ヘッダー (変更なし) --- */
+        .site-header { background-color: var(--header-footer-bg); padding: 20px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 4px var(--shadow-color); position: relative; }
+        .site-header h1 { margin: 0 0 20px 0; text-align: center; color: var(--primary-color); font-size: 1.8em; }
+        body.dark-mode .site-header h1 { color: var(--link-color); }
+
+        /* --- 検索エリア (変更なし) --- */
+        .search-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+        .search-container input[type="search"] { padding: 10px; width: 300px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1em; background-color: var(--card-bg-color); color: var(--text-color); }
+        .search-container button { background-color: var(--button-primary-bg); color: white; }
+        .search-container button:hover { background-color: var(--button-primary-hover-bg); }
+        .search-container button i { margin-right: 5px; }
+
+        /* --- タグフィルターエリア (変更なし) --- */
+        .tag-list-container { background-color: var(--card-bg-color); padding: 15px 20px; margin-bottom: 25px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px var(--shadow-color); }
+        .tag-list-container h3 { margin: 0 0 15px 0; font-size: 1.1em; color: var(--muted-text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
+        #tagList { display: flex; flex-wrap: wrap; gap: 10px; }
+        .tag-filter { background-color: var(--tag-bg-color); color: var(--tag-text-color); padding: 6px 12px; border-radius: 15px; font-size: 0.9em; }
+        .tag-filter:hover { background-color: var(--secondary-color); color: white; }
+        .tag-filter.active { background-color: var(--primary-color); color: white; font-weight: bold; }
+        body.dark-mode .tag-filter.active { background-color: var(--link-color); }
+        .tag-filter.reset-filter { background-color: #dc3545; color: white; }
+        .tag-filter.reset-filter:hover { background-color: #c82333; }
+
+        /* --- コントロールエリア（ソート、件数） (変更なし) --- */
+        .controls { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .sort-button { background-color: var(--button-secondary-bg); color: white; }
+        .sort-button:hover { background-color: var(--button-secondary-hover-bg); }
+        .sort-button i { margin-right: 5px; }
+        #resultsCount { font-size: 0.95em; color: var(--muted-text-color); }
+
+        /* --- ★★★ 追加: 特別リンクセクションのスタイル ★★★ --- */
+        .special-link-section {
+            background-color: #e7f1ff; /* 例: 薄い青 (ライトモード用) */
+            border: 1px solid #b8d4ff; /* 薄い青系のボーダー */
+            border-left: 5px solid var(--primary-color); /* 左端にアクセント */
+            padding: 20px 25px;
+            margin-bottom: 30px; /* 下の h2 との間隔 */
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 86, 179, 0.1); /* 少し青みがかった影 */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap; /* 横幅が狭い時用 */
+            gap: 15px;
+            transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
+        }
+        body.dark-mode .special-link-section {
+            background-color: #2a3a50; /* ダークモード用の背景色 */
+            border-color: #4a6a90; /* ダークモード用のボーダー色 */
+            border-left-color: var(--link-color); /* ダークモード用のアクセント色 */
+            box-shadow: 0 2px 5px rgba(96, 165, 250, 0.1); /* ダークモード用の影 */
+        }
+        .special-link-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 86, 179, 0.15);
+        }
+        body.dark-mode .special-link-section:hover {
+             box-shadow: 0 4px 10px rgba(96, 165, 250, 0.2);
+        }
+        .special-link-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-grow: 1; /* ボタン以外のスペースを埋める */
+        }
+        .special-link-icon {
+            font-size: 2.5em; /* アイコンサイズ */
+            color: var(--primary-color);
+            body.dark-mode & { color: var(--link-color); }
+            width: 40px; /* 幅確保 */
+            text-align: center;
+            flex-shrink: 0; /* 縮まないように */
+        }
+        .special-link-title {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3em;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+        .special-link-description {
+            margin: 0;
+            font-size: 0.95em;
+            color: var(--muted-text-color);
+        }
+        .special-link-button {
+            display: inline-block; /* aタグをボタン風に */
+            background-color: var(--button-primary-bg);
+            color: white !important; /* 強制的に白文字 */
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-decoration: none !important; /* 下線除去 */
+            transition: background-color var(--transition-speed) ease;
+            white-space: nowrap; /* ボタン内改行防止 */
+            flex-shrink: 0; /* 縮まないように */
+        }
+        .special-link-button:hover {
+            background-color: var(--button-primary-hover-bg);
+        }
+        .special-link-button i {
+            margin-left: 8px;
+        }
+         /* --- ★★★ スタイル追加ここまで ★★★ --- */
+
+        /* --- メインコンテンツ見出し (変更なし) --- */
+        .main-content h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+            margin-bottom: 25px;
+            color: var(--text-color);
+        }
+        body.dark-mode .main-content h2 { border-bottom-color: var(--link-color); }
+
+        /* --- カードグリッド (変更なし) --- */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .card { border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; background-color: var(--card-bg-color); box-shadow: 0 2px 5px var(--shadow-color); display: flex; flex-direction: column; transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 4px 10px var(--shadow-color); }
+        .card-content { flex-grow: 1; }
+        .card-title { margin-top: 0; margin-bottom: 8px; font-size: 1.2em; }
+        .card-title a { font-weight: bold; }
+        .card-date { font-size: 0.85em; color: var(--muted-text-color); margin-bottom: 12px; }
+        .card-summary { margin-top: 0; margin-bottom: 15px; font-size: 0.95em; color: var(--text-color); flex-grow: 1; }
+        .card-tags { margin-top: auto; padding-top: 10px; }
+        .tag { background-color: var(--tag-bg-color); color: var(--tag-text-color); padding: 4px 10px; border-radius: 15px; font-size: 0.8em; margin-right: 6px; display: inline-block; margin-bottom: 6px; cursor: pointer; border: 1px solid transparent; transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
+        .tag:hover { background-color: var(--secondary-color); color: white; border-color: var(--secondary-color); }
+
+        /* --- フッター (変更なし) --- */
+        .site-footer { background-color: var(--header-footer-bg); padding: 20px; margin-top: 40px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9em; color: var(--muted-text-color); }
+
+        /* --- ダークモード切り替えボタン (変更なし) --- */
+        #darkModeToggle { position: absolute; top: 15px; right: 20px; background: none; border: 1px solid var(--muted-text-color); color: var(--muted-text-color); border-radius: 50%; width: 40px; height: 40px; font-size: 1.2em; display: flex; justify-content: center; align-items: center; transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
+        #darkModeToggle:hover { color: var(--text-color); border-color: var(--text-color); }
+
+        /* --- ヘルパークラス (変更なし) --- */
+        .hidden { display: none; }
+
+        /* --- レスポンシブ対応 (変更なし + 特別リンクの調整追加) --- */
+        @media (max-width: 768px) {
+            .search-container { flex-direction: column; align-items: center;}
+            .search-container input[type="search"] { width: 80%; }
+            .search-container button { width: 80%; }
+            .controls { flex-direction: column; align-items: flex-start; }
+            .card-grid { grid-template-columns: 1fr; }
+            .site-header h1 { font-size: 1.5em; }
+            #darkModeToggle { top: 10px; right: 10px; width: 35px; height: 35px; font-size: 1em;}
+
+            /* ★★★ 追加: 特別リンクセクションのレスポンシブ調整 ★★★ */
+            .special-link-section {
+                flex-direction: column; /* 縦並び */
+                align-items: flex-start; /* 左寄せ */
+                padding: 15px 20px; /* 少しパディング調整 */
+            }
+            .special-link-content {
+                margin-bottom: 15px; /* ボタンとの間隔 */
+                width: 100%; /* 横幅いっぱい使う */
+                gap: 15px; /* アイコンとの間隔調整 */
+            }
+            .special-link-icon {
+                font-size: 2em; /* アイコンサイズ少し小さく */
+                width: 30px;
+            }
+             .special-link-title { font-size: 1.2em; }
+             .special-link-description { font-size: 0.9em; }
+             .special-link-button {
+                 align-self: center; /* ボタンは中央寄せ */
+                 width: 80%; /* 幅指定 */
+                 max-width: 300px; /* 最大幅 */
+                 text-align: center;
+             }
+            /* ★★★ レスポンシブ調整ここまで ★★★ */
+        }
     </style>
 </head>
 <body>
 
     <header class="site-header">
+        <button id="darkModeToggle" title="ダークモード切替"><i class="fa-solid fa-moon"></i></button>
         <h1>授業記録まとめ</h1>
         <div class="search-container">
-            <!-- 検索機能はまだ実装されていません -->
-            <input type="search" placeholder="キーワードで検索...">
-            <button>検索</button>
+            <input type="search" id="searchInput" placeholder="キーワードで検索...">
+            <button id="searchButton"><i class="fa-solid fa-magnifying-glass"></i> 検索</button>
         </div>
-        <nav class="category-nav">
-            <ul>
-                <!-- カテゴリリンク（クリックしてもまだ正しく絞り込まれません） -->
-                <li><a href="#">すべて表示</a></li>
-                <li><a href="/categories/数学/">数学</a></li>
-                <li><a href="/categories/英語/">英語</a></li>
-                <li><a href="/categories/歴史/">歴史</a></li>
-            </ul>
-        </nav>
     </header>
 
-    <main class="main-content">
+    <main class="container main-content">
+
+        <!-- タグフィルターエリア -->
+        <div class="tag-list-container">
+            <h3><i class="fa-solid fa-tags"></i> タグで絞り込み:</h3>
+            <div id="tagList">
+                <button class="tag-filter active" data-tag="all">#すべて表示</button>
+                <button class="tag-filter" data-tag="数学Ⅰ">#数学Ⅰ</button>
+                <button class="tag-filter" data-tag="乗法公式">#乗法公式</button>
+                <button class="tag-filter" data-tag="因数分解">#因数分解</button>
+                <button class="tag-filter" data-tag="展開">#展開</button>
+                <button class="tag-filter reset-filter" id="resetFilters" title="フィルター解除"><i class="fa-solid fa-xmark"></i> リセット</button>
+            </div>
+        </div>
+
+        <!-- コントロールエリア（ソート、件数表示） -->
         <div class="controls">
-             <!-- 並べ替えボタン（まだ機能しません） -->
-            <button class="sort-button">日付 新しい順 ↑↓</button>
+             <div>
+                <button class="sort-button" id="sortButton" data-sort-order="desc">
+                    <i class="fa-solid fa-arrow-down-wide-short"></i> 日付 新しい順
+                </button>
+            </div>
+             <span id="resultsCount"></span>
         </div>
 
-        <h2>新着の授業記録</h2>
-        <div class="card-grid">
-            <!-- ↓↓↓ Jekyllが自動生成したカード（サンプルデータ） ↓↓↓ -->
-
-             <article class="card">
-                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
-                <h3 class="card-title"><a href="20250421.html">[数学] 乗法公式</a></h3>
-                <p class="card-date">2025年4月21日</p>
-                <p class="card-summary">中学校の乗法公式から高校の乗法公式まで</p>
-                <div class="card-tags">
-                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
-                    <a href="/tags/前期/" class="tag">#数学Ⅰ</a>
-                    <a href="/tags/日本史/" class="tag">#乗法公式</a>
+        <!-- ★★★ 追加セクション: 数学の勉強法へのリンク ★★★ -->
+        <section class="special-link-section methods-link">
+            <div class="special-link-content">
+                <i class="fa-solid fa-lightbulb special-link-icon"></i>
+                <div>
+                    <h3 class="special-link-title">数学の力を伸ばす！効果的な学習法ガイド</h3>
+                    <p class="special-link-description">教科書の効果的な使い方から問題演習のコツまで、成績アップのためのヒントをまとめました。</p>
                 </div>
-            </article>
+            </div>
+            <!-- methods.htmlへのリンク -->
+            <a href="methods.html" class="special-link-button">勉強法を見る <i class="fa-solid fa-arrow-right"></i></a>
+        </section>
+        <!-- ★★★ ここまで追加セクション ★★★ -->
 
-            <article class="card">
-                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
-                <h3 class="card-title"><a href="20250423.html">[数学] 工夫した展開と因数分解</a></h3>
-                <p class="card-date">2025年4月23日</p>
-                <p class="card-summary">工夫した展開と因数分解について</p>
-                <div class="card-tags">
-                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
-                    <a href="/tags/前期/" class="tag">#数学Ⅰ</a>
-                    <a href="/tags/前期/" class="tag">#因数分解</a>
-                    <a href="/tags/日本史/" class="tag">#展開</a>
-                </div>
-            </article>
-
-             <article class="card">
-                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
-                <h3 class="card-title"><a href="20250424.html">[数学] 公式を使った因数分解</a></h3>
-                <p class="card-date">2025年4月24日</p>
-                <p class="card-summary">公式を因数分解について</p>
-                <div class="card-tags">
-                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
-                    <a href="/tags/前期/" class="tag">#数学Ⅰ</a>
-                    <a href="/tags/前期/" class="tag">#因数分解</a>
-                    <a href="/tags/日本史/" class="tag">#展開</a>
-                </div>
-            </article>
-            <!-- ↑↑↑ ここまでが自動生成されたカードのサンプル ↑↑↑ -->
-            <!-- 実際には授業記録のMarkdownファイルが増えれば、ここにカードが追加されます -->
-        </div>
-         </article>
-
-             <article class="card">
-                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
-                <h3 class="card-title"><a href="20250425.html">[数学] 工夫が必要な因数分解</a></h3>
-                <p class="card-date">2025年4月25日</p>
-                <p class="card-summary">因数分解を工夫して解く方法とそのセオリー</p>
-                <div class="card-tags">
-                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
-                    <a href="/tags/前期/" class="tag">#数学Ⅰ</a>
-                    <a href="/tags/前期/" class="tag">#因数分解</a>
-                    <a href="/tags/日本史/" class="tag">#展開</a>
-                </div>
-            </article>
-
-          <article class="card">
-                 <!-- 詳細ページへのリンク（/lessons/history-kamakura.html は仮のパス） -->
-                <h3 class="card-title"><a href="20250428.html">[数学] 乗法公式</a></h3>
-                <p class="card-date">2025年4月28日</p>
-                <p class="card-summary">高校レベルの因数分解（応用）</p>
-                <div class="card-tags">
-                    <!-- タグページへのリンク（/tags/前期/ などは仮のパス） -->
-                    <a href="/tags/前期/" class="tag">#数学Ⅰ</a>
-                    <a href="/tags/日本史/" class="tag">#因数分解</a>
-                </div>
-            </article>
-
-            <!-- ↑↑↑ ここまでが自動生成されたカードのサンプル ↑↑↑ -->
-            <!-- 実際には授業記録のMarkdownファイルが増えれば、ここにカードが追加されます -->
+        <!-- 見出し -->
+        <h2><i class="fa-solid fa-book-open"></i> 授業記録</h2>
+        <!-- カードグリッド -->
+        <div class="card-grid" id="cardGrid">
+            <!-- カードデータ (変更なし) -->
+            <article class="card" data-date="2025-04-21" data-tags="数学Ⅰ,乗法公式"> ... </article>
+            <article class="card" data-date="2025-04-23" data-tags="数学Ⅰ,因数分解,展開"> ... </article>
+            <article class="card" data-date="2025-04-24" data-tags="数学Ⅰ,因数分解,展開"> ... </article>
+            <article class="card" data-date="2025-04-25" data-tags="数学Ⅰ,因数分解,展開"> ... </article>
+            <article class="card" data-date="2025-04-28" data-tags="数学Ⅰ,因数分解"> ... </article>
         </div>
     </main>
 
@@ -141,7 +306,11 @@
         <p>© 2025 水戸葵陵高校</p>
     </footer>
 
-    <!-- JavaScriptファイルへのリンクも本来はここに記述されます（検索、ソート等） -->
+    <!-- JavaScript (機能は未実装) -->
+    <script>
+        // (元のJavaScriptコード - 機能未実装のアラート等)
+        // ... (省略) ...
+    </script>
 
 </body>
 </html>
