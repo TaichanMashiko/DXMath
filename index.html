@@ -4,23 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>授業記録まとめ - 高機能版スタイル</title>
-    <!-- Font Awesome CDN (アイコン用) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>授業記録まとめ - 高機能版スタイル</title>
     <!-- Font Awesome CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- ★★★ 外部CSSファイルへのリンク ★★★ -->
+    <!-- 外部CSSファイルへのリンク -->
     <link rel="stylesheet" href="style.css">
     <!-- ↑ href属性の値は、HTMLから見たCSSファイルのパスに合わせてください -->
 </head>
-</head>
-    <!-- JavaScriptファイルへのリンク -->
-<script src="script.js"></script>
-</body>
-</html>
 <body>
 
     <header class="site-header">
@@ -47,14 +36,10 @@
             </div>
         </div>
 
-        <!-- コントロールエリア（ソート、件数表示） -->
+        <!-- ★変更箇所: コントロールエリア（件数表示のみ） -->
         <div class="controls">
-             <div>
-                <button class="sort-button" id="sortButton" data-sort-order="desc">
-                    <i class="fa-solid fa-arrow-down-wide-short"></i> 日付 新しい順
-                </button>
-            </div>
-             <span id="resultsCount"></span>
+            <!-- ソートボタンは削除 -->
+            <span id="resultsCount"></span> <!-- 件数表示（CSSで右寄せされる想定） -->
         </div>
 
         <!-- 特別リンクセクション: 数学の勉強法へのリンク -->
@@ -66,19 +51,26 @@
                     <p class="special-link-description">教科書の効果的な使い方から問題演習のコツまで、成績アップのためのヒントをまとめました。</p>
                 </div>
             </div>
-            <!-- methods.htmlへのリンク -->
             <a href="methods.html" class="special-link-button">勉強法を見る <i class="fa-solid fa-arrow-right"></i></a>
         </section>
 
-        <!-- 見出し -->
-        <h2><i class="fa-solid fa-book-open"></i> 授業記録</h2>
+        <!-- ★変更箇所: 授業記録セクションヘッダー（見出しとソートボタンをまとめる） -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-book-open"></i> 授業記録</h2>
+            <!-- ↓↓↓ ソートボタンをここに移動 ↓↓↓ -->
+            <button class="sort-button" id="sortButton" data-sort-order="desc">
+                <i class="fa-solid fa-arrow-down-wide-short"></i> 日付 新しい順
+            </button>
+        </div>
+        <!-- ↑↑↑ ここまで変更箇所 ↑↑↑ -->
+
+        <!-- 元の見出しh2は section-header 内に移動したので削除 -->
+
         <!-- カードグリッド -->
         <div class="card-grid" id="cardGrid">
-
-            <!-- ★★★ 各カードの内容を復元 ★★★ -->
+            <!-- カードデータ -->
             <article class="card" data-date="2025-04-21" data-tags="数学Ⅰ,乗法公式">
                  <div class="card-content">
-                    <!-- ↓↓↓ リンク先を具体的なHTMLファイル名に変更 ↓↓↓ -->
                     <h3 class="card-title"><a href="20250421.html">[数学] 乗法公式</a></h3>
                     <p class="card-date">2025年4月21日</p>
                     <p class="card-summary">中学校の乗法公式から高校の乗法公式まで</p>
@@ -88,7 +80,6 @@
                     <span class="tag" data-tag="乗法公式">#乗法公式</span>
                 </div>
             </article>
-
             <article class="card" data-date="2025-04-23" data-tags="数学Ⅰ,因数分解,展開">
                 <div class="card-content">
                     <h3 class="card-title"><a href="20250423.html">[数学] 工夫した展開と因数分解</a></h3>
@@ -101,7 +92,6 @@
                     <span class="tag" data-tag="展開">#展開</span>
                 </div>
             </article>
-
              <article class="card" data-date="2025-04-24" data-tags="数学Ⅰ,因数分解,展開">
                  <div class="card-content">
                     <h3 class="card-title"><a href="20250424.html">[数学] 公式を使った因数分解</a></h3>
@@ -114,7 +104,6 @@
                     <span class="tag" data-tag="展開">#展開</span>
                 </div>
             </article>
-
              <article class="card" data-date="2025-04-25" data-tags="数学Ⅰ,因数分解,展開">
                  <div class="card-content">
                     <h3 class="card-title"><a href="20250425.html">[数学] 工夫が必要な因数分解</a></h3>
@@ -127,11 +116,9 @@
                     <span class="tag" data-tag="展開">#展開</span>
                 </div>
             </article>
-
           <article class="card" data-date="2025-04-28" data-tags="数学Ⅰ,因数分解">
                  <div class="card-content">
-                    <!-- ↓↓↓ タイトルが重複していましたが、元のデータに合わせています ↓↓↓ -->
-                    <h3 class="card-title"><a href="20250428.html">[数学] 因数分解（応用）</a></h3> <!-- タイトル修正例 -->
+                    <h3 class="card-title"><a href="20250428.html">[数学] 因数分解（応用）</a></h3>
                     <p class="card-date">2025年4月28日</p>
                     <p class="card-summary">高校レベルの因数分解（応用）</p>
                 </div>
@@ -140,15 +127,14 @@
                     <span class="tag" data-tag="因数分解">#因数分解</span>
                 </div>
             </article>
-             <!-- ★★★ カード内容の復元ここまで ★★★ -->
-
-        </div> <!-- .card-grid の閉じタグ -->
+        </div>
     </main>
 
     <footer class="site-footer">
         <p>© 2025 水戸葵陵高校</p>
     </footer>
 
-
+    <!-- JavaScriptファイルへのリンク -->
+    <script src="script.js"></script>
 </body>
 </html>
