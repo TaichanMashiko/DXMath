@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数学 学習法ガイド【高校生向け】 - A4・1枚印刷対応</title>
+    <style>
+        /* Google Fonts (Noto Sans JP) */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        /* Font Awesome (アイコン用) */
+        /* <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> */
+
+        /* --- Web表示用スタイル（変更なし） --- */
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #e0e8f0;
+            color: #333;
+            padding: 20px;
+            line-height: 1.7; /* Web用行間 */
+        }
+        .whiteboard {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.15);
+            padding: 30px 40px;
+            max-width: 850px;
+            margin: 30px auto;
+            border-radius: 10px;
+            position: relative;
+        }
+        .whiteboard::before, .whiteboard::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            width: 12px;
+            height: 12px;
+            background-color: #b0b0b0;
+            border-radius: 50%;
+            box-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .whiteboard::before { left: 20px; }
+        .whiteboard::after { right: 20px; }
+        h1 {
+            text-align: center;
+            color: #005a9e;
+            border-bottom: 4px dotted #77aadd;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        h1 .icon { font-size: 0.9em; color: #f39c12; }
+        .intro {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #555;
+            font-size: 1.1em;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #77aadd;
+        }
+        .step {
+            margin-bottom: 35px;
+            padding: 25px;
+            border: 1px solid #dce4ec;
+            border-radius: 8px;
+            background-color: #fdfdff;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        .step:hover { transform: translateY(-3px); }
+        .step h2 {
+            color: #0077cc;
+            font-size: 1.6em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        .step h2 .icon { margin-right: 12px; font-size: 1.1em; color: #0077cc; width: 30px; text-align: center; }
+        .step ul { list-style: none; padding-left: 15px; margin-bottom: 15px; }
+        .step li { margin-bottom: 12px; position: relative; padding-left: 25px; font-size: 1.05em; }
+        .step li::before { font-family: "Font Awesome 5 Free"; font-weight: 900; content: '\f058'; color: #2ecc71; position: absolute; left: 0; top: 2px; font-size: 1.1em; }
+        .point, .warning, .prime-tip { padding: 15px 20px; margin-top: 20px; border-radius: 5px; border-left-width: 5px; border-left-style: solid; display: flex; align-items: flex-start; gap: 10px; }
+        .point .icon, .warning .icon, .prime-tip .icon { font-size: 1.3em; margin-top: 2px; }
+        .point { background-color: #fff9e6; border-color: #f1c40f; color: #a07400; }
+        .point .icon { color: #f1c40f; }
+        .warning { background-color: #fff1f0; border-color: #e74c3c; color: #c0392b; }
+        .warning .icon { color: #e74c3c; }
+        .warning strong { color: #a1281b; }
+        .prime-tip { background-color: #e8f6f3; border-color: #1abc9c; color: #148f77; }
+        .prime-tip .icon { color: #1abc9c; }
+        .prime-tip ul { margin-top: 10px; margin-bottom: 0; padding-left: 5px; }
+        .prime-tip li { padding-left: 20px; }
+        .prime-tip li::before { content: '\f0da'; color: #1abc9c; font-size: 1em; top: 4px; }
+        .conclusion { text-align: center; margin-top: 40px; padding: 25px; background-color: #eafaf1; border-top: 4px solid #2ecc71; border-radius: 8px; color: #16a085; font-weight: bold; font-size: 1.15em; }
+        .conclusion .icon { margin: 0 5px; color: #27ae60; }
+        strong { color: #d35400; font-weight: bold; }
+
+        /* --- 印刷用スタイル（A4・1枚収まるように調整） --- */
+        @media print {
+            body {
+                background-color: #fff !important;
+                color: #000 !important;
+                font-size: 8.5pt; /* ★フォントサイズを小さく */
+                padding: 0;
+                margin: 0;
+                width: 100%;
+                line-height: 1.3; /* ★行間を詰める */
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            /* ページ設定 */
+            @page {
+              size: A4;
+              margin: 10mm; /* ★マージンを狭める */
+            }
+
+            .whiteboard {
+                max-width: 100%;
+                width: 190mm; /* A4幅(210mm) - マージン(10mm*2) */
+                margin: 0 auto;
+                border: 1px solid #999; /* 枠線を少し薄く */
+                box-shadow: none !important;
+                padding: 5mm 7mm; /* ★内側余白を詰める */
+                border-radius: 0;
+            }
+            .whiteboard::before, .whiteboard::after { display: none; }
+
+            h1 {
+                font-size: 15pt; /* ★フォントサイズ縮小 */
+                color: #000 !important;
+                border-bottom: 1px solid #333; /* 下線を細く */
+                padding-bottom: 4px; /* ★下線との間隔詰める */
+                margin-bottom: 6mm; /* ★下のマージン詰める */
+            }
+             h1 .icon { display: none; } /* アイコン非表示 */
+
+            .intro {
+                font-size: 8.5pt; /* 基本フォントサイズに合わせる */
+                background-color: #f0f0f0 !important; /* 薄いグレー背景 */
+                border: 1px solid #ccc; /* 枠線追加 */
+                border-left: 3px solid #999;
+                color: #000 !important;
+                padding: 5px 8px; /* ★パディング詰める */
+                margin-bottom: 6mm; /* ★下のマージン詰める */
+                text-align: left; /* 中央揃え解除 */
+            }
+
+            .step {
+                box-shadow: none !important;
+                border: 1px solid #ccc;
+                margin-bottom: 4mm; /* ★ステップ間のマージン詰める */
+                padding: 4mm 6mm; /* ★ステップ内の余白詰める */
+                background-color: #fff !important;
+                page-break-inside: avoid;
+            }
+            .step:hover { transform: none; }
+
+            .step h2 {
+                font-size: 12pt; /* ★フォントサイズ縮小 */
+                color: #000 !important;
+                border-bottom: 1px solid #ddd;
+                margin-top: 0;
+                margin-bottom: 4px; /* ★見出しとリストの間隔詰める */
+                padding-bottom: 2px; /* ★下線との間隔詰める */
+                display: block; /* アイコン非表示のため */
+            }
+            .step h2 .icon { display: none; } /* アイコン非表示 */
+
+            .step ul {
+                padding-left: 10px; /* ★リストのインデント詰める */
+                margin-top: 0;
+                margin-bottom: 4px; /* ★リスト下のマージン詰める */
+            }
+            .step li {
+                font-size: 8.5pt; /* 基本フォントサイズ */
+                margin-bottom: 2px; /* ★リスト項目の間隔詰める */
+                padding-left: 0; /* アイコン非表示のためインデントリセット */
+            }
+            .step li::before { display: none; } /* リストアイコン非表示 */
+
+            .point, .warning, .prime-tip {
+                background-color: #f5f5f5 !important; /* 背景統一 */
+                border: 1px solid #bbb;
+                border-left-width: 3px;
+                border-left-style: solid;
+                border-color: #888 !important;
+                color: #000 !important;
+                box-shadow: none;
+                padding: 4px 8px; /* ★パディング詰める */
+                margin-top: 5px; /* ★上のマージン詰める */
+                page-break-inside: avoid;
+                display: block; /* アイコン非表示のため */
+                font-size: 8pt; /* 少し小さく */
+            }
+            .point .icon, .warning .icon, .prime-tip .icon { display: none; } /* アイコン非表示 */
+
+             .warning strong, strong {
+                 color: #000 !important;
+                 font-weight: bold;
+             }
+             /* 特に重要な警告内の強調は維持 */
+             .warning i.fas { font-style: normal; margin: 0 2px; } /* FontAwesomeアイコンの代替表現（もし使うなら） */
+
+             .prime-tip ul {
+                 margin-top: 3px;
+                 margin-bottom: 0;
+                 padding-left: 10px; /* ★インデント詰める */
+             }
+             .prime-tip li {
+                 padding-left: 0; /* インデントリセット */
+                 margin-bottom: 1px; /* ★リスト項目の間隔詰める */
+                 font-size: 8pt; /* 少し小さく */
+             }
+             .prime-tip li::before { display: none; } /* アイコン非表示 */
+             .prime-tip i.fas { font-style: normal; margin: 0 2px; } /* FontAwesomeアイコンの代替表現 */
+
+
+            .conclusion {
+                background-color: #e8e8e8 !important;
+                border-top: 1px solid #666;
+                color: #000 !important;
+                font-size: 8.5pt;
+                padding: 6px 8px; /* ★パディング詰める */
+                margin-top: 5mm; /* ★上のマージン詰める */
+                border-radius: 0;
+                text-align: center;
+            }
+            .conclusion .icon { display: none; } /* アイコン非表示 */
+
+            /* リンクは下線のみ表示 */
+            a, a:visited {
+                color: #000 !important;
+                text-decoration: underline !important;
+            }
+        }
+    </style>
+    <!-- Font Awesomeなどのアイコンライブラリを読み込む -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+<div class="whiteboard">
+    <!-- コンテンツ部分は変更なし -->
+    <h1><span class="icon"><i class="fas fa-calculator"></i></span> 数学を得意にする！効果的な学習法ガイド <span class="icon"><i class="fas fa-chart-line"></i></span></h1>
+
+    <p class="intro">
+        「数学の成績、もっと上げたい！」「入試で通用する力をつけたい！」
+        そんな君へ贈る、<strong>"わかる"が"使える"に変わる</strong>学習ステップガイドです。
+        今日から実践して、本物の数学力を手に入れよう！
+    </p>
+
+    <!-- ステップ１ -->
+    <div class="step">
+        <h2><span class="icon"><i class="fas fa-book-reader"></i></span> STEP 1 : すべてはココから！ 教科書・ワークシートを「理解」する</h2>
+        <ul>
+            <li>新しい単元の<strong>「公式・定理・定義」</strong>の説明部分を、集中して熟読しよう。</li>
+            <li>ただ読むだけでなく、<strong>「なぜ？」「どういう意味？」</strong>と常に問いかけながら読むのがカギ！</li>
+            <li>図やグラフは、説明とセットで理解する。（目で見て納得！）</li>
+            <li>読んだ内容は、<strong>自分の言葉で言い換えたり、ノートにまとめたり</strong>できるか確認しよう。</li>
+        </ul>
+        <div class="point">
+            <span class="icon"><i class="fas fa-lightbulb"></i></span>
+            <div><strong>学習の土台づくり！</strong> ここでの深い理解が、後々の応用力に直結します。焦らずじっくり取り組もう。</div>
+        </div>
+    </div>
+
+    <!-- ステップ２ -->
+    <div class="step">
+        <h2><span class="icon"><i class="fas fa-pencil-alt"></i></span> STEP 2 : 使ってみよう！ 例・例題・問で「理解」を試す</h2>
+        <ul>
+            <li>教科書の<strong>「例」「例題」</strong>に挑戦！まずは解答を見ずに、自分の頭で考える時間を作ろう。</li>
+            <li>解答を見る時は、答え合わせだけでなく、<strong>解き方の「考え方」や「流れ」</strong>を徹底的に理解する。「なぜこの式変形？」「なぜこの公式？」を説明できるように！</li>
+            <li>「例題」が理解できたら、<strong>「問」</strong>などの練習問題で、自力で解けるか腕試し！</li>
+        </ul>
+        <div class="warning">
+            <span class="icon"><i class="fas fa-exclamation-triangle"></i></span>
+            <div><strong>最重要注意点！「解き方暗記」はNG！</strong><br>
+            「解答を覚えて解ける」だけでは、入試や難しい問題には歯が立ちません。<br>
+            目指すのは、<i class="fas fa-chalkboard-teacher" aria-hidden="true"></i> <strong>友達や先生に「なぜそうなるのか」を説明できるレベルの理解！</strong> これが本物の数学力への道です。</div>
+        </div>
+    </div>
+
+    <!-- ステップ３ -->
+    <div class="step">
+        <h2><span class="icon"><i class="fas fa-tasks"></i></span> STEP 3 : 定着度チェック！ 小テストで実力診断</h2>
+        <ul>
+            <li>その分野の学習内容が<strong>「しっかり理解できた！」と自信が持てたら</strong>、小テストに臨もう。</li>
+            <li>小テストは点数に一喜一憂せず、<strong>自分の「理解が曖昧な部分」や「弱点」を発見する</strong>ための絶好のツールと考えよう。</li>
+            <li><strong>間違えた問題こそ、伸びしろ！</strong> なぜ間違えたのか原因を分析し、必ず解き直して完璧に理解すること。</li>
+            <li><i class="fas fa-question-circle" aria-hidden="true" style="color: #3498db;"></i> 疑問点は放置せず、すぐに質問しよう！</li>
+        </ul>
+    </div>
+
+    <!-- ステップ４ -->
+    <div class="step">
+        <h2><span class="icon"><i class="fas fa-marker"></i></span> STEP 4 : 演習で完成！ PRIME（問題集）を徹底活用</h2>
+        <ul>
+            <li>小テストで確認した理解を盤石にするため、対応する<strong>PRIMEの問題を自宅で必ず解こう！</strong></li>
+            <li>様々な問題に取り組むことで、知識の定着はもちろん、<strong>応用力・思考力・計算力</strong>が総合的に向上します。</li>
+            <li>計画的に、毎日少しずつでも<strong>継続すること</strong>が何より大切！ <i class="far fa-calendar-check" aria-hidden="true" style="color: #27ae60;"></i></li>
+        </ul>
+        <div class="prime-tip">
+            <span class="icon"><i class="fas fa-highlighter"></i></span>
+            <div><strong>PRIME 効果最大化のコツ！<br>間違えた問題には「成長の記録」をつけよう！</strong>
+                <ul>
+                    <li>間違えた問題番号の横に、<strong>間違えた回数がわかる印</strong>をつけよう。（例：✗, ／, 日付, 正の字など）</li>
+                    <li><i class="fas fa-signal" aria-hidden="true"></i> <strong>印の数 ＝ 君にとっての難易度・苦手度</strong> が一目でわかる！</li>
+                    <li>2周目、3周目と解き直す際は、印が多い問題（＝苦手な問題）を重点的に復習することで、効率的に弱点を潰せる！</li>
+                    <li>印がなくなるまで繰り返せば、その問題はマスターした証拠！</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- まとめ -->
+    <div class="conclusion">
+        <i class="fas fa-trophy icon" aria-hidden="true"></i> <strong>数学は、正しい方法で続ければ必ず得意になる！</strong> <i class="fas fa-rocket icon" aria-hidden="true"></i><br>
+        「なぜ？」を常に考え、「人に説明できる理解」を目指して、
+        今日からこの４ステップで学習を進めてみよう！<br>
+        君の努力を全力で応援しています！ <i class="fas fa-fist-raised icon" aria-hidden="true"></i>
+    </div>
+
+</div>
+
+</body>
+</html>
