@@ -7,7 +7,7 @@
     <!-- Font Awesome CDN (アイコン用) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* --- 基本設定と変数 (変更なし) --- */
+        /* --- 基本設定と変数 --- */
         :root {
             --primary-color: #0056b3;
             --secondary-color: #6c757d;
@@ -29,7 +29,7 @@
             --transition-speed: 0.2s;
         }
 
-        /* ダークモード用変数 (変更なし) */
+        /* ダークモード用変数 */
         body.dark-mode {
             --background-color: #212529;
             --card-bg-color: #343a40;
@@ -48,7 +48,7 @@
             --button-secondary-hover-bg: #6c757d;
         }
 
-        /* --- 全体スタイル (変更なし) --- */
+        /* --- 全体スタイル --- */
         body {
             font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
             margin: 0;
@@ -63,19 +63,19 @@
         button { cursor: pointer; border: none; border-radius: 5px; padding: 10px 15px; font-size: 0.95em; transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease; }
         button:hover { transform: translateY(-1px); }
 
-        /* --- ヘッダー (変更なし) --- */
+        /* --- ヘッダー --- */
         .site-header { background-color: var(--header-footer-bg); padding: 20px; margin-bottom: 30px; border-bottom: 1px solid var(--border-color); box-shadow: 0 2px 4px var(--shadow-color); position: relative; }
         .site-header h1 { margin: 0 0 20px 0; text-align: center; color: var(--primary-color); font-size: 1.8em; }
         body.dark-mode .site-header h1 { color: var(--link-color); }
 
-        /* --- 検索エリア (変更なし) --- */
+        /* --- 検索エリア --- */
         .search-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .search-container input[type="search"] { padding: 10px; width: 300px; border: 1px solid var(--border-color); border-radius: 5px; font-size: 1em; background-color: var(--card-bg-color); color: var(--text-color); }
         .search-container button { background-color: var(--button-primary-bg); color: white; }
         .search-container button:hover { background-color: var(--button-primary-hover-bg); }
         .search-container button i { margin-right: 5px; }
 
-        /* --- タグフィルターエリア (変更なし) --- */
+        /* --- タグフィルターエリア --- */
         .tag-list-container { background-color: var(--card-bg-color); padding: 15px 20px; margin-bottom: 25px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px var(--shadow-color); }
         .tag-list-container h3 { margin: 0 0 15px 0; font-size: 1.1em; color: var(--muted-text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 8px; }
         #tagList { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -86,14 +86,14 @@
         .tag-filter.reset-filter { background-color: #dc3545; color: white; }
         .tag-filter.reset-filter:hover { background-color: #c82333; }
 
-        /* --- コントロールエリア（ソート、件数） (変更なし) --- */
+        /* --- コントロールエリア（ソート、件数） --- */
         .controls { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
         .sort-button { background-color: var(--button-secondary-bg); color: white; }
         .sort-button:hover { background-color: var(--button-secondary-hover-bg); }
         .sort-button i { margin-right: 5px; }
         #resultsCount { font-size: 0.95em; color: var(--muted-text-color); }
 
-        /* --- ★★★ 追加: 特別リンクセクションのスタイル ★★★ --- */
+        /* --- 特別リンクセクションのスタイル --- */
         .special-link-section {
             background-color: #e7f1ff; /* 例: 薄い青 (ライトモード用) */
             border: 1px solid #b8d4ff; /* 薄い青系のボーダー */
@@ -166,9 +166,8 @@
         .special-link-button i {
             margin-left: 8px;
         }
-         /* --- ★★★ スタイル追加ここまで ★★★ --- */
 
-        /* --- メインコンテンツ見出し (変更なし) --- */
+        /* --- メインコンテンツ見出し --- */
         .main-content h2 {
             font-size: 1.5em;
             border-bottom: 2px solid var(--primary-color);
@@ -178,7 +177,7 @@
         }
         body.dark-mode .main-content h2 { border-bottom-color: var(--link-color); }
 
-        /* --- カードグリッド (変更なし) --- */
+        /* --- カードグリッド --- */
         .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { border: 1px solid var(--border-color); padding: 20px; border-radius: 8px; background-color: var(--card-bg-color); box-shadow: 0 2px 5px var(--shadow-color); display: flex; flex-direction: column; transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
@@ -192,17 +191,17 @@
         .tag { background-color: var(--tag-bg-color); color: var(--tag-text-color); padding: 4px 10px; border-radius: 15px; font-size: 0.8em; margin-right: 6px; display: inline-block; margin-bottom: 6px; cursor: pointer; border: 1px solid transparent; transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
         .tag:hover { background-color: var(--secondary-color); color: white; border-color: var(--secondary-color); }
 
-        /* --- フッター (変更なし) --- */
+        /* --- フッター --- */
         .site-footer { background-color: var(--header-footer-bg); padding: 20px; margin-top: 40px; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.9em; color: var(--muted-text-color); }
 
-        /* --- ダークモード切り替えボタン (変更なし) --- */
+        /* --- ダークモード切り替えボタン --- */
         #darkModeToggle { position: absolute; top: 15px; right: 20px; background: none; border: 1px solid var(--muted-text-color); color: var(--muted-text-color); border-radius: 50%; width: 40px; height: 40px; font-size: 1.2em; display: flex; justify-content: center; align-items: center; transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease; }
         #darkModeToggle:hover { color: var(--text-color); border-color: var(--text-color); }
 
-        /* --- ヘルパークラス (変更なし) --- */
+        /* --- ヘルパークラス --- */
         .hidden { display: none; }
 
-        /* --- レスポンシブ対応 (変更なし + 特別リンクの調整追加) --- */
+        /* --- レスポンシブ対応 --- */
         @media (max-width: 768px) {
             .search-container { flex-direction: column; align-items: center;}
             .search-container input[type="search"] { width: 80%; }
@@ -211,31 +210,12 @@
             .card-grid { grid-template-columns: 1fr; }
             .site-header h1 { font-size: 1.5em; }
             #darkModeToggle { top: 10px; right: 10px; width: 35px; height: 35px; font-size: 1em;}
-
-            /* ★★★ 追加: 特別リンクセクションのレスポンシブ調整 ★★★ */
-            .special-link-section {
-                flex-direction: column; /* 縦並び */
-                align-items: flex-start; /* 左寄せ */
-                padding: 15px 20px; /* 少しパディング調整 */
-            }
-            .special-link-content {
-                margin-bottom: 15px; /* ボタンとの間隔 */
-                width: 100%; /* 横幅いっぱい使う */
-                gap: 15px; /* アイコンとの間隔調整 */
-            }
-            .special-link-icon {
-                font-size: 2em; /* アイコンサイズ少し小さく */
-                width: 30px;
-            }
-             .special-link-title { font-size: 1.2em; }
-             .special-link-description { font-size: 0.9em; }
-             .special-link-button {
-                 align-self: center; /* ボタンは中央寄せ */
-                 width: 80%; /* 幅指定 */
-                 max-width: 300px; /* 最大幅 */
-                 text-align: center;
-             }
-            /* ★★★ レスポンシブ調整ここまで ★★★ */
+            .special-link-section { flex-direction: column; align-items: flex-start; padding: 15px 20px; }
+            .special-link-content { margin-bottom: 15px; width: 100%; gap: 15px; }
+            .special-link-icon { font-size: 2em; width: 30px; }
+            .special-link-title { font-size: 1.2em; }
+            .special-link-description { font-size: 0.9em; }
+            .special-link-button { align-self: center; width: 80%; max-width: 300px; text-align: center; }
         }
     </style>
 </head>
@@ -275,7 +255,7 @@
              <span id="resultsCount"></span>
         </div>
 
-        <!-- ★★★ 追加セクション: 数学の勉強法へのリンク ★★★ -->
+        <!-- 特別リンクセクション: 数学の勉強法へのリンク -->
         <section class="special-link-section methods-link">
             <div class="special-link-content">
                 <i class="fa-solid fa-lightbulb special-link-icon"></i>
@@ -287,19 +267,80 @@
             <!-- methods.htmlへのリンク -->
             <a href="methods.html" class="special-link-button">勉強法を見る <i class="fa-solid fa-arrow-right"></i></a>
         </section>
-        <!-- ★★★ ここまで追加セクション ★★★ -->
 
         <!-- 見出し -->
         <h2><i class="fa-solid fa-book-open"></i> 授業記録</h2>
         <!-- カードグリッド -->
         <div class="card-grid" id="cardGrid">
-            <!-- カードデータ (変更なし) -->
-            <article class="card" data-date="2025-04-21" data-tags="数学Ⅰ,乗法公式"> ... </article>
-            <article class="card" data-date="2025-04-23" data-tags="数学Ⅰ,因数分解,展開"> ... </article>
-            <article class="card" data-date="2025-04-24" data-tags="数学Ⅰ,因数分解,展開"> ... </article>
-            <article class="card" data-date="2025-04-25" data-tags="数学Ⅰ,因数分解,展開"> ... </article>
-            <article class="card" data-date="2025-04-28" data-tags="数学Ⅰ,因数分解"> ... </article>
-        </div>
+
+            <!-- ★★★ 各カードの内容を復元 ★★★ -->
+            <article class="card" data-date="2025-04-21" data-tags="数学Ⅰ,乗法公式">
+                 <div class="card-content">
+                    <!-- ↓↓↓ リンク先を具体的なHTMLファイル名に変更 ↓↓↓ -->
+                    <h3 class="card-title"><a href="20250421.html">[数学] 乗法公式</a></h3>
+                    <p class="card-date">2025年4月21日</p>
+                    <p class="card-summary">中学校の乗法公式から高校の乗法公式まで</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
+                    <span class="tag" data-tag="乗法公式">#乗法公式</span>
+                </div>
+            </article>
+
+            <article class="card" data-date="2025-04-23" data-tags="数学Ⅰ,因数分解,展開">
+                <div class="card-content">
+                    <h3 class="card-title"><a href="20250423.html">[数学] 工夫した展開と因数分解</a></h3>
+                    <p class="card-date">2025年4月23日</p>
+                    <p class="card-summary">工夫した展開と因数分解について</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
+                    <span class="tag" data-tag="因数分解">#因数分解</span>
+                    <span class="tag" data-tag="展開">#展開</span>
+                </div>
+            </article>
+
+             <article class="card" data-date="2025-04-24" data-tags="数学Ⅰ,因数分解,展開">
+                 <div class="card-content">
+                    <h3 class="card-title"><a href="20250424.html">[数学] 公式を使った因数分解</a></h3>
+                    <p class="card-date">2025年4月24日</p>
+                    <p class="card-summary">公式を因数分解について</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
+                    <span class="tag" data-tag="因数分解">#因数分解</span>
+                    <span class="tag" data-tag="展開">#展開</span>
+                </div>
+            </article>
+
+             <article class="card" data-date="2025-04-25" data-tags="数学Ⅰ,因数分解,展開">
+                 <div class="card-content">
+                    <h3 class="card-title"><a href="20250425.html">[数学] 工夫が必要な因数分解</a></h3>
+                    <p class="card-date">2025年4月25日</p>
+                    <p class="card-summary">因数分解を工夫して解く方法とそのセオリー</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
+                    <span class="tag" data-tag="因数分解">#因数分解</span>
+                    <span class="tag" data-tag="展開">#展開</span>
+                </div>
+            </article>
+
+          <article class="card" data-date="2025-04-28" data-tags="数学Ⅰ,因数分解">
+                 <div class="card-content">
+                    <!-- ↓↓↓ タイトルが重複していましたが、元のデータに合わせています ↓↓↓ -->
+                    <h3 class="card-title"><a href="20250428.html">[数学] 因数分解（応用）</a></h3> <!-- タイトル修正例 -->
+                    <p class="card-date">2025年4月28日</p>
+                    <p class="card-summary">高校レベルの因数分解（応用）</p>
+                </div>
+                <div class="card-tags">
+                    <span class="tag" data-tag="数学Ⅰ">#数学Ⅰ</span>
+                    <span class="tag" data-tag="因数分解">#因数分解</span>
+                </div>
+            </article>
+             <!-- ★★★ カード内容の復元ここまで ★★★ -->
+
+        </div> <!-- .card-grid の閉じタグ -->
     </main>
 
     <footer class="site-footer">
@@ -309,7 +350,66 @@
     <!-- JavaScript (機能は未実装) -->
     <script>
         // (元のJavaScriptコード - 機能未実装のアラート等)
-        // ... (省略) ...
+
+        // 例：ダークモード切替ボタンのイベントリスナー（機能は未実装）
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        if(darkModeToggle) {
+            darkModeToggle.addEventListener('click', () => {
+                // document.body.classList.toggle('dark-mode'); // ← 本来の処理
+                alert('ダークモード切替機能は現在実装されていません。');
+            });
+        }
+
+        // 例：検索ボタンのイベントリスナー（機能は未実装）
+        const searchButton = document.getElementById('searchButton');
+        if(searchButton) {
+            searchButton.addEventListener('click', () => {
+                alert('検索機能は現在実装されていません。');
+            });
+        }
+        const searchInput = document.getElementById('searchInput');
+        if(searchInput) {
+             searchInput.addEventListener('keypress', (e) => {
+                 if (e.key === 'Enter') {
+                     alert('検索機能は現在実装されていません。');
+                 }
+             });
+        }
+
+
+        // 例：ソートボタンのイベントリスナー（機能は未実装）
+        const sortButton = document.getElementById('sortButton');
+        if(sortButton) {
+            sortButton.addEventListener('click', () => {
+                alert('ソート機能は現在実装されていません。');
+            });
+        }
+
+        // 例：タグフィルターのイベントリスナー（機能は未実装）
+        const tagListContainer = document.getElementById('tagList');
+        if(tagListContainer) {
+            tagListContainer.addEventListener('click', (event) => {
+                if (event.target.classList.contains('tag-filter') && event.target.id !== 'resetFilters') {
+                     alert(`タグ「${event.target.textContent}」での絞り込み機能は現在実装されていません。`);
+                 } else if (event.target.id === 'resetFilters') {
+                     alert('フィルターリセット機能は現在実装されていません。');
+                 }
+            });
+        }
+
+        // 例：カード内タグのクリックイベント（機能は未実装）
+         document.querySelectorAll('.card .tag').forEach(tagElement => {
+             tagElement.addEventListener('click', (event) => {
+                 alert(`タグ「${event.target.textContent}」での絞り込み機能は現在実装されていません。`);
+             });
+         });
+
+         // 例：件数表示（機能未実装のため固定テキスト）
+         const resultsCount = document.getElementById('resultsCount');
+         if(resultsCount) {
+             const cardCount = document.querySelectorAll('#cardGrid .card').length;
+             resultsCount.textContent = `${cardCount}件 表示中 (フィルタリング未実装)`;
+         }
     </script>
 
 </body>
