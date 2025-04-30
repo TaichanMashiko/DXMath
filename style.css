@@ -1,0 +1,560 @@
+/* --- Google Fonts Import --- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap');
+
+/* --- 基本設定と変数 --- */
+:root {
+    /* Fonts */
+    --font-family-base: 'Roboto', 'Noto Sans JP', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    --font-family-jp: 'Noto Sans JP', sans-serif;
+
+    /* Colors (Light Mode) */
+    --primary-color: #0056b3;
+    --primary-color-darker: #003d80;
+    --secondary-color: #5a6268; /* 少し濃く */
+    --secondary-color-lighter: #6c757d;
+    --accent-color: #17a2b8; /* アクセントカラー例 (勉強法リンクなど) */
+    --accent-color-darker: #138496;
+
+    --background-color: #f8f9fa; /* より明るい白に近い背景 */
+    --content-bg-color: #ffffff; /* コンテンツエリア背景 */
+    --card-bg-color: #ffffff;
+    --header-footer-bg: #f1f3f5;
+
+    --text-color: #212529; /* 少し濃い黒 */
+    --muted-text-color: #6c757d;
+    --link-color: var(--primary-color);
+    --link-hover-color: var(--primary-color-darker);
+    --border-color: #dee2e6; /* 少し明るい境界線 */
+
+    --tag-bg-color: #e9ecef;
+    --tag-text-color: #495057;
+    --tag-hover-bg-color: var(--secondary-color);
+    --tag-hover-text-color: #ffffff;
+
+    --button-primary-bg: var(--primary-color);
+    --button-primary-hover-bg: var(--primary-color-darker);
+    --button-secondary-bg: var(--secondary-color);
+    --button-secondary-hover-bg: #495057;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.1);
+
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+
+    --transition-speed: 0.2s;
+}
+
+/* ダークモード用変数 */
+body.dark-mode {
+    --primary-color: #60a5fa; /* 明るい青 (ダークモード用) */
+    --primary-color-darker: #93c5fd;
+    --secondary-color: #adb5bd; /* 明るいグレー */
+    --secondary-color-lighter: #ced4da;
+    --accent-color: #3dd5f3; /* 明るい水色 */
+    --accent-color-darker: #6be0fa;
+
+    --background-color: #1a1a1a; /* より深い黒 */
+    --content-bg-color: #212529; /* コンテンツエリア背景 */
+    --card-bg-color: #2b2f33; /* カード背景 */
+    --header-footer-bg: #212529;
+
+    --text-color: #f8f9fa;
+    --muted-text-color: #adb5bd;
+    --link-color: var(--primary-color);
+    --link-hover-color: var(--primary-color-darker);
+    --border-color: #495057;
+
+    --tag-bg-color: #495057;
+    --tag-text-color: #f8f9fa;
+    --tag-hover-bg-color: var(--secondary-color);
+    --tag-hover-text-color: #1a1a1a;
+
+    --button-primary-bg: var(--link-color);
+    --button-primary-hover-bg: var(--link-hover-color);
+    --button-secondary-bg: #495057;
+    --button-secondary-hover-bg: #6c757d;
+
+    --shadow-sm: 0 1px 3px rgba(255, 255, 255, 0.05);
+    --shadow-md: 0 4px 8px rgba(255, 255, 255, 0.08);
+    --shadow-lg: 0 10px 20px rgba(255, 255, 255, 0.1);
+}
+
+/* --- 全体スタイル --- */
+body {
+    font-family: var(--font-family-base);
+    margin: 0;
+    line-height: 1.7; /* 少し広げて読みやすく */
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-weight: 400; /* 標準の太さ */
+    -webkit-font-smoothing: antialiased; /* フォント描画の調整 (Mac/iOS) */
+    -moz-osx-font-smoothing: grayscale;  /* フォント描画の調整 (Firefox) */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+a {
+    color: var(--link-color);
+    text-decoration: none;
+    transition: color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+}
+a:hover {
+    color: var(--link-hover-color);
+    opacity: 0.85;
+}
+
+button,
+.button-like { /* ボタン風のスタイルを共通化 */
+    cursor: pointer;
+    border: none;
+    border-radius: var(--border-radius-md); /* 少し丸みを増やす */
+    padding: 10px 18px; /* 少し左右パディングを増やす */
+    font-size: 0.95em;
+    font-weight: 500; /* 少し太く */
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    display: inline-flex; /* アイコンとテキストの縦揃えのため */
+    align-items: center;
+    gap: 8px; /* アイコンとテキストの間隔 */
+    line-height: 1.2; /* ボタン内テキストの行間 */
+}
+button:hover,
+.button-like:hover {
+    transform: translateY(-2px); /* ホバー時の移動量を少し増やす */
+    box-shadow: var(--shadow-sm);
+}
+button:active,
+.button-like:active {
+    transform: translateY(0); /* クリック時に元の位置に戻す */
+    box-shadow: none;
+}
+
+/* --- Focus Visible (キーボード操作用) --- */
+*:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+    border-radius: var(--border-radius-sm);
+}
+/* ダークモードのフォーカス色 */
+body.dark-mode *:focus-visible {
+    outline-color: var(--primary-color-darker);
+}
+/* 特定の要素でアウトラインの見た目を調整 (例: ボタン) */
+button:focus-visible,
+.button-like:focus-visible,
+input[type="search"]:focus-visible {
+    outline-offset: 1px;
+}
+
+/* --- ヘッダー --- */
+.site-header {
+    background-color: var(--header-footer-bg);
+    padding: 20px 30px; /* 左右パディング調整 */
+    margin-bottom: 40px; /* メインコンテンツとの間隔を広げる */
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+}
+.site-header h1 {
+    margin: 0 0 25px 0;
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 2em; /* 少し大きく */
+    font-weight: 700;
+    font-family: var(--font-family-jp); /* 見出しは日本語優先 */
+}
+body.dark-mode .site-header h1 { color: var(--link-color); }
+
+/* --- 検索エリア --- */
+.search-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+.search-container input[type="search"] {
+    padding: 12px 15px; /* パディング調整 */
+    width: 350px; /* 少し幅を広げる */
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    font-size: 1em;
+    background-color: var(--content-bg-color); /* 背景色変数を使う */
+    color: var(--text-color);
+    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+.search-container input[type="search"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1); /* フォーカス時の影 */
+    outline: none; /* デフォルトのoutlineを消す */
+}
+body.dark-mode .search-container input[type="search"]:focus {
+    border-color: var(--link-color);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+.search-container button {
+    background-color: var(--button-primary-bg);
+    color: white;
+    padding: 12px 20px; /* パディング調整 */
+}
+.search-container button:hover { background-color: var(--button-primary-hover-bg); }
+
+/* --- タグフィルターエリア --- */
+.tag-list-container {
+    background-color: var(--content-bg-color);
+    padding: 20px 25px; /* パディング調整 */
+    margin-bottom: 30px; /* 下のマージン調整 */
+    border-radius: var(--border-radius-lg); /* 少し丸みを増やす */
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+.tag-list-container h3 {
+    margin: 0 0 18px 0; /* 下マージン調整 */
+    font-size: 1.15em; /* 少し大きく */
+    color: var(--muted-text-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+#tagList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px; /* タグ間の隙間調整 */
+}
+/* タグボタンのスタイル */
+.tag-filter {
+    background-color: var(--tag-bg-color);
+    color: var(--tag-text-color);
+    padding: 8px 16px; /* パディング調整 */
+    border-radius: 20px; /* より丸く */
+    font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid transparent; /* 枠線用のスペース確保 */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+.tag-filter:hover {
+    background-color: var(--tag-hover-bg-color);
+    color: var(--tag-hover-text-color);
+    border-color: var(--tag-hover-bg-color);
+    transform: scale(1.03); /* 少し大きく */
+}
+.tag-filter.active {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 700;
+    border-color: var(--primary-color);
+}
+body.dark-mode .tag-filter.active {
+    background-color: var(--link-color);
+    border-color: var(--link-color);
+    color: #1a1a1a; /* ダークモードのアクティブタグ文字色 */
+}
+.tag-filter.reset-filter { /* リセットボタン */
+     background-color: transparent; /* 背景透明に */
+     color: #dc3545; /* 赤系文字 */
+     border: 1px dashed #dc3545; /* 破線 */
+     padding: 7px 15px; /* パディング微調整 */
+}
+ .tag-filter.reset-filter:hover {
+     background-color: rgba(220, 53, 69, 0.1); /* ホバー時薄く赤背景 */
+     color: #c82333;
+     border-color: #c82333;
+     border-style: solid; /* 実線に */
+     transform: scale(1.03);
+ }
+ body.dark-mode .tag-filter.reset-filter {
+     color: #f08080; /* 明るい赤 */
+     border-color: #f08080;
+ }
+ body.dark-mode .tag-filter.reset-filter:hover {
+     background-color: rgba(240, 128, 128, 0.15);
+     color: #ff9a9a;
+     border-color: #ff9a9a;
+ }
+
+/* --- コントロールエリア（ソート、件数） --- */
+.controls {
+    margin-bottom: 25px; /* 下マージン調整 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px; /* 要素間の隙間 */
+}
+.sort-button {
+    background-color: var(--button-secondary-bg);
+    color: white;
+}
+.sort-button:hover { background-color: var(--button-secondary-hover-bg); }
+#resultsCount {
+    font-size: 0.95em;
+    color: var(--muted-text-color);
+    font-weight: 500;
+}
+
+/* --- 特別リンクセクション（勉強法） --- */
+.special-link-section {
+    background-color: var(--accent-color-lighter, #e7f1ff); /* 変数が見つからない場合の代替色 */
+    border: 1px solid var(--accent-color, #b8d4ff);
+    border-left: 5px solid var(--accent-color-darker, var(--accent-color));
+    padding: 25px 30px; /* パディング調整 */
+    margin-bottom: 40px; /* 下マージン調整 */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md); /* 少し濃い影 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px; /* 要素間の隙間 */
+    transition: transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease, background-color var(--transition-speed) ease;
+}
+/* ダークモード用の変数を割り当て */
+body.dark-mode .special-link-section {
+    --accent-color-lighter: #2a3a50;
+    --accent-color: #4a6a90;
+    --accent-color-darker: var(--accent-color);
+    background-color: var(--accent-color-lighter);
+    border-color: var(--accent-color);
+    border-left-color: var(--accent-color-darker);
+}
+.special-link-section:hover {
+    transform: translateY(-4px); /* ホバー時の移動量 */
+    box-shadow: var(--shadow-lg); /* ホバー時の影 */
+}
+.special-link-content {
+    display: flex;
+    align-items: center;
+    gap: 25px; /* アイコンとの間隔 */
+    flex-grow: 1;
+}
+.special-link-icon {
+    font-size: 2.8em; /* アイコンサイズ */
+    color: var(--accent-color-darker, var(--accent-color)); /* アイコン色 */
+    width: 45px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.special-link-title {
+    margin-top: 0;
+    margin-bottom: 8px; /* 説明文との間隔 */
+    font-size: 1.4em; /* タイトルサイズ */
+    color: var(--text-color);
+    font-weight: 700;
+    font-family: var(--font-family-jp);
+}
+.special-link-description {
+    margin: 0;
+    font-size: 1em; /* 説明文サイズ */
+    color: var(--muted-text-color);
+}
+.special-link-button {
+    display: inline-block;
+    background-color: var(--accent-color, var(--button-primary-bg)); /* ボタン色 */
+    color: white !important;
+    padding: 12px 25px; /* ボタンサイズ */
+    border-radius: var(--border-radius-md);
+    font-weight: 700;
+    text-decoration: none !important;
+    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.special-link-button:hover {
+    background-color: var(--accent-color-darker, var(--button-primary-hover-bg));
+    transform: translateY(-2px); /* ボタン自体のホバーエフェクト */
+    box-shadow: var(--shadow-sm);
+}
+.special-link-button i { margin-left: 10px; } /* 矢印アイコンの間隔 */
+
+/* --- メインコンテンツ見出し --- */
+.main-content h2 {
+    font-size: 1.6em; /* 少し大きく */
+    border-bottom: 3px solid var(--primary-color); /* 下線を太く */
+    padding-bottom: 10px; /* 下線との間隔 */
+    margin-bottom: 30px; /* カードグリッドとの間隔 */
+    color: var(--text-color);
+    font-weight: 700;
+    font-family: var(--font-family-jp);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+body.dark-mode .main-content h2 { border-bottom-color: var(--link-color); }
+
+/* --- カードグリッドとカード --- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px; /* カード間の隙間 */
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.card {
+    border: 1px solid var(--border-color);
+    padding: 25px; /* カード内パディング */
+    border-radius: var(--border-radius-lg); /* 角丸を大きく */
+    background-color: var(--card-bg-color);
+    box-shadow: var(--shadow-md); /* カードの影 */
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, background-color var(--transition-speed) ease, border-color var(--transition-speed) ease;
+    /* アニメーションはJS側で制御推奨 */
+}
+.card:hover {
+    transform: translateY(-6px); /* ホバー移動量 */
+    box-shadow: var(--shadow-lg); /* ホバー時の影 */
+}
+.card-content { flex-grow: 1; margin-bottom: 15px; /* タグエリアとの間隔 */ }
+.card-title {
+    margin-top: 0;
+    margin-bottom: 10px; /* 日付との間隔 */
+    font-size: 1.25em; /* タイトルサイズ */
+    font-weight: 700;
+    line-height: 1.4;
+}
+.card-title a {
+    color: var(--text-color); /* 通常時のリンク色 */
+    text-decoration: none;
+    transition: color var(--transition-speed) ease;
+}
+.card-title a:hover { color: var(--link-color); } /* ホバー時に色を変える */
+body.dark-mode .card-title a { color: var(--text-color); }
+body.dark-mode .card-title a:hover { color: var(--link-color); }
+
+.card-date {
+    font-size: 0.85em;
+    color: var(--muted-text-color);
+    margin-bottom: 15px; /* サマリーとの間隔 */
+    font-weight: 500;
+    display: block; /* 日付をブロック要素に */
+}
+.card-summary {
+    margin-top: 0;
+    margin-bottom: 0; /* card-contentのmargin-bottomで調整 */
+    font-size: 0.95em;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+.card-tags { margin-top: auto; padding-top: 15px; border-top: 1px solid var(--border-color); } /* タグエリア上に線 */
+.tag {
+    background-color: transparent; /* 背景透明に */
+    color: var(--secondary-color); /* タグの色 */
+    padding: 5px 12px; /* パディング調整 */
+    border-radius: 15px;
+    font-size: 0.85em; /* 少し大きく */
+    font-weight: 500;
+    margin-right: 8px;
+    display: inline-block;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 1px solid var(--secondary-color); /* 枠線 */
+    transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+.tag:hover {
+    background-color: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+    transform: scale(1.05); /* ホバーで少し拡大 */
+}
+body.dark-mode .tag {
+    color: var(--secondary-color-lighter);
+    border-color: var(--secondary-color-lighter);
+}
+body.dark-mode .tag:hover {
+     background-color: var(--secondary-color-lighter);
+     color: var(--background-color); /* ダークモードのホバー文字色 */
+     border-color: var(--secondary-color-lighter);
+}
+
+/* --- フッター --- */
+.site-footer {
+    background-color: var(--header-footer-bg);
+    padding: 30px 20px; /* パディング調整 */
+    margin-top: 60px; /* メインコンテンツとの間隔 */
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.9em;
+    color: var(--muted-text-color);
+}
+
+/* --- ダークモード切り替えボタン --- */
+#darkModeToggle {
+    position: absolute;
+    top: 20px; /* 位置調整 */
+    right: 30px; /* 位置調整 */
+    background: none;
+    border: 2px solid var(--muted-text-color); /* 枠線を少し太く */
+    color: var(--muted-text-color);
+    border-radius: 50%;
+    width: 45px; /* サイズ調整 */
+    height: 45px; /* サイズ調整 */
+    font-size: 1.3em; /* アイコンサイズ調整 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: color var(--transition-speed) ease, border-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+ #darkModeToggle:hover {
+     color: var(--text-color);
+     border-color: var(--text-color);
+     transform: rotate(15deg) scale(1.05); /* ホバーで少し回転・拡大 */
+ }
+
+/* --- ヘルパークラス --- */
+.hidden { display: none; }
+
+/* --- レスポンシブ対応 --- */
+@media (max-width: 768px) {
+    .container { padding: 15px; }
+    .site-header { padding: 15px 20px; margin-bottom: 30px; }
+    .site-header h1 { font-size: 1.6em; margin-bottom: 20px; }
+    #darkModeToggle { top: 15px; right: 15px; width: 40px; height: 40px; font-size: 1.1em; }
+
+    .search-container { flex-direction: column; align-items: stretch; gap: 8px; } /* Stretchで幅揃え */
+    .search-container input[type="search"] { width: auto; /* 幅自動 */ }
+    .search-container button { width: auto; justify-content: center; } /* 中央揃え */
+
+    .tag-list-container { padding: 15px; margin-bottom: 25px; }
+    .tag-list-container h3 { font-size: 1.1em; margin-bottom: 15px; }
+
+    .controls { flex-direction: column; align-items: stretch; gap: 10px; } /* Stretch */
+    .sort-button { width: 100%; justify-content: center; } /* 中央揃え */
+    #resultsCount { text-align: center; width: 100%; }
+
+    .special-link-section {
+        flex-direction: column;
+        align-items: center; /* 中央寄せに変更 */
+        padding: 20px;
+        text-align: center; /* テキストも中央寄せ */
+    }
+    .special-link-content {
+        margin-bottom: 20px;
+        gap: 15px;
+        flex-direction: column; /* アイコンも縦積み */
+        align-items: center;
+    }
+    .special-link-icon { font-size: 2.5em; width: auto; margin-bottom: 5px; }
+    .special-link-title { font-size: 1.3em; }
+    .special-link-description { font-size: 0.95em; }
+    .special-link-button { width: 100%; max-width: 320px; }
+
+    .main-content h2 { font-size: 1.4em; margin-bottom: 25px; justify-content: center; } /* 中央揃え */
+
+    .card-grid { grid-template-columns: 1fr; gap: 25px; }
+    .card { padding: 20px; }
+    .card-title { font-size: 1.2em; }
+    .card-tags { padding-top: 12px; }
+
+    .site-footer { padding: 25px 15px; margin-top: 50px; }
+}
