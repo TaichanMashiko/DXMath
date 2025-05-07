@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>実数と有理数・無理数、循環小数</title> <!-- 単元名で置き換え -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important:not(blockquote) { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* span用 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+        
+        /* 引用符スタイルの修正 (importantクラス適用時) */
+        blockquote.important {
+            border-left-color: #f44336; /* importantのボーダー色 */
+            background-color: #ffebee; /* importantの背景色 */
+            font-weight: bold; /* importantの太字 (必要に応じて) */
+            padding: 1em 1.5em;
+            margin-left: 0; /* 左インデントをリセット */
+            margin-right: 0;
+            position: relative; /* アイコン配置のため */
+            padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+         blockquote.important::before {
+             content: '⭐'; /* importantと同じアイコン */
+             position: absolute; left: 1em; top: 0.9em; font-size: 1.1em; width: 1.5em; text-align: center;
+         }
+         blockquote.important p {
+             margin-bottom: 0; /* blockquote内のpタグのマージン調整 */
+         }
+         blockquote.important strong {
+             font-weight: bold; /* blockquote内のstrongタグは太字を維持 */
+         }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>実数と有理数・無理数、循環小数</h1>
+    <p>授業日: 2025年5月1日</p>
+    <p>学習目標: 実数の分類（有理数、無理数、整数、小数など）を理解し、特に循環小数を分数で表す方法を習得する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#real-numbers">実数とは 📖</a>
+                    <ul>
+                        <li><a href="#definition-real">実数の定義</a></li>
+                        <li><a href="#classification-real">実数の分類</a>
+                            <ul>
+                                <li><a href="#rational-irrational">有理数と無理数</a></li>
+                                <li><a href="#rational-details">有理数の詳細（整数・分数）</a></li>
+                                <li><a href="#decimal-classification">小数の分類（有限小数・無限小数・循環小数）</a></li>
+                                <li><a href="#repeating-decimal-notation">循環小数の表記方法</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#supplement-imaginary">補足：実在しない数（虚数）について ➕</a></li>
+                    </ul>
+                </li>
+                <li><a href="#decimal-to-fraction">小数を分数に直す方法 ✍️</a>
+                    <ul>
+                        <li><a href="#finite-to-fraction">有限小数を分数に直す</a></li>
+                        <li><a href="#repeating-to-fraction">循環小数を分数に直す</a>
+                            <ul>
+                                <li><a href="#example-1-1">例1：循環節が小数第1位から始まる場合</a></li>
+                                <li><a href="#example-1-2">例2：循環節の前に数字がある場合</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="#repeating-decimal-guide">循環小数を分数に直す手順ガイド 🧭</a></li>
+                <li><a href="#common-mistakes-repeating">循環小数の分数化での間違いやすいポイント ⚠️</a></li>
+                <li><a href="#textbook-exercises">教科書の練習問題解説 ✏️</a>
+                    <ul>
+                        <li><a href="#exercise-1">問いの1：有限小数の分数化</a></li>
+                        <li><a href="#exercise-2">問いの2：循環小数の分数化</a></li>
+                    </ul>
+                </li>
+                <li><a href="#standard-practice">標準的な練習問題 ✏️</a></li>
+                <li><a href="#advanced-practice">発展的な練習問題 ✏️</a></li>
+                <li><a href="#tips-numbers">数の分類に関するTips 💡</a></li>
+                <li><a href="#check-quiz">理解度チェッククイズ ❓</a></li>
+                <li><a href="#class-info">授業の連絡事項</a></li>
+                <li><a href="#summary">授業全体の要約 🔖</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="real-numbers">実数とは 📖</h2> <span class="importance">★★★</span>
+    <h3 id="definition-real">実数の定義</h3>
+    <div class="definition">
+        <p><span class="tooltip" data-tooltip="数直線上の点として表すことができる数。有理数と無理数を合わせたもの。">実数</span>とは、「実在する数」と書くように、実際に存在する数を指します。英語では Real Number と表現され、実数全体の集合を表す記号として \(\mathbb{R}\) などが用いられることがあります。</p>
+    </div>
+
+    <h3 id="classification-real">実数の分類</h3>
+    <p>実数は、大きく<span class="tooltip" data-tooltip="整数 m と 0 でない整数 n を用いて分数 m/n の形で表せる数。有限小数や循環小数も含む。">有理数</span>と<span class="tooltip" data-tooltip="分数で表すことのできない実数。循環しない無限小数となる。例：π, √2">無理数</span>に分けられます。</p>
+
+    <h4 id="rational-irrational">有理数と無理数</h4> <span class="importance">★★★</span>
+    <div class="definition">📖
+        <p><strong>有理数 (ゆうりすう):</strong> 整数 \(m\) と \(0\) でない整数 \(n\) を用いて、分数 \( \frac{m}{n} \) の形で表すことができる数です。</p>
+        <p><strong>無理数 (むりすう):</strong> 有理数ではない実数、つまり分数で表すことができない数です。</p>
+    </div>
+    <p>無理数の代表的な例としては、円周率 \(\pi\) (3.141592...) や、平方根のうち整数にならないもの（例: \(\sqrt{2}\) (1.41421356...)、\(\sqrt{3}\) など）があります。これらは小数で表すと、循環しない無限小数となります。</p>
+
+    <h4 id="rational-details">有理数の詳細（整数・分数）</h4> <span class="importance">★★☆</span>
+    <p>有理数はさらに細かく分類できます。</p>
+    <ul>
+        <li><strong><span class="tooltip" data-tooltip="..., -2, -1, 0, 1, 2, ... のような数。">整数</span>:</strong>
+            <ul>
+                <li><strong>正の整数（<span class="tooltip" data-tooltip="1, 2, 3, ... のような正の整数。">自然数</span>）:</strong> 1, 2, 3, ...</li>
+                <li><strong>0 (ゼロ)</strong></li>
+                <li><strong>負の整数:</strong> -1, -2, -3, ...</li>
+            </ul>
+        </li>
+        <li><strong>整数ではない有理数（分数）:</strong> 例: \( \frac{1}{2}, -\frac{3}{4} \) など。これらは小数で表すと<span class="tooltip" data-tooltip="小数部分が有限で終わる小数。例：0.5, 0.25">有限小数</span>になるか、後述する<span class="tooltip" data-tooltip="同じ数字の並びが無限に繰り返される小数。例：0.333..., 0.1212...">循環小数</span>になります。</li>
+    </ul>
+
+    <h4 id="decimal-classification">小数の分類（有限小数・無限小数・循環小数）</h4> <span class="importance">★★☆</span>
+    <p>小数は、小数部分の続き方によって以下のように分類されます。</p>
+    <div class="definition">📖
+        <p><strong>有限小数 (ゆうげんしょうすう):</strong> 小数点以下の桁が有限で終わる小数です。例: \(0.5, 2.75\)</p>
+        <p><strong><span class="tooltip" data-tooltip="小数部分が無限に続く小数。循環小数と循環しない無限小数がある。">無限小数</span> (むげんしょうすう):</strong> 小数点以下の桁が無限に続く小数です。</p>
+        <ul>
+            <li><strong>循環小数 (じゅんかんしょうすう):</strong> ある桁から先で同じ数字の並び（循環節）が無限に繰り返される小数です。例: \(0.333\dots, 1.272727\dots\)</li>
+            <li><strong>循環しない無限小数:</strong> 循環節を持たずに無限に続く小数です。無理数はこれに該当します。例: \(\pi = 3.14159265\dots, \sqrt{2} = 1.41421356\dots\)</li>
+        </ul>
+    </div>
+    <div class="important">⭐
+        <p>有理数は有限小数または循環小数で表すことができ、逆に有限小数や循環小数は必ず分数で表せるため有理数です。無理数は循環しない無限小数となります。</p>
+    </div>
+    <div class="caution">⚠️
+        <p>数が無限に続くからといって、必ずしも無理数になるわけではないことに注意しましょう。循環小数は無限に続きますが、有理数です。</p>
+    </div>
+
+    <h5 id="repeating-decimal-notation">循環小数の表記方法</h5> <span class="importance">★★☆</span>
+    <p>循環小数を表す際には、繰り返される数字の列（循環節）の最初と最後の数字の上に点を付けて示します。</p>
+    <ul>
+        <li>\(0.333\dots\) は \(0.\dot{3}\) と書きます。</li>
+        <li>\(0.121212\dots\) は \(0.\dot{1}\dot{2}\) と書きます。</li>
+        <li>\(0.8333\dots\) は \(0.8\dot{3}\) と書きます。（循環節は3のみ）</li>
+        <li>\(1.234234\dots\) は \(1.\dot{2}3\dot{4}\) と書きます。（循環節は234）</li>
+    </ul>
+
+    <div class="supplement">➕
+    <h3 id="supplement-imaginary">補足：実在しない数（虚数）について</h3> <span class="importance">★☆☆</span>
+    <p>実数を学ぶ意義の一つとして、今後学習する「実在しない数（<span class="tooltip" data-tooltip="2乗すると負の数になる数。iを虚数単位とする。">虚数</span>）」との対比を理解するためです。虚数については高校2年生以降で詳しく学習します。</p>
+    </div>
+
+    <h2 id="decimal-to-fraction">小数を分数に直す方法 ✍️</h2> <span class="importance">★★★</span>
+    <p>小数を分数に直す方法は、有限小数と循環小数で異なります。</p>
+
+    <h3 id="finite-to-fraction">有限小数を分数に直す</h3> <span class="importance">★★☆</span>
+    <div class="example">
+        <p><strong>(1) \(0.8\) を分数に直しなさい。</strong> <span class="difficulty">★☆☆</span></p>
+        <details>
+            <summary>解答</summary>
+            <p>\(0.8 = \frac{8}{10} = \frac{4}{5}\)</p>
+        </details>
+        <p><strong>(2) \(0.123\) を分数に直しなさい。</strong> <span class="difficulty">★☆☆</span></p>
+        <details>
+            <summary>解答</summary>
+            <p>\(0.123 = \frac{123}{1000}\) （これはこれ以上<span class="tooltip" data-tooltip="分子と分母を同じ数で割って簡単な分数にすること。">約分</span>できません）</p>
+        </details>
+    </div>
+    <div class="tips">💡
+        <p>有限小数を分数に直すには、小数部分の桁数に応じて分母を10, 100, 1000, ... とし、分子には小数点の数字をそのまま書きます。その後、約分できる場合は既約分数にします。</p>
+    </div>
+
+    <h3 id="repeating-to-fraction">循環小数を分数に直す</h3> <span class="importance">★★★</span>
+    <p>循環小数を分数に直すには、少し工夫が必要です。</p>
+
+    <h4 id="example-1-1">例1：循環節が小数第1位から始まる場合</h4>
+    <div class="example">
+        <p><strong>\(0.333\dots\) (\(0.\dot{3}\)) を分数に直しなさい。</strong> <span class="difficulty">★★☆</span></p>
+        <details>
+            <summary>考え方と解答</summary>
+            <ol>
+                <li>求める循環小数を \(R\) とおきます。 \(R = 0.333\dots\)</li>
+                <li>循環節の桁数（今回は「3」の1桁）に応じて、\(R\) を10倍、100倍、...します。今回は1桁なので10倍します。
+                    <p>\(10R = 3.333\dots\)</p>
+                </li>
+                <li>手順2で得た式から手順1の式を引きます。これにより、循環する小数部分が消去されます。
+                    <p>\(10R = 3.333\dots\)</p>
+                    <p> \(\underline{-\hspace{0.5em} R = 0.333\dots}\)</p>
+                    <p> \(\hspace{1em} 9R = 3\)</p>
+                </li>
+                <li>\(R\) について解きます。
+                    <p>\(R = \frac{3}{9} = \frac{1}{3}\)</p>
+                </li>
+            </ol>
+            <p>解答: \( \frac{1}{3} \)</p>
+        </details>
+    </div>
+    <div class="example">
+        <p><strong>\(1.232323\dots\) (\(1.\dot{2}\dot{3}\)) を分数に直しなさい。</strong> <span class="difficulty">★★☆</span></p>
+        <details>
+            <summary>考え方と解答</summary>
+            <ol>
+                <li>\(R = 1.232323\dots\) とおきます。</li>
+                <li>循環節は「23」の2桁なので、\(R\) を100倍します。
+                    <p>\(100R = 123.232323\dots\)</p>
+                </li>
+                <li>\(100R\) から \(R\) を引きます。
+                    <p>\(100R = 123.232323\dots\)</p>
+                    <p> \(\underline{-\hspace{1em} R = \hspace{1.1em}1.232323\dots}\)</p>
+                    <p>  \(\hspace{1em} 99R = 122\)</p>
+                </li>
+                <li>\(R\) について解きます。
+                    <p>\(R = \frac{122}{99}\)</p>
+                </li>
+            </ol>
+            <p>解答: \( \frac{122}{99} \)</p>
+        </details>
+    </div>
+
+    <h4 id="example-1-2">例2：循環節の前に数字がある場合</h4>
+    <div class="example">
+        <p><strong>\(0.8333\dots\) (\(0.8\dot{3}\)) を分数に直しなさい。</strong> <span class="difficulty">★★★</span></p>
+        <details>
+            <summary>考え方と解答</summary>
+            <ol>
+                <li>\(R = 0.8333\dots\) とおきます。</li>
+                <li>まず、循環しない部分をなくすために、小数点が循環節の直前に来るように10倍します。
+                    <p>\(10R = 8.333\dots\)</p>
+                </li>
+                <li>次に、循環節が1つ分ずれるように、さらに10倍します（\(10R\) を10倍するので、元の \(R\) から見ると100倍）。
+                    <p>\(100R = 83.333\dots\)</p>
+                </li>
+                <li>手順3の式から手順2の式を引きます。
+                    <p>\(100R = 83.333\dots\)</p>
+                    <p> \(\underline{-\hspace{1em} 10R = \hspace{1.1em}8.333\dots}\)</p>
+                    <p>  \(\hspace{1.5em} 90R = 75\)</p>
+                </li>
+                <li>\(R\) について解きます。
+                    <p>\(R = \frac{75}{90} = \frac{5}{6}\)</p>
+                </li>
+            </ol>
+            <p>解答: \( \frac{5}{6} \)</p>
+        </details>
+    </div>
+
+    <div class="formula-guide">🧭
+    <h2 id="repeating-decimal-guide">循環小数を分数に直す手順ガイド</h2> <span class="importance">★★★</span>
+    <p>循環小数を分数に変換する一般的な手順は以下の通りです。</p>
+    <ol>
+        <li><strong>1. \(R\) と置く:</strong> 与えられた循環小数を \(R\) と置きます。</li>
+        <li><strong>2. 循環節の開始位置に小数点を移動:</strong>
+            循環節が小数第 \(m\) 位から始まる場合、\(10^{m-1}R\) （もし小数第1位から始まるならこのステップは不要、\(R\)のまま）を計算し、小数点が循環節の直前に来るようにします。これを式(A)とします。
+        </li>
+        <li><strong>3. 循環節の終了位置の次に小数点を移動:</strong>
+            循環節の長さが \(k\) 桁である場合、式(A)をさらに \(10^k\) 倍します（元の \(R\) から見ると \(10^{m-1+k}R\)）。これにより、循環節が1つ分整数部分に移動し、小数部分が式(A)と同じになります。これを式(B)とします。
+        </li>
+        <li><strong>4. 引き算で循環部分を消去:</strong> 式(B) から 式(A) を引きます。すると、小数部分が完全に消え、整数同士の引き算になります。</li>
+        <li><strong>5. \(R\) について解く:</strong> 得られた方程式を \(R\) について解き、必要であれば約分します。</li>
+    </ol>
+    <p><strong>例：\(R = 0.25353\dots = 0.2\dot{5}\dot{3}\) の場合</strong></p>
+    <ul>
+        <li>循環節「53」は小数第2位から始まります (\(m=2\))。循環節の長さは2桁です (\(k=2\))。</li>
+        <li>手順2: 小数点を循環節の直前に移動させるため、\(10^{2-1}R = 10R\) を計算します。
+            <p>\(10R = 2.5353\dots\) (式A)</p>
+        </li>
+        <li>手順3: 式Aをさらに \(10^2=100\) 倍します (元の \(R\) から見ると \(1000R\))。
+            <p>\(1000R = 253.5353\dots\) (式B)</p>
+        </li>
+        <li>手順4: 式B - 式A
+            <p>\(1000R - 10R = 253.5353\dots - 2.5353\dots \)</p>
+            <p>\(990R = 251\)</p>
+        </li>
+        <li>手順5: \(R = \frac{251}{990}\)</li>
+    </ul>
+    </div>
+
+    <div class="caution">⚠️
+    <h2 id="common-mistakes-repeating">循環小数の分数化での間違いやすいポイント</h2> <span class="importance">★★☆</span>
+    <ul>
+        <li><strong>10の何乗をかけるかの選択ミス:</strong>
+            <ul>
+                <li>循環節が小数第1位から始まる場合は、循環節の桁数 \(k\) に対して \(10^k R\) と \(R\) の差を取ります。</li>
+                <li>循環節の前に循環しない数字がある場合は、まず小数点が循環節の直前に来るように \(10^m R\) を計算し、その後さらに循環節の桁数分 \(10^k\) 倍した \(10^{m+k}R\) との差を取ります。</li>
+            </ul>
+        </li>
+        <li><strong>引き算の際の桁ズレ:</strong> 小数点以下の循環部分が完全に一致するように式を並べて引き算を行う必要があります。</li>
+        <li><strong>計算ミス:</strong> 単純な引き算や割り算のミス。</li>
+        <li><strong>約分忘れ:</strong> 最終的に得られた分数が約分できる場合、必ず<span class="tooltip" data-tooltip="それ以上約分できない分数。">既約分数</span>の形にしましょう。</li>
+    </ul>
+    </div>
+
+    <h2 id="textbook-exercises">教科書の練習問題解説 ✏️</h2> <span class="importance">★★☆</span>
+    <h3 id="exercise-1">問いの1：有限小数の分数化</h3>
+    <div class="practice-problems">
+        <p><strong>(1) \(0.25\)</strong> <span class="difficulty">★☆☆</span></p>
+        <details><summary>解答</summary><p>\(0.25 = \frac{25}{100} = \frac{1}{4}\)</p></details>
+        <p><strong>(2) \(0.12\)</strong> <span class="difficulty">★☆☆</span></p>
+        <details><summary>解答</summary><p>\(0.12 = \frac{12}{100} = \frac{3}{25}\)</p></details>
+        <p><strong>(3) \(2.34\)</strong> <span class="difficulty">★☆☆</span></p>
+        <details><summary>解答</summary><p>\(2.34 = \frac{234}{100} = \frac{117}{50}\)</p></details>
+    </div>
+
+    <h3 id="exercise-2">問いの2：循環小数の分数化</h3>
+    <div class="practice-problems">
+        <p><strong>(1) \(0.777\dots\) (\(0.\dot{7}\))</strong> <span class="difficulty">★★☆</span></p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(R = 0.777\dots\)</p>
+            <p>\(10R = 7.777\dots\)</p>
+            <p>\(10R - R = 7 \implies 9R = 7 \implies R = \frac{7}{9}\)</p>
+        </details>
+
+        <p><strong>(2) \(0.424242\dots\) (\(0.\dot{4}\dot{2}\))</strong> <span class="difficulty">★★☆</span></p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(R = 0.424242\dots\)</p>
+            <p>\(100R = 42.424242\dots\)</p>
+            <p>\(100R - R = 42 \implies 99R = 42 \implies R = \frac{42}{99} = \frac{14}{33}\)</p>
+        </details>
+
+        <p><strong>(3) \(0.123123\dots\) (\(0.\dot{1}2\dot{3}\))</strong> <span class="difficulty">★★☆</span></p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(R = 0.123123\dots\)</p>
+            <p>\(1000R = 123.123123\dots\)</p>
+            <p>\(1000R - R = 123 \implies 999R = 123 \implies R = \frac{123}{999} = \frac{41}{333}\)</p>
+        </details>
+
+        <p><strong>(4) \(0.25353\dots\) (\(0.2\dot{5}\dot{3}\))</strong> <span class="difficulty">★★★</span></p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(R = 0.25353\dots\)</p>
+            <p>\(10R = 2.5353\dots\)</p>
+            <p>\(1000R = 253.5353\dots\)</p>
+            <p>\(1000R - 10R = 251 \implies 990R = 251 \implies R = \frac{251}{990}\)</p>
+        </details>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h2 id="standard-practice">標準的な練習問題</h2>
+    <p>以下の小数を分数で表しなさい（既約分数で答えること）。</p>
+    <ol>
+        <li> \(0.6\) <span class="difficulty">★☆☆</span> <span class="importance">★☆☆</span>
+            <details><summary>解答</summary><p>\(0.6 = \frac{6}{10} = \frac{3}{5}\)</p></details>
+        </li>
+        <li> \(0.\dot{5}\) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+            <details><summary>解答</summary><p>\(R=0.555\dots \implies 10R=5.555\dots \implies 9R=5 \implies R=\frac{5}{9}\)</p></details>
+        </li>
+        <li> \(0.1\dot{6}\) <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
+             <details><summary>解答</summary><p>\(R=0.1666\dots \implies 10R=1.666\dots, 100R=16.666\dots \implies 100R-10R=15 \implies 90R=15 \implies R=\frac{15}{90}=\frac{1}{6}\)</p></details>
+        </li>
+         <li> \(0.\dot{1}3\dot{5}\) <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
+             <details><summary>解答</summary><p>\(R=0.135135\dots \implies 1000R=135.135135\dots \implies 999R=135 \implies R=\frac{135}{999}=\frac{5}{37}\)</p></details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h2 id="advanced-practice">発展的な練習問題</h2>
+    <p>以下の小数を分数で表しなさい（既約分数で答えること）。</p>
+    <ol>
+        <li> \(2.3\dot{4}\dot{5}\) <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>\(R = 2.34545\dots\)</p>
+                <p>\(10R = 23.4545\dots\) (式A)</p>
+                <p>\(1000R = 2345.4545\dots\) (式B)</p>
+                <p>式B - 式A:</p>
+                <p>\(1000R - 10R = 2345.4545\dots - 23.4545\dots\)</p>
+                <p>\(990R = 2322\)</p>
+                <p>\(R = \frac{2322}{990} = \frac{1161}{495} = \frac{387}{165} = \frac{129}{55}\)</p>
+                <p>解答: \( \frac{129}{55} \)</p>
+            </details>
+        </li>
+        <li> \(0.10\dot{8}\) <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
+            <details>
+                <summary>解答と解説</summary>
+                <p>\(R = 0.10888\dots\)</p>
+                <p>\(100R = 10.888\dots\) (式A)</p>
+                <p>\(1000R = 108.888\dots\) (式B)</p>
+                <p>式B - 式A:</p>
+                <p>\(1000R - 100R = 108.888\dots - 10.888\dots\)</p>
+                <p>\(900R = 98\)</p>
+                <p>\(R = \frac{98}{900} = \frac{49}{450}\)</p>
+                <p>解答: \( \frac{49}{450} \)</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="tips">💡
+    <h2 id="tips-numbers">数の分類に関するTips</h2> <span class="importance">★★☆</span>
+    <ul>
+        <li><strong>無理数の覚え方:</strong> 「循環しない無限小数」と覚えるのが基本です。\(\pi\) や \(\sqrt{2}, \sqrt{3}, \sqrt{5}\) など、平方根を開いたときに整数にならないものが代表例です。</li>
+        <li><strong>有理数かどうか迷ったら:</strong> 「分数 \(\frac{m}{n}\) (m, nは整数, n≠0) の形にできるか？」を基準に考えましょう。できれば有理数、できなければ無理数です。</li>
+        <li><strong>すべての整数は有理数:</strong> 例えば、整数 \(3\) は \( \frac{3}{1} \) と分数で表せるので有理数です。</li>
+    </ul>
+    </div>
+
+    <div class="quiz">❓
+    <h2 id="check-quiz">理解度チェッククイズ</h2>
+    <ol>
+        <li>
+            次の数のうち、無理数はどれですか？
+            <ol type="a">
+                <li>\(0.5\)</li>
+                <li>\(0.\dot{6}\)</li>
+                <li>\(\sqrt{9}\)</li>
+                <li>\(\sqrt{7}\)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は d. \(\sqrt{7}\) です。</p>
+                <p>a. \(0.5 = \frac{1}{2}\) (有理数)</p>
+                <p>b. \(0.\dot{6} = \frac{6}{9} = \frac{2}{3}\) (有理数)</p>
+                <p>c. \(\sqrt{9} = 3 = \frac{3}{1}\) (有理数)</p>
+                <p>d. \(\sqrt{7}\) は循環しない無限小数であり、分数で表せないので無理数です。</p>
+            </details>
+        </li>
+        <li>
+            循環小数 \(0.\dot{1}\dot{5}\) を分数に直すために、\(R = 0.1515\dots\) と置いたとき、次に計算すべき式はどれですか？
+            <ol type="a">
+                <li>\(10R\)</li>
+                <li>\(100R\)</li>
+                <li>\(1000R\)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b. \(100R\) です。</p>
+                <p>循環節「15」は2桁なので、小数点を2つずらすために100倍します。そうすることで \(100R - R\) を計算したときに小数部分が消去できます。</p>
+            </details>
+        </li>
+        <li>
+            循環小数 \(0.4\dot{2}\dot{7}\) を \(R\) と置く。分数に直す過程で、\(1000R - 10R\) のような計算を行う。この計算結果（左辺が \(990R\) となる式の右辺の整数）は何になりますか？
+            <ol type="a">
+                <li>\(427\)</li>
+                <li>\(423\)</li>
+                <li>\(27\)</li>
+            </ol>
+             <details>
+                <summary>解答と解説</summary>
+                <p>正解は b. \(423\) です。</p>
+                <p>\(R = 0.42727\dots\)</p>
+                <p>\(10R = 4.2727\dots\)</p>
+                <p>\(1000R = 427.2727\dots\)</p>
+                <p>\(1000R - 10R = 427.2727\dots - 4.2727\dots = 423\)</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <h2 id="class-info">授業の連絡事項</h2>
+    <div class="supplement">➕
+        <p>次回の授業では、実数の大小比較（平方根を含む数の比較など）を行います。また、テスト範囲には有理数と無理数の定義、循環小数を分数に直す問題が含まれる予定です。</p>
+    </div>
+
+    <h2 id="summary">授業全体の要約 🔖</h2> <span class="importance">★★★</span>
+    <div class="summary">
+        <p>本日の授業では、実数の体系と、特に循環小数を分数に変換する方法について学びました。</p>
+        <ul>
+            <li><strong>実数</strong>は、実際に存在する数であり、<span class="important">有理数</span>と<span class="important">無理数</span>に大別されます。</li>
+            <li><strong>有理数</strong>は分数 \( \frac{m}{n} \) の形で表せる数で、整数、有限小数、循環小数を含みます。</li>
+            <li><strong>無理数</strong>は分数で表せない数で、小数で表すと循環しない無限小数となります（例: \(\pi, \sqrt{2}\)）。</li>
+            <li><strong>循環小数</strong>は、循環節の桁数に応じて \(R\) を \(10^k\) 倍し、元の \(R\) (または小数点の位置を調整した \(10^m R\)) との差を取ることで、分数に変換できます。</li>
+        </ul>
+        <p>これらの数の性質を理解することは、今後の数学学習の基礎となります。特に循環小数の分数化はテストでも重要なので、手順をしっかりマスターしましょう。</p>
+    </div>
+
+</body>
+</html>
