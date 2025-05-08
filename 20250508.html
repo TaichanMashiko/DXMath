@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>絶対値を含む方程式・不等式</title> <!-- 単元名で置き換え -->
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important:not(blockquote) { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; } /* span用 */
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+        
+        /* 引用符スタイルの修正 (importantクラス適用時) */
+        blockquote.important {
+            border-left-color: #f44336; /* importantのボーダー色 */
+            background-color: #ffebee; /* importantの背景色 */
+            font-weight: bold; /* importantの太字 (必要に応じて) */
+            padding: 1em 1.5em;
+            margin-left: 0; /* 左インデントをリセット */
+            margin-right: 0;
+            position: relative; /* アイコン配置のため */
+            padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+         blockquote.important::before {
+             content: '⭐'; /* importantと同じアイコン */
+             position: absolute; left: 1em; top: 0.9em; font-size: 1.1em; width: 1.5em; text-align: center;
+         }
+         blockquote.important p {
+             margin-bottom: 0; /* blockquote内のpタグのマージン調整 */
+         }
+         blockquote.important strong {
+             font-weight: bold; /* blockquote内のstrongタグは太字を維持 */
+         }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+    </style>
+</head>
+<body>
+    <h1>絶対値を含む方程式・不等式</h1>
+    <p>授業日: 2025年5月8日</p>
+    <p>学習目標: 絶対値の定義を理解し、それに基づいて絶対値を含む方程式および不等式を解けるようになる。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#review-absolute-value">絶対値の復習 📖</a>
+                    <ul>
+                        <li><a href="#definition-absolute">定義：原点からの距離</a></li>
+                        <li><a href="#how-to-remove">絶対値の外し方</a></li>
+                        <li><a href="#property-review">基本的な性質（再確認）</a></li>
+                    </ul>
+                </li>
+                <li><a href="#absolute-equation">絶対値を含む方程式 ✍️</a>
+                    <ul>
+                        <li><a href="#basic-eq">基本形：|x| = a (a > 0)</a></li>
+                        <li><a href="#example-eq1">例題：|x| = 3</a></li>
+                        <li><a href="#applied-eq">応用形：|x - p| = a</a></li>
+                        <li><a href="#example-eq2">例題：|x - 2| = 5</a></li>
+                    </ul>
+                </li>
+                <li><a href="#practice-eq">練習問題（方程式） ✏️</a></li>
+                <li><a href="#check-quiz-1">理解度チェッククイズ1 ❓</a></li>
+                <li><a href="#absolute-inequality">絶対値を含む不等式 ✍️</a>
+                    <ul>
+                        <li><a href="#basic-ineq1">基本形1：|x| < a (a > 0)</a></li>
+                        <li><a href="#example-ineq1">例題：|x| < 3</a></li>
+                        <li><a href="#basic-ineq2">基本形2：|x| > a (a > 0)</a></li>
+                        <li><a href="#example-ineq2">例題：|x| > 3</a></li>
+                        <li><a href="#applied-ineq">応用形：|x - p| < a, |x - p| > a</a></li>
+                        <li><a href="#example-ineq3">例題：|x - 2| < 5</a></li>
+                        <li><a href="#example-ineq4">例題：|x - 2| > 5</a></li>
+                        <li><a href="#case-separation">場合分けによる解法</a></li>
+                        <li><a href="#example-ineq-case">例題：|x - 1| + |x - 3| < 4</a></li>
+                    </ul>
+                </li>
+                <li><a href="#inequality-guide">不等式の解き方ガイド 🧭</a></li>
+                <li><a href="#practice-ineq">練習問題（不等式） ✏️</a></li>
+                <li><a href="#common-mistakes">間違いやすいポイント ⚠️</a></li>
+                <li><a href="#check-quiz-2">理解度チェッククイズ2 ❓</a></li>
+                <li><a href="#summary">授業全体の要約 🔖</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="review-absolute-value">絶対値の復習 📖</h2> <span class="importance">★★★</span>
+    <p>まず、絶対値の基本的な考え方を確認しましょう。</p>
+
+    <h3 id="definition-absolute">定義：原点からの距離</h3> <span class="importance">★★★</span>
+    <div class="definition">
+        <p>実数 \(a\) の<span class="tooltip" data-tooltip="数直線上での原点(0)からの距離。常に0以上の値をとる。記号は |a|。">絶対値</span> \(|a|\) は、数直線上で原点 \(0\) から点 \(a\) までの<span class="important">距離</span>を表します。</p>
+        <p>距離なので、絶対値は常に \(0\) 以上になります。</p>
+        <ul>
+            <li>例: \(|2| = 2\), \(|-3| = 3\), \(|0| = 0\)</li>
+        </ul>
+    </div>
+    <div class="important">⭐
+        <p>絶対値は「距離」であるという定義をしっかり理解することが重要です。これが方程式や不等式を解く上での基本となります。</p>
+    </div>
+
+    <h3 id="how-to-remove">絶対値の外し方</h3> <span class="importance">★★★</span>
+    <p>絶対値記号を外すときは、中身の数が正か負（または0）かで場合分けします。</p>
+    <ul>
+        <li>\( a \ge 0 \) のとき： \(|a| = a\) （そのまま外す）</li>
+        <li>\( a < 0 \) のとき： \(|a| = -a\) （マイナスをつけて外す）</li>
+    </ul>
+    <p>例:</p>
+    <ul>
+        <li>\(|5| = 5\) (中身が正なのでそのまま)</li>
+        <li>\(|-5| = -(-5) = 5\) (中身が負なのでマイナスをつける)</li>
+        <li>\(|0| = 0\) (中身が0なのでそのまま)</li>
+    </ul>
+    <div class="caution">⚠️
+        <p>\(a < 0\) のときに \(|a| = -a\) となるのは、「\(a\) 自体が負の数なので、それにマイナスをつけることで正の数（距離）にする」という意味です。\(-a\) という表記自体が負の数を意味するわけではありません。</p>
+    </div>
+
+    <h3 id="property-review">基本的な性質（再確認）</h3> <span class="importance">★★☆</span>
+    <div class="supplement">➕
+    <ul>
+        <li>\(|a| \ge 0\)</li>
+        <li>\(|a| = |-a|\)</li>
+        <li>\(|ab| = |a||b|\)</li>
+        <li>\(|\frac{a}{b}| = \frac{|a|}{|b|}\) (ただし \(b \neq 0\))</li>
+        <li>\(|a|^2 = a^2\)</li>
+    </ul>
+    </div>
+
+    <h2 id="absolute-equation">絶対値を含む方程式 ✍️</h2> <span class="importance">★★★</span>
+    <p>絶対値の定義（原点からの距離）に基づいて、絶対値を含む<span class="tooltip" data-tooltip="未知数を含む等式。その等式を成り立たせる未知数の値を求めること。">方程式</span>を解いてみましょう。</p>
+
+    <h3 id="basic-eq">基本形：|x| = a (a > 0)</h3> <span class="importance">★★★</span>
+    <p>方程式 \(|x| = a\) （ただし \(a > 0\)）は、「原点からの距離が \(a\) である点 \(x\) を求めなさい」という意味です。</p>
+    <p>数直線を考えると、原点から距離が \(a\) である点は \(+a\) と \(-a\) の2つあります。</p>
+    <p>よって、\(|x| = a\) の解は \(x = \pm a\) となります。</p>
+    <p class="caution">⚠️ \(a < 0\) の場合、\(|x| = a\) を満たす実数 \(x\) は存在しません（距離は負にならないため）。\(a=0\) の場合は \(|x|=0\) となり、解は \(x=0\) のみです。</p>
+
+    <div class="example">
+    <h3 id="example-eq1">例題：|x| = 3</h3> <span class="difficulty">★☆☆</span>
+        <p>原点からの距離が3である点を求めます。</p>
+        <details>
+            <summary>解答</summary>
+            <p>\(x = \pm 3\)</p>
+        </details>
+    </div>
+
+    <h3 id="applied-eq">応用形：|x - p| = a</h3> <span class="importance">★★★</span>
+    <p>\(|x - p|\) は、数直線上での「点 \(x\) と点 \(p\) の間の距離」と解釈できます。（これは \(|p - x|\) とも同じです）</p>
+    <p>したがって、方程式 \(|x - p| = a\) （ただし \(a > 0\)）は、「点 \(p\) からの距離が \(a\) である点 \(x\) を求めなさい」という意味になります。</p>
+    <p>点 \(p\) から距離 \(a\) の点は、\(p+a\) と \(p-a\) の2つあります。</p>
+    <p>よって、\(|x - p| = a\) の解は \(x - p = \pm a\)、つまり \(x = p \pm a\) となります。</p>
+
+    <div class="example">
+    <h3 id="example-eq2">例題：|x - 2| = 5</h3> <span class="difficulty">★☆☆</span>
+        <p>点 \(2\) からの距離が \(5\) である点 \(x\) を求めます。</p>
+        <details>
+            <summary>解答</summary>
+            <p>考え方1（距離で考える）：点 \(2\) から距離 \(5\) の点は \(2+5=7\) と \(2-5=-3\) です。よって \(x = 7, -3\)</p>
+            <p>考え方2（定義に従って外す）：</p>
+            <p>\( x - 2 = \pm 5 \)</p>
+            <p>場合1: \( x - 2 = 5 \implies x = 7 \)</p>
+            <p>場合2: \( x - 2 = -5 \implies x = -3 \)</p>
+            <p>よって \(x = 7, -3\)</p>
+        </details>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="practice-eq">練習問題（方程式）</h3>
+    <p>次の方程式を解きなさい。</p>
+    <ol>
+        <li>\( |x| = 5 \) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span>
+            <details><summary>解答</summary><p>\(x = \pm 5\)</p></details>
+        </li>
+        <li>\( |x + 3| = 1 \) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span>
+            <details><summary>解答</summary><p>\(x + 3 = \pm 1\)。\(x+3=1\) より \(x=-2\)。\(x+3=-1\) より \(x=-4\)。よって \(x = -2, -4\)</p></details>
+        </li>
+        <li>\( |2x - 1| = 7 \) <span class="difficulty">★★☆</span> <span class="importance">★★★</span>
+            <details><summary>解答</summary><p>\(2x - 1 = \pm 7\)。\(2x-1=7\) より \(2x=8, x=4\)。\(2x-1=-7\) より \(2x=-6, x=-3\)。よって \(x = 4, -3\)</p></details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="quiz">❓
+    <h3 id="check-quiz-1">理解度チェッククイズ1</h3>
+    <ol>
+        <li>
+            方程式 \( |-2| = x \) の解は何ですか？
+            <ol type="a">
+                <li>\( x = 2 \)</li>
+                <li>\( x = -2 \)</li>
+                <li>\( x = \pm 2 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は a. \( x = 2 \) です。</p>
+                <p>まず左辺の絶対値を計算します。\( |-2| = 2 \) です。よって方程式は \( 2 = x \) となり、解は \(x=2\) です。</p>
+            </details>
+        </li>
+        <li>
+            方程式 \( |x - 5| = 0 \) の解は何ですか？
+            <ol type="a">
+                <li>解なし</li>
+                <li>\( x = 0 \)</li>
+                <li>\( x = 5 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は c. \( x = 5 \) です。</p>
+                <p>絶対値が \(0\) になるのは、中身が \(0\) のときだけです。よって \( x - 5 = 0 \) を解いて \(x=5\) となります。「点 \(5\) からの距離が \(0\) である点 \(x\) は？」と考えても \(x=5\) です。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <hr>
+
+    <h2 id="absolute-inequality">絶対値を含む不等式 ✍️</h2> <span class="importance">★★★</span>
+    <p>次に、絶対値を含む<span class="tooltip" data-tooltip="未知数を含む不等式。その不等式を成り立たせる未知数の値の範囲を求めること。">不等式</span>の解き方を学びます。これも「原点からの距離」という定義に基づいて考えます。</p>
+
+    <h3 id="basic-ineq1">基本形1：|x| < a (a > 0)</h3> <span class="importance">★★★</span>
+    <p>不等式 \(|x| < a\) （ただし \(a > 0\)）は、「原点からの距離が \(a\) より小さい範囲 \(x\) を求めなさい」という意味です。</p>
+    <p>数直線上で考えると、原点からの距離が \(a\) より小さいのは、\(-a\) と \(a\) の間の範囲になります。</p>
+    <p>よって、\(|x| < a\) の解は \( -a < x < a \) となります。</p>
+    <p class="caution">⚠️ \(a \le 0\) の場合、\(|x| < a\) を満たす実数 \(x\) は存在しません（距離は負や0より小さくはなれないため）。</p>
+
+    <div class="example">
+    <h3 id="example-ineq1">例題：|x| < 3</h3> <span class="difficulty">★☆☆</span>
+        <p>原点からの距離が3より小さい範囲を求めます。</p>
+        <details>
+            <summary>解答</summary>
+            <p>\(-3 < x < 3\)</p>
+        </details>
+    </div>
+
+    <h3 id="basic-ineq2">基本形2：|x| > a (a > 0)</h3> <span class="importance">★★★</span>
+    <p>不等式 \(|x| > a\) （ただし \(a > 0\)）は、「原点からの距離が \(a\) より大きい範囲 \(x\) を求めなさい」という意味です。</p>
+    <p>数直線上で考えると、原点からの距離が \(a\) より大きいのは、\(a\) より大きい範囲と、\(-a\) より小さい範囲になります。</p>
+    <p>よって、\(|x| > a\) の解は \( x < -a \) または \( x > a \) となります。</p>
+    <p class="supplement">➕ \(a \le 0\) の場合、\(|x| > a\) の解はすべての実数となります（絶対値は常に0以上なので）。</p>
+
+    <div class="example">
+    <h3 id="example-ineq2">例題：|x| > 3</h3> <span class="difficulty">★☆☆</span>
+        <p>原点からの距離が3より大きい範囲を求めます。</p>
+        <details>
+            <summary>解答</summary>
+            <p>\( x < -3, x > 3 \)</p>
+        </details>
+    </div>
+
+    <h3 id="applied-ineq">応用形：|x - p| < a, |x - p| > a</h3> <span class="importance">★★★</span>
+    <p>方程式と同様に、\(|x - p|\) を「点 \(p\) からの距離」と考えると、応用的な不等式も解けます。</p>
+    <ul>
+        <li><strong>\(|x - p| < a\) (a > 0) :</strong> 点 \(p\) からの距離が \(a\) より小さい範囲。
+            <p>解: \( -a < x - p < a \implies p - a < x < p + a \)</p>
+        </li>
+        <li><strong>\(|x - p| > a\) (a > 0) :</strong> 点 \(p\) からの距離が \(a\) より大きい範囲。
+            <p>解: \( x - p < -a \) または \( x - p > a \)</p>
+            <p>\( \implies x < p - a \) または \( x > p + a \)</p>
+        </li>
+    </ul>
+
+    <div class="example">
+    <h3 id="example-ineq3">例題：|x - 2| < 5</h3> <span class="difficulty">★☆☆</span>
+        <p>点 \(2\) からの距離が \(5\) より小さい範囲 \(x\) を求めます。</p>
+        <details>
+            <summary>解答</summary>
+            <p>考え方1（距離で考える）：点 \(2\) から距離 \(5\) の点は \(7\) と \(-3\) です。距離が \(5\) より小さいのは、この2点の間の範囲なので、\(-3 < x < 7\)</p>
+            <p>考え方2（定義に従って解く）：</p>
+            <p>\( -5 < x - 2 < 5 \)</p>
+            <p>各辺に \(2\) を加えます。</p>
+            <p>\( -5 + 2 < x < 5 + 2 \)</p>
+            <p>\( -3 < x < 7 \)</p>
+        </details>
+    </div>
+
+    <div class="example">
+    <h3 id="example-ineq4">例題：|x - 2| > 5</h3> <span class="difficulty">★☆☆</span>
+        <p>点 \(2\) からの距離が \(5\) より大きい範囲 \(x\) を求めます。</p>
+        <details>
+            <summary>解答</summary>
+            <p>考え方1（距離で考える）：点 \(2\) から距離 \(5\) の点は \(7\) と \(-3\) です。距離が \(5\) より大きいのは、この2点の外側の範囲なので、\(x < -3\) または \(x > 7\)</p>
+            <p>考え方2（定義に従って解く）：</p>
+            <p>\( x - 2 < -5 \) または \( x - 2 > 5 \)</p>
+            <p>それぞれ解きます。</p>
+            <p>\( x < -5 + 2 \implies x < -3 \)</p>
+            <p>\( x > 5 + 2 \implies x > 7 \)</p>
+            <p>よって \(x < -3, x > 7\)</p>
+        </details>
+    </div>
+
+    <h3 id="case-separation">場合分けによる解法</h3> <span class="importance">★★★</span>
+    <p>絶対値を含む方程式や不等式は、絶対値の中身の符号によって<span class="tooltip" data-tooltip="条件によって場合を分けて考えること。絶対値の問題では、絶対値の中身が0以上か負かで場合分けする。">場合分け</span>をして解くこともできます。特に、絶対値記号が複数ある場合などに有効です。</p>
+    <p>基本的な考え方：</p>
+    <ol>
+        <li>絶対値の中身が \(0\) になる \(x\) の値を求め、それを境界として数直線を区間に分ける。</li>
+        <li>各区間ごとに、絶対値の中身の符号を判断し、絶対値記号を外す。</li>
+        <li>各区間ごとに、得られた方程式または不等式を解く。</li>
+        <li>得られた解が、その区間の条件を満たしているかを確認する。</li>
+        <li>各区間で得られた解をすべて合わせる。</li>
+    </ol>
+
+    <div class="example">
+        <p><strong>例題：不等式 \(|x - 1| + |x - 3| < 4\) を解きなさい。</strong><span class="difficulty">★★★</span></p>
+         <details>
+            <summary>解答と解説</summary>
+             <ol>
+                 <li>絶対値の中身が0になるのは \(x=1\) と \(x=3\) のときです。これにより、数直線を3つの区間 \(x < 1\)、\(1 \le x < 3\)、\(x \ge 3\) に分けます。</li>
+                 <li><strong>場合1: \(x < 1\) のとき</strong>
+                     <p>\(x-1 < 0\) かつ \(x-3 < 0\) なので、絶対値を外すと両方にマイナスがつきます。</p>
+                     <p>\( -(x-1) - (x-3) < 4 \)</p>
+                     <p>\( -x + 1 - x + 3 < 4 \)</p>
+                     <p>\( -2x + 4 < 4 \)</p>
+                     <p>\( -2x < 0 \)</p>
+                     <p>\( x > 0 \) </p>
+                     <p>条件 \(x < 1\) と合わせて、この場合の解は \(0 < x < 1\)</p>
+                 </li>
+                 <li><strong>場合2: \(1 \le x < 3\) のとき</strong>
+                     <p>\(x-1 \ge 0\) かつ \(x-3 < 0\) なので、\(|x-1|=x-1\)、\(|x-3|=-(x-3)\) となります。</p>
+                     <p>\( (x-1) - (x-3) < 4 \)</p>
+                     <p>\( x - 1 - x + 3 < 4 \)</p>
+                     <p>\( 2 < 4 \) </p>
+                     <p>これは常に成り立ちます。したがって、条件 \(1 \le x < 3\) の範囲全体が解となります。</p>
+                 </li>
+                 <li><strong>場合3: \(x \ge 3\) のとき</strong>
+                     <p>\(x-1 > 0\) かつ \(x-3 \ge 0\) なので、両方そのまま外します。</p>
+                     <p>\( (x-1) + (x-3) < 4 \)</p>
+                     <p>\( 2x - 4 < 4 \)</p>
+                     <p>\( 2x < 8 \)</p>
+                     <p>\( x < 4 \) </p>
+                     <p>条件 \(x \ge 3\) と合わせて、この場合の解は \(3 \le x < 4\)</p>
+                 </li>
+                 <li><strong>解を合わせる:</strong>
+                     場合1, 2, 3 で得られた解の範囲 \(0 < x < 1\)、\(1 \le x < 3\)、\(3 \le x < 4\) をすべて合わせます。
+                     <p>よって、最終的な解は \( 0 < x < 4 \) となります。</p>
+                 </li>
+             </ol>
+             <p>解答: \( 0 < x < 4 \)</p>
+        </details>
+    </div>
+
+    <div class="formula-guide">🧭
+    <h2 id="inequality-guide">不等式の解き方ガイド</h2> <span class="importance">★★★</span>
+    <p>絶対値を含む不等式を解く際の主なアプローチです。</p>
+    <ul>
+        <li><strong>基本形 \(|X| < a\) (a>0)</strong>
+            <strong>解釈:</strong> 原点からの距離が \(a\) より小さい。
+            <strong>解き方:</strong> \( -a < X < a \) として解く。
+        </li>
+        <li><strong>基本形 \(|X| > a\) (a>0)</strong>
+            <strong>解釈:</strong> 原点からの距離が \(a\) より大きい。
+            <strong>解き方:</strong> \( X < -a \) または \( X > a \) として解く。
+        </li>
+        <li><strong>応用形 \(|X - p| < a\), \(|X - p| > a\) (a>0)</strong>
+            <strong>解釈:</strong> 点 \(p\) からの距離で考える。
+            <strong>解き方:</strong> 基本形と同様に、\(X\) の部分を \(X-p\) に置き換えて解く。
+            <p>\(|X-p|<a \implies -a < X-p < a \implies p-a < X < p+a\)</p>
+            <p>\(|X-p|>a \implies X-p < -a \text{ or } X-p > a \implies X < p-a \text{ or } X > p+a\)</p>
+        </li>
+         <li><strong>場合分け</strong>
+            <strong>解釈:</strong> 絶対値の中身の符号で場合を分けて考える。
+            <strong>解き方:</strong>
+            <ol>
+                <li>絶対値の中身が0になる値で数直線を区切る。</li>
+                <li>各区間で絶対値を外す。</li>
+                <li>各区間で不等式を解く。</li>
+                <li>解が区間の条件を満たすか確認。</li>
+                <li>すべての区間の解を合わせる。</li>
+            </ol>
+            <p>（特に絶対値記号が複数ある場合や、右辺にも変数がある場合に有効）</p>
+        </li>
+    </ul>
+    </div>
+
+    <div class="practice-problems">✏️
+    <h3 id="practice-ineq">練習問題（不等式）</h3>
+    <p>次の不等式を解きなさい。</p>
+    <ol>
+        <li>\( |x| \le 4 \) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span>
+             <details><summary>解答</summary><p>\(-4 \le x \le 4\)</p></details>
+        </li>
+        <li>\( |x| \ge 1 \) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span>
+             <details><summary>解答</summary><p>\(x \le -1, x \ge 1\)</p></details>
+        </li>
+        <li>\( |x + 1| < 2 \) <span class="difficulty">★☆☆</span> <span class="importance">★★★</span>
+             <details><summary>解答</summary><p>\(-2 < x + 1 < 2\)。各辺から1を引くと \(-3 < x < 1\)</p></details>
+        </li>
+        <li>\( |x - 3| \ge 4 \) <span class="difficulty">★★☆</span> <span class="importance">★★★</span>
+             <details><summary>解答</summary><p>\(x - 3 \le -4\) または \(x - 3 \ge 4\)。\(x \le -1\) または \(x \ge 7\)</p></details>
+        </li>
+        <li>\( |2x + 1| \le 3 \) <span class="difficulty">★★☆</span> <span class="importance">★★★</span>
+             <details><summary>解答</summary><p>\(-3 \le 2x + 1 \le 3\)。各辺から1を引くと \(-4 \le 2x \le 2\)。各辺を2で割ると \(-2 \le x \le 1\)</p></details>
+        </li>
+        <li>\( |3x - 2| > 5 \) <span class="difficulty">★★★</span> <span class="importance">★★★</span>
+             <details><summary>解答</summary><p>\(3x - 2 < -5\) または \(3x - 2 > 5\)。<br/>\(3x < -3 \implies x < -1\)<br/>\(3x > 7 \implies x > \frac{7}{3}\)<br/>よって \( x < -1, x > \frac{7}{3} \)</p></details>
+        </li>
+    </ol>
+    </div>
+
+    <div class="caution">⚠️
+    <h2 id="common-mistakes">間違いやすいポイント</h2> <span class="importance">★★★</span>
+    <ul>
+        <li><strong>不等号の向き:</strong> \(|X| < a\) と \(|X| > a\) で解の形（内側か外側か）が変わります。不等号の向きを混同しないようにしましょう。「<」は内側、「>」は外側と覚えると良いかもしれません。等号 (\(\le, \ge\)) が含まれる場合も同様です。</li>
+        <li><strong>\(a\) が負の場合の処理:</strong> \(|X| < (\text{負の数})\) は解なし、\(|X| > (\text{負の数})\) はすべての実数（または定義域内のすべての実数）となる点に注意が必要です。</li>
+        <li><strong>場合分けの条件と解の吟味:</strong> 場合分けで解いた後、得られた解が場合分けの条件（例: \(x \ge 1\)）を満たしているかを必ず確認（吟味）する必要があります。条件を満たさない解は除外します。</li>
+        <li><strong>複数の絶対値記号の場合分け:</strong> 複数の絶対値記号がある場合、それぞれの絶対値の中身が0になる点で区切り、すべての組み合わせの場合分けを考える必要があります。区間の設定漏れや符号判断ミスに注意しましょう。</li>
+        <li><strong>最終的な解の結合:</strong> 場合分けで得られた解を最後に合わせる際に、範囲を正しく結合（または共通部分を取るなど、問題に応じて）する必要があります。数直線を書いて確認するとミスが減ります。</li>
+    </ul>
+    </div>
+
+    <div class="quiz">❓
+    <h2 id="check-quiz-2">理解度チェッククイズ2</h2>
+    <ol>
+        <li>
+            不等式 \( |x| \le 2 \) の解はどれですか？
+            <ol type="a">
+                <li>\( x \le -2, x \ge 2 \)</li>
+                <li>\( -2 \le x \le 2 \)</li>
+                <li>\( x < -2, x > 2 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b. \( -2 \le x \le 2 \) です。</p>
+                <p>原点からの距離が2以下である範囲を考えます。これは-2と2の間の範囲（両端を含む）になります。</p>
+            </details>
+        </li>
+        <li>
+            不等式 \( |x - 1| > 4 \) を解いた結果はどれですか？
+            <ol type="a">
+                <li>\( -3 < x < 5 \)</li>
+                <li>\( x < -3, x > 5 \)</li>
+                <li>\( x \le -3, x \ge 5 \)</li>
+            </ol>
+            <details>
+                <summary>解答と解説</summary>
+                <p>正解は b. \( x < -3, x > 5 \) です。</p>
+                <p>点1からの距離が4より大きい範囲を考えます。\(1-4=-3\) と \(1+4=5\) の外側の範囲なので、\(x < -3\) または \(x > 5\) となります。定義に従って解くと \(x-1 < -4\) または \(x-1 > 4\) となり、これを解いても同じ結果が得られます。</p>
+            </details>
+        </li>
+    </ol>
+    </div>
+
+    <h2 id="summary">授業全体の要約 🔖</h2> <span class="importance">★★★</span>
+    <div class="summary">
+        <p>本日の授業では、絶対値の定義に基づいて、絶対値を含む方程式と不等式の解き方を体系的に学びました。</p>
+        <ul>
+            <li><strong>絶対値の基本:</strong> 絶対値 \(|a|\) は原点からの距離であり、常に0以上です。外す際は中身の符号で場合分けします (\(a \ge 0\) なら \(a\), \(a < 0\) なら \(-a\))。</li>
+            <li><strong>絶対値を含む方程式:</strong>
+                <ul>
+                    <li>\(|X| = a\) (a>0) の解は \(X = \pm a\)。距離が \(a\) である点を求めることに相当します。</li>
+                    <li>\(|X - p| = a\) (a>0) の解は \(X = p \pm a\)。点 \(p\) からの距離が \(a\) である点を求めることに相当します。</li>
+                </ul>
+            </li>
+            <li><strong>絶対値を含む不等式:</strong>
+                 <ul>
+                    <li>\(|X| < a\) (a>0) の解は \(-a < X < a\)。原点からの距離が \(a\) より小さい範囲。</li>
+                    <li>\(|X| > a\) (a>0) の解は \(X < -a, X > a\)。原点からの距離が \(a\) より大きい範囲。</li>
+                    <li>\(|X - p|\) の場合も、点 \(p\) からの距離として同様に考えます。</li>
+                </ul>
+            </li>
+            <li><strong>場合分け:</strong> 絶対値記号の中身が0になる値を境界として区間を分け、各区間で絶対値を外して解き、最後に解を合わせる方法も有効です（特に絶対値記号が複数の場合）。</li>
+        </ul>
+        <p>絶対値の方程式・不等式は、「距離」という基本的な意味を理解することが重要です。パターンを暗記するだけでなく、なぜその解き方になるのかを常に意識するようにしましょう。</p>
+    </div>
+</body>
+</html>
