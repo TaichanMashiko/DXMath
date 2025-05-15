@@ -282,3 +282,57 @@ body.dark-mode .tag:hover { background-color: var(--secondary-color-lighter); co
 
     .site-footer { padding: 25px 15px; margin-top: 50px; }
 }
+/* style.css の末尾に以下を追記 */
+
+/* ==========================
+   訪問回数カウンター スタイル
+   ========================== */
+
+.search-container {
+    /* .search-container内の要素（入力欄、検索ボタン、カウンター）を横並びにする */
+    /* 既にもし .search-container に display: flex; が設定されていれば、この部分は不要な場合があります */
+    display: flex;
+    align-items: center; /* アイテムを垂直方向の中央に揃える */
+    gap: 10px; /* アイテム間の隙間（お好みで調整） */
+}
+
+.visitor-counter-header {
+    font-size: 0.85em;      /* 少し文字を小さくする (お好みで調整) */
+    color: #555;           /* 文字色 (サイトのテーマに合わせて調整) */
+    white-space: nowrap;    /* カウンターの文言が改行されないようにする */
+    padding: 5px 8px;       /* 内側の余白（任意） */
+    background-color: #f0f0f0; /* 背景色（任意、目立たせたい場合）*/
+    border-radius: 4px;     /* 角を丸くする（任意） */
+    /* margin-left: 15px; */ /* gapで指定している場合は不要なことも */
+}
+
+/* ダークモード時のカウンターのスタイル */
+body.dark-mode .visitor-counter-header {
+    color: #bbb;           /* ダークモード時の文字色 */
+    background-color: #3a3a3a; /* ダークモード時の背景色（任意） */
+}
+
+/* 検索コンテナ内の他の要素とのバランス調整（必要に応じて） */
+.search-container input[type="search"] {
+    /* 例えば、カウンター追加によって幅が狭くなりすぎる場合など */
+    /* flex-grow: 1; */ /* 残りのスペースを埋めるように広がる（他の要素との兼ね合いで調整） */
+}
+
+/* 画面幅が狭い場合の調整例（任意） */
+@media (max-width: 768px) {
+    .search-container {
+        /* flex-wrap: wrap; */ /* 必要なら折り返す */
+    }
+    .visitor-counter-header {
+        /* margin-top: 5px; */ /* 折り返した場合の上のマージン */
+        /* width: 100%; */    /* 折り返した場合に幅いっぱいに表示（デザインによる） */
+        /* text-align: right; */ /* 右寄せにするなど */
+        font-size: 0.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .visitor-counter-header {
+        display: none; /* スマホなど極端に狭い画面では非表示にする例 */
+    }
+}
