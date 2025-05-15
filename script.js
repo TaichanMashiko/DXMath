@@ -5,6 +5,7 @@
  * - タグ絞り込みフィルター
  * - キーワード検索フィルター
  * - 件数表示
+ * - 訪問回数カウンター
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const tagListContainer = document.getElementById('tagList');
     const resetFiltersButton = document.getElementById('resetFilters');
+    const visitorCounterHeader = document.getElementById('visitorCounterHeader'); // ★ 訪問回数カウンター用要素
 
     // ==== 状態変数 ====
     let currentSortOrder = 'desc'; // 初期ソート順
@@ -49,7 +51,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==== ダークモード機能 ====
     // ===========================
     if (darkModeToggle) {
-        const applyTheme = (theme) => { /* 省略: 前回のコードと同じ */ };
+        // applyTheme関数の具体的な実装 (元コードで省略されていたため、一般的な実装を仮定)
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                body.classList.add('dark-mode');
+                body.classList.remove('light-mode');
+                darkModeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; // アイコンを太陽に
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.add('light-mode');
+                body.classList.remove('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; // アイコンを月に
+                localStorage.setItem('theme', 'light');
+            }
+        };
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         if (savedTheme) applyTheme(savedTheme);
@@ -83,8 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const dateA = a.date;
             const dateB = b.date;
             if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
-            if (isNaN(dateA.getTime())) return 1;
-            if (isNaN(dateB.getTime())) return -1;
+            if (isNaN(dateA.getTime())) return 1; // 無効な日付は後ろへ
+            if (isNaN(dateB.getTime())) return -1; // 無効な日付は後ろへ
 
             if (currentSortOrder === 'desc') {
                 return dateB - dateA;
@@ -96,16 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // 3. DOM更新
         const fragment = document.createDocumentFragment();
         if (filteredBySearch.length > 0) {
-            filteredBySearch.forEach((cardData, index) => {
-                // アニメーションのための準備（必要なら）
-                // cardData.element.style.animationDelay = `${index * 0.05}s`;
-                // cardData.element.style.opacity = '0';
+            filteredBySearch.forEach((cardData) => { // indexとアニメーション関連は削除
                 fragment.appendChild(cardData.element);
-                 // setTimeout(() => { cardData.element.style.opacity = '1'; }, 10);
             });
         } else {
             const noResultMessage = document.createElement('p');
             noResultMessage.textContent = '該当する授業記録が見つかりませんでした。';
+            noResultMessage.className = 'no-results-message'; // スタイル付け用クラス
             fragment.appendChild(noResultMessage);
         }
         // cardGridの中身を入れ替え
@@ -163,13 +175,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (tagListContainer) {
         tagListContainer.addEventListener('click', (event) => {
-            const target = event.target;
+            const target = event.target.closest('.tag-filter'); // ボタン内のアイコンクリックも考慮
             // クリックされたのがタグフィルターボタン（リセット以外）か確認
-            if (target.classList.contains('tag-filter') && !target.classList.contains('reset-filter')) {
+            if (target && target.classList.contains('tag-filter') && !target.classList.contains('reset-filter')) {
                 currentFilterTag = target.dataset.tag;
-                // 検索ワードもリセットする（必要に応じて）
-                // currentSearchTerm = '';
-                // searchInput.value = '';
                 updateDisplay(); // 表示更新
             }
         });
@@ -196,20 +205,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==== 検索機能 ====
     // =========================
     const performSearch = () => {
+        if (!searchInput) return;
         currentSearchTerm = searchInput.value.trim().toLowerCase();
-        // 検索実行時にタグフィルターをリセットするかどうかは仕様による
-        // currentFilterTag = 'all';
         updateDisplay(); // 表示更新
     };
 
     if (searchButton && searchInput) {
         searchButton.addEventListener('click', performSearch);
         searchInput.addEventListener('keypress', (e) => {
-            // Enterキーでも検索実行
             if (e.key === 'Enter') {
                 performSearch();
             }
         });
+        // 検索入力欄のクリアボタン（もしあれば）の対応などもここに書ける
+        searchInput.addEventListener('input', () => { // リアルタイム検索したい場合 or クリアボタン用
+            if (searchInput.value.trim() === '' && currentSearchTerm !== '') {
+                // 検索窓がクリアされたら、検索もリセットする
+                // currentSearchTerm = ''; // performSearch内で設定されるので不要かも
+                // performSearch();
+            }
+        });
+
     } else {
         if (!searchButton) console.warn('#searchButton not found.');
         if (!searchInput) console.warn('#searchInput not found.');
@@ -222,9 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
         resetFiltersButton.addEventListener('click', () => {
             currentFilterTag = 'all';
             currentSearchTerm = '';
-            searchInput.value = '';
-            // ソート順はリセットしない（または必要ならリセット）
-            // currentSortOrder = 'desc';
+            if (searchInput) searchInput.value = '';
+            // ソート順はリセットしないポリシー
             updateDisplay(); // 表示更新
         });
     } else { console.warn('#resetFilters not found.'); }
@@ -235,10 +250,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const updateResultsCount = (count) => {
         if (resultsCount) {
             resultsCount.textContent = `${count}件 表示中`;
-        } else if (!resultsCount) {
-            // console.warn('#resultsCount not found.'); // 毎回出すと煩わしいかも
+        } else {
+            // console.warn('#resultsCount not found.'); // 毎回出すと煩わしい場合がある
         }
     };
+
+    // ===========================
+    // ==== 訪問回数カウンター機能 ==== // ★追加セクション
+    // ===========================
+    if (visitorCounterHeader) {
+        // localStorageから訪問回数を取得
+        let visitCount = localStorage.getItem('pageVisits');
+
+        if (visitCount) {
+            // 既に訪問回数があれば、1増やす
+            visitCount = Number(visitCount) + 1;
+        } else {
+            // 初めての訪問なら、1に設定
+            visitCount = 1;
+        }
+
+        // 新しい訪問回数をlocalStorageに保存
+        localStorage.setItem('pageVisits', visitCount);
+
+        // HTMLに表示（回数バージョン）
+        visitorCounterHeader.textContent = `${visitCount} 回目のアクセスです！`;
+        visitorCounterHeader.title = "このブラウザでの訪問回数です"; // マウスオーバー時の補足情報
+    } else {
+        console.warn('#visitorCounterHeader not found. カウンターは表示されません。');
+    }
 
 
     // ===========================
