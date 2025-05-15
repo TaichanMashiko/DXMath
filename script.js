@@ -272,4 +272,4 @@ document.addEventListener('DOMContentLoaded', () => {
     allCardData = initializeCardData();
     updateDisplay();
 
-}); // End of DOMContentLoaded
+}); 
