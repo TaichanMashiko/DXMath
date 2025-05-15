@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         searchInput.addEventListener('input', () => {
             if (searchInput.value.trim() === '' && currentSearchTerm !== '') {
-                // 意図的に何もしない（検索ボックスが空になった時の自動リセットは行わない）
+                // 意図的に何もしない
             }
         });
     } else {
@@ -223,21 +223,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===========================
 
     // ===========================
-    // ==== 訪問回数カウンター機能 (セッションベース) ==== // ★★★ 表示テキスト修正 ★★★
+    // ==== 訪問回数カウンター機能 (セッションベース) ==== // ★★★ 初期値と加算ロジック修正 ★★★
     // ===========================
     if (visitorCounterHeader) {
         // sessionStorageから訪問フラグを取得
         let hasVisitedThisSession = sessionStorage.getItem('visitedThisSession');
 
         // 累計の「セッション単位でのアクセス回数」をlocalStorageで管理
-        let totalSessionVisits = localStorage.getItem('totalSessionPageVisits');
-        totalSessionVisits = totalSessionVisits ? Number(totalSessionVisits) : 0;
+        // getItemの結果がnullの場合も考慮して、Number()で数値化し、デフォルトを0とする
+        let totalSessionVisits = Number(localStorage.getItem('totalSessionPageVisits')) || 0;
 
         if (!hasVisitedThisSession) {
             // このセッションで初めての訪問の場合
-            sessionStorage.setItem('visitedThisSession', 'true'); // セッション訪問フラグを設定
             totalSessionVisits += 1; // 累計セッションアクセス回数を1増やす
             localStorage.setItem('totalSessionPageVisits', totalSessionVisits); // 新しい累計を保存
+            sessionStorage.setItem('visitedThisSession', 'true'); // セッション訪問フラグを設定 (加算後に設定)
         }
 
         // HTMLに表示（数値とテキストを分けてスタイリングしやすくする）
