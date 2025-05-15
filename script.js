@@ -5,7 +5,7 @@
  * - タグ絞り込みフィルター
  * - キーワード検索フィルター
  * - 件数表示
- * - 訪問回数カウンター
+ * - 訪問回数カウンター (セッションベース)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -20,24 +20,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchButton = document.getElementById('searchButton');
     const tagListContainer = document.getElementById('tagList');
     const resetFiltersButton = document.getElementById('resetFilters');
-    const visitorCounterHeader = document.getElementById('visitorCounterHeader'); // ★ 訪問回数カウンター用要素
+    const visitorCounterHeader = document.getElementById('visitorCounterHeader');
 
     // ==== 状態変数 ====
-    let currentSortOrder = 'desc'; // 初期ソート順
-    let currentFilterTag = 'all'; // 初期タグフィルター
-    let currentSearchTerm = '';   // 初期検索キーワード
-    let allCardData = [];         // 全カード情報を保持する配列
+    let currentSortOrder = 'desc';
+    let currentFilterTag = 'all';
+    let currentSearchTerm = '';
+    let allCardData = [];
 
     // ===========================
     // ==== カード情報初期化 ====
-    // ===========================
+    // (省略 - 変更なし)
     const initializeCardData = () => {
         if (!cardGrid) return [];
         const cardElements = Array.from(cardGrid.querySelectorAll('.card'));
         return cardElements.map(card => {
             const tagsAttr = card.dataset.tags || '';
             return {
-                element: card, // DOM要素への参照
+                element: card,
                 title: card.querySelector('.card-title a')?.textContent.toLowerCase() || '',
                 summary: card.querySelector('.card-summary')?.textContent.toLowerCase() || '',
                 date: new Date(card.dataset.date || 0),
@@ -46,22 +46,22 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
     };
+    // ===========================
 
     // ===========================
     // ==== ダークモード機能 ====
-    // ===========================
+    // (省略 - 変更なし)
     if (darkModeToggle) {
-        // applyTheme関数の具体的な実装 (元コードで省略されていたため、一般的な実装を仮定)
         const applyTheme = (theme) => {
             if (theme === 'dark') {
                 body.classList.add('dark-mode');
                 body.classList.remove('light-mode');
-                darkModeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>'; // アイコンを太陽に
+                darkModeToggle.innerHTML = '<i class="fa-solid fa-sun"></i>';
                 localStorage.setItem('theme', 'dark');
             } else {
                 body.classList.add('light-mode');
                 body.classList.remove('dark-mode');
-                darkModeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>'; // アイコンを月に
+                darkModeToggle.innerHTML = '<i class="fa-solid fa-moon"></i>';
                 localStorage.setItem('theme', 'light');
             }
         };
@@ -72,71 +72,58 @@ document.addEventListener('DOMContentLoaded', () => {
         else applyTheme('light');
         darkModeToggle.addEventListener('click', () => applyTheme(body.classList.contains('dark-mode') ? 'light' : 'dark'));
     } else { console.warn('#darkModeToggle not found.'); }
+    // ===========================
 
 
     // ===================================
     // ==== 表示更新 (フィルター＆ソート) ====
-    // ===================================
+    // (省略 - 変更なし)
     const updateDisplay = () => {
         if (!cardGrid) return;
-
-        // 1. フィルター (タグ -> 検索)
         const filteredByTag = allCardData.filter(card =>
             currentFilterTag === 'all' || card.tags.includes(currentFilterTag)
         );
-
         const filteredBySearch = filteredByTag.filter(card => {
-            const term = currentSearchTerm; // すでに小文字化されている想定
+            const term = currentSearchTerm;
             return card.title.includes(term) ||
                    card.summary.includes(term) ||
-                   card.tags.some(tag => tag.includes(term)) || // タグ自体も検索対象に
-                   card.dateString.includes(term); // 日付文字列も検索対象に
+                   card.tags.some(tag => tag.includes(term)) ||
+                   card.dateString.includes(term);
         });
-
-        // 2. ソート
         filteredBySearch.sort((a, b) => {
             const dateA = a.date;
             const dateB = b.date;
             if (isNaN(dateA.getTime()) && isNaN(dateB.getTime())) return 0;
-            if (isNaN(dateA.getTime())) return 1; // 無効な日付は後ろへ
-            if (isNaN(dateB.getTime())) return -1; // 無効な日付は後ろへ
-
+            if (isNaN(dateA.getTime())) return 1;
+            if (isNaN(dateB.getTime())) return -1;
             if (currentSortOrder === 'desc') {
                 return dateB - dateA;
             } else {
                 return dateA - dateB;
             }
         });
-
-        // 3. DOM更新
         const fragment = document.createDocumentFragment();
         if (filteredBySearch.length > 0) {
-            filteredBySearch.forEach((cardData) => { // indexとアニメーション関連は削除
+            filteredBySearch.forEach((cardData) => {
                 fragment.appendChild(cardData.element);
             });
         } else {
             const noResultMessage = document.createElement('p');
             noResultMessage.textContent = '該当する授業記録が見つかりませんでした。';
-            noResultMessage.className = 'no-results-message'; // スタイル付け用クラス
+            noResultMessage.className = 'no-results-message';
             fragment.appendChild(noResultMessage);
         }
-        // cardGridの中身を入れ替え
-        cardGrid.innerHTML = ''; // 中身をクリア
+        cardGrid.innerHTML = '';
         cardGrid.appendChild(fragment);
-
-        // 4. 件数更新
         updateResultsCount(filteredBySearch.length);
-
-        // 5. ソートボタン表示更新 (ソート状態が変わる可能性があるため)
         updateSortButtonView();
-
-        // 6. アクティブタグ表示更新
         updateActiveTagView();
     };
+    // ===================================
 
     // ===========================
     // ==== ソートボタン機能 ====
-    // ===========================
+    // (省略 - 変更なし)
     const updateSortButtonView = () => {
         if (!sortButton) return;
         if (currentSortOrder === 'desc') {
@@ -147,69 +134,61 @@ document.addEventListener('DOMContentLoaded', () => {
             sortButton.dataset.sortOrder = 'asc';
         }
     };
-
     if (sortButton) {
-        // 初期ソート順読み込み
         currentSortOrder = sortButton.dataset.sortOrder || 'desc';
-
         sortButton.addEventListener('click', () => {
             currentSortOrder = (currentSortOrder === 'desc') ? 'asc' : 'desc';
-            updateDisplay(); // フィルターとソートを含めて表示更新
+            updateDisplay();
         });
     } else { console.warn('#sortButton not found.'); }
+    // ===========================
 
     // ==============================
     // ==== フィルターボタン機能 ====
-    // ==============================
+    // (省略 - 変更なし)
     const updateActiveTagView = () => {
         if (!tagListContainer) return;
         tagListContainer.querySelectorAll('.tag-filter').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tag === currentFilterTag);
         });
-         // 「すべて表示」ボタンのアクティブ状態も制御
          const allButton = tagListContainer.querySelector('.tag-filter[data-tag="all"]');
          if (allButton) {
             allButton.classList.toggle('active', currentFilterTag === 'all');
          }
     };
-
     if (tagListContainer) {
         tagListContainer.addEventListener('click', (event) => {
-            const target = event.target.closest('.tag-filter'); // ボタン内のアイコンクリックも考慮
-            // クリックされたのがタグフィルターボタン（リセット以外）か確認
+            const target = event.target.closest('.tag-filter');
             if (target && target.classList.contains('tag-filter') && !target.classList.contains('reset-filter')) {
                 currentFilterTag = target.dataset.tag;
-                updateDisplay(); // 表示更新
+                updateDisplay();
             }
         });
     } else { console.warn('#tagList not found.'); }
-
-    // --- カード内のタグクリック ---
     if (cardGrid) {
         cardGrid.addEventListener('click', (event) => {
             if (event.target.classList.contains('tag')) {
                 const clickedTag = event.target.dataset.tag;
                 const filterButton = tagListContainer?.querySelector(`.tag-filter[data-tag="${clickedTag}"]`);
                 if (filterButton) {
-                    filterButton.click(); // 対応するフィルターボタンをクリックしたことにする
+                    filterButton.click();
                 } else {
-                    // フィルターボタンがない場合（動的生成していない場合など）
                     currentFilterTag = clickedTag;
                     updateDisplay();
                 }
             }
         });
     }
+    // ==============================
 
     // =========================
     // ==== 検索機能 ====
-    // =========================
+    // (省略 - 変更なし)
     const performSearch = () => {
         if (!searchInput) return;
         currentSearchTerm = searchInput.value.trim().toLowerCase();
-        updateDisplay(); // 表示更新
+        updateDisplay();
     };
-
     if (searchButton && searchInput) {
         searchButton.addEventListener('click', performSearch);
         searchInput.addEventListener('keypress', (e) => {
@@ -217,65 +196,61 @@ document.addEventListener('DOMContentLoaded', () => {
                 performSearch();
             }
         });
-        // 検索入力欄のクリアボタン（もしあれば）の対応などもここに書ける
-        searchInput.addEventListener('input', () => { // リアルタイム検索したい場合 or クリアボタン用
+        searchInput.addEventListener('input', () => {
             if (searchInput.value.trim() === '' && currentSearchTerm !== '') {
-                // 検索窓がクリアされたら、検索もリセットする
-                // currentSearchTerm = ''; // performSearch内で設定されるので不要かも
                 // performSearch();
             }
         });
-
     } else {
         if (!searchButton) console.warn('#searchButton not found.');
         if (!searchInput) console.warn('#searchInput not found.');
     }
+    // =========================
 
     // =========================
     // ==== リセット機能 ====
-    // =========================
+    // (省略 - 変更なし)
     if (resetFiltersButton) {
         resetFiltersButton.addEventListener('click', () => {
             currentFilterTag = 'all';
             currentSearchTerm = '';
             if (searchInput) searchInput.value = '';
-            // ソート順はリセットしないポリシー
-            updateDisplay(); // 表示更新
+            updateDisplay();
         });
     } else { console.warn('#resetFilters not found.'); }
+    // =========================
 
     // ===========================
     // ==== 件数表示機能 ====
-    // ===========================
+    // (省略 - 変更なし)
     const updateResultsCount = (count) => {
         if (resultsCount) {
             resultsCount.textContent = `${count}件 表示中`;
-        } else {
-            // console.warn('#resultsCount not found.'); // 毎回出すと煩わしい場合がある
         }
     };
+    // ===========================
 
     // ===========================
-    // ==== 訪問回数カウンター機能 ==== // ★追加セクション
+    // ==== 訪問回数カウンター機能 (セッションベース) ==== // ★★★ ここが変更されています ★★★
     // ===========================
     if (visitorCounterHeader) {
-        // localStorageから訪問回数を取得
-        let visitCount = localStorage.getItem('pageVisits');
+        // sessionStorageから訪問フラグを取得
+        let hasVisitedThisSession = sessionStorage.getItem('visitedThisSession');
 
-        if (visitCount) {
-            // 既に訪問回数があれば、1増やす
-            visitCount = Number(visitCount) + 1;
-        } else {
-            // 初めての訪問なら、1に設定
-            visitCount = 1;
+        let totalVisits = localStorage.getItem('totalPageVisits'); // 累計訪問回数はlocalStorageで管理
+        totalVisits = totalVisits ? Number(totalVisits) : 0;
+
+        if (!hasVisitedThisSession) {
+            // このセッションで初めての訪問の場合
+            sessionStorage.setItem('visitedThisSession', 'true'); // セッション訪問フラグを設定
+            totalVisits += 1; // 累計訪問回数を1増やす
+            localStorage.setItem('totalPageVisits', totalVisits); // 新しい累計訪問回数を保存
         }
 
-        // 新しい訪問回数をlocalStorageに保存
-        localStorage.setItem('pageVisits', visitCount);
+        // HTMLに表示（累計の回数を表示）
+        visitorCounterHeader.textContent = `あなたは ${totalVisits} 人目の訪問者です (セッションカウント)`;
+        visitorCounterHeader.title = "ブラウザセッション毎のカウントです。累計訪問回数を表示しています。";
 
-        // HTMLに表示（回数バージョン）
-        visitorCounterHeader.textContent = `${visitCount} 回目のアクセスです！`;
-        visitorCounterHeader.title = "このブラウザでの訪問回数です"; // マウスオーバー時の補足情報
     } else {
         console.warn('#visitorCounterHeader not found. カウンターは表示されません。');
     }
@@ -283,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================
     // ==== 初期化実行 ====
+    // (省略 - 変更なし)
+    allCardData = initializeCardData();
+    updateDisplay();
     // ===========================
-    allCardData = initializeCardData(); // 全カード情報を取得して保持
-    updateDisplay(); // 初期表示 (フィルター・ソート適用)
-
 
 }); // End of DOMContentLoaded
