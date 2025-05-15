@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================
     // ==== カード情報初期化 ====
-    // (省略 - 変更なし)
     const initializeCardData = () => {
         if (!cardGrid) return [];
         const cardElements = Array.from(cardGrid.querySelectorAll('.card'));
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================
     // ==== ダークモード機能 ====
-    // (省略 - 変更なし)
     if (darkModeToggle) {
         const applyTheme = (theme) => {
             if (theme === 'dark') {
@@ -77,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===================================
     // ==== 表示更新 (フィルター＆ソート) ====
-    // (省略 - 変更なし)
     const updateDisplay = () => {
         if (!cardGrid) return;
         const filteredByTag = allCardData.filter(card =>
@@ -123,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================
     // ==== ソートボタン機能 ====
-    // (省略 - 変更なし)
     const updateSortButtonView = () => {
         if (!sortButton) return;
         if (currentSortOrder === 'desc') {
@@ -145,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ==============================
     // ==== フィルターボタン機能 ====
-    // (省略 - 変更なし)
     const updateActiveTagView = () => {
         if (!tagListContainer) return;
         tagListContainer.querySelectorAll('.tag-filter').forEach(btn => {
@@ -183,7 +178,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // =========================
     // ==== 検索機能 ====
-    // (省略 - 変更なし)
     const performSearch = () => {
         if (!searchInput) return;
         currentSearchTerm = searchInput.value.trim().toLowerCase();
@@ -198,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         searchInput.addEventListener('input', () => {
             if (searchInput.value.trim() === '' && currentSearchTerm !== '') {
-                // performSearch();
+                // 意図的に何もしない（検索ボックスが空になった時の自動リセットは行わない）
             }
         });
     } else {
@@ -209,7 +203,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // =========================
     // ==== リセット機能 ====
-    // (省略 - 変更なし)
     if (resetFiltersButton) {
         resetFiltersButton.addEventListener('click', () => {
             currentFilterTag = 'all';
@@ -222,7 +215,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================
     // ==== 件数表示機能 ====
-    // (省略 - 変更なし)
     const updateResultsCount = (count) => {
         if (resultsCount) {
             resultsCount.textContent = `${count}件 表示中`;
@@ -231,25 +223,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // ===========================
 
     // ===========================
-    // ==== 訪問回数カウンター機能 (セッションベース) ==== // ★★★ ここが変更されています ★★★
+    // ==== 訪問回数カウンター機能 (セッションベース) ==== // ★★★ 表示テキスト修正 ★★★
     // ===========================
     if (visitorCounterHeader) {
         // sessionStorageから訪問フラグを取得
         let hasVisitedThisSession = sessionStorage.getItem('visitedThisSession');
 
-        let totalVisits = localStorage.getItem('totalPageVisits'); // 累計訪問回数はlocalStorageで管理
-        totalVisits = totalVisits ? Number(totalVisits) : 0;
+        // 累計の「セッション単位でのアクセス回数」をlocalStorageで管理
+        let totalSessionVisits = localStorage.getItem('totalSessionPageVisits');
+        totalSessionVisits = totalSessionVisits ? Number(totalSessionVisits) : 0;
 
         if (!hasVisitedThisSession) {
             // このセッションで初めての訪問の場合
             sessionStorage.setItem('visitedThisSession', 'true'); // セッション訪問フラグを設定
-            totalVisits += 1; // 累計訪問回数を1増やす
-            localStorage.setItem('totalPageVisits', totalVisits); // 新しい累計訪問回数を保存
+            totalSessionVisits += 1; // 累計セッションアクセス回数を1増やす
+            localStorage.setItem('totalSessionPageVisits', totalSessionVisits); // 新しい累計を保存
         }
 
-        // HTMLに表示（累計の回数を表示）
-        visitorCounterHeader.textContent = `あなたは ${totalVisits} 人目の訪問者です (セッションカウント)`;
-        visitorCounterHeader.title = "ブラウザセッション毎のカウントです。累計訪問回数を表示しています。";
+        // HTMLに表示（数値とテキストを分けてスタイリングしやすくする）
+        // アイコンはCSSの ::before で .visitor-counter-header に適用
+        visitorCounterHeader.innerHTML = `<span class="counter-number">${totalSessionVisits}</span><span class="counter-text"> 回目のアクセスです！</span>`;
+
+        // title属性で補足情報を表示
+        visitorCounterHeader.title = "このブラウザでのセッションごとの累計アクセス回数です。";
 
     } else {
         console.warn('#visitorCounterHeader not found. カウンターは表示されません。');
@@ -258,7 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ===========================
     // ==== 初期化実行 ====
-    // (省略 - 変更なし)
     allCardData = initializeCardData();
     updateDisplay();
     // ===========================
