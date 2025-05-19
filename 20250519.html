@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>解と係数の関係・ルートの計算</title>
+    <title>ルートの計算と有理化</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -96,50 +96,38 @@
     </style>
 </head>
 <body>
-    <h1>解と係数の関係・ルートの計算</h1>
+    <h1>ルートの計算と有理化</h1>
     <p>授業日: 2025年5月19日</p>
     <p>学習目標:</p>
     <ul>
-        <li>判別式の意味と使い方を復習する。</li>
-        <li>2次方程式の解と係数の関係を理解し、適用できるようになる。</li>
-        <li>平方根の計算ルール、特に積と商の扱いを理解する。</li>
-        <li>平方根の性質を利用して、根号を含む式を簡単にする方法を学ぶ。</li>
-        <li>絶対値の概念を平方根の計算と関連付けて理解する。</li>
-        <li>分母の有理化の計算ができるようになる。</li>
+        <li>ルートの基本的な計算ルールを再確認する。</li>
+        <li>ルートの中を簡単にする方法を理解し、適用できるようになる。</li>
+        <li>分母の有理化の手順を理解し、正しく計算できるようになる。</li>
+        <li>ルートを含む式の加減乗除をスムーズに行えるようになる。</li>
     </ul>
 
     <details class="toc-toggle">
         <summary><h2>目次</h2></summary>
         <nav>
             <ul>
-                <li><a href="#review-discriminant">前回の復習: 判別式</a>
+                <li><a href="#root-calculation-basics">ルート計算の基本</a>
                     <ul>
-                        <li><a href="#discriminant-definition">判別式の定義と役割</a></li>
-                        <li><a href="#discriminant-conditions">判別式による解の種類の判別</a></li>
+                        <li><a href="#multiplication-division">乗法・除法</a></li>
+                        <li><a href="#simplifying-radicals">ルートの中を簡単にする</a></li>
+                        <li><a href="#addition-subtraction">加法・減法</a></li>
+                        <li><a href="#rationalization-basics">分母の有理化（基本）</a></li>
                     </ul>
                 </li>
-                <li><a href="#roots-and-coefficients">解と係数の関係</a>
+                <li><a href="#rationalization-advanced">発展的な分母の有理化</a>
                     <ul>
-                        <li><a href="#introduction-roots-coefficients">導入: 解と係数のつながり</a></li>
-                        <li><a href="#theorem-roots-coefficients">定理: 解と係数の関係</a></li>
-                        <li><a href="#example1-roots-coefficients">例題1: 解と係数の関係の基本的な利用</a></li>
-                        <li><a href="#common-mistakes-roots-coefficients">間違いやすいポイント: 符号のミス</a></li>
-                        <li><a href="#tips-roots-coefficients">Tips: 解と係数の関係の活用場面</a></li>
+                        <li><a href="#conjugate-expression">共役な式を利用した有理化</a></li>
+                        <li><a href="#example1-rationalization">例題1: 有理化</a></li>
+                        <li><a href="#practice1-rationalization">練習問題1: 有理化</a></li>
+                        <li><a href="#common-mistakes-rationalization">間違いやすいポイント: 有理化の際の符号ミス</a></li>
                     </ul>
                 </li>
-                <li><a href="#calculation-with-roots">根号を含む式の計算</a>
-                    <ul>
-                        <li><a href="#root-multiplication-division">根号の乗法・除法</a></li>
-                        <li><a href="#understanding-check-1">理解度チェッククイズ 1</a></li>
-                        <li><a href="#root-simplification">根号の中を簡単にする</a></li>
-                        <li><a href="#absolute-value-and-roots">平方根と絶対値</a></li>
-                        <li><a href="#example2-simplifying-roots">例題2: 根号の計算と絶対値</a></li>
-                        <li><a href="#caution-absolute-value">注意点: ルートの中の2乗の外し方</a></li>
-                        <li><a href="#rationalizing-denominator">分母の有理化</a></li>
-                        <li><a href="#example3-rationalization">例題3: 分母の有理化</a></li>
-                        <li><a href="#understanding-check-2">理解度チェッククイズ 2</a></li>
-                    </ul>
-                </li>
+                <li><a href="#formula-guide-rationalization">公式の使い分けガイド: 有理化のパターン</a></li>
+                <li><a href="#understanding-check-1">理解度チェッククイズ 1</a></li>
                 <li><a href="#summary-today">本日のまとめ</a></li>
                 <li><a href="#standard-practice-problems">標準的な練習問題（追加生成）</a></li>
                 <li><a href="#advanced-practice-problems">発展的な練習問題（追加生成）</a></li>
@@ -147,247 +135,211 @@
         </nav>
     </details>
 
-    <h2 id="review-discriminant">前回の復習: 判別式</h2>
-    <p>前回の授業では、2次方程式の解の性質を判別するための「判別式」について学習しました。これは、2次方程式 \(ax^2+bx+c=0\) の解の公式 \(x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}\) の中の平方根の部分 \(b^2-4ac\) にあたります。</p>
+    <h2 id="root-calculation-basics">ルート計算の基本</h2>
+    <p>ルートの計算にはいくつかの基本的なルールがあります。これらは中学校で学習した内容の復習となります。</p>
 
-    <h3 id="discriminant-definition">判別式の定義と役割 📖</h3>
+    <h3 id="multiplication-division">乗法・除法 📖</h3>
     <div class="definition">
         📖 <span class="importance">★★★</span>
-        <p><span class="tooltip" data-tooltip="2次方程式の解の性質（実数解の個数など）を判別するための式。記号Dで表される。">判別式</span> \(D\) は、2次方程式の解の個数や種類（実数解か虚数解か）を判別するために用いられます。</p>
-        <p>具体的には、\(D = b^2 - 4ac\) で計算されます。</p>
+        <p>ルート同士の掛け算・割り算は、一つのルートの中にまとめて計算することができます。</p>
+        <ul>
+            <li>\(\sqrt{a} \times \sqrt{b} = \sqrt{ab}\)</li>
+            <li>\(\frac{\sqrt{a}}{\sqrt{b}} = \sqrt{\frac{a}{b}}\)</li>
+        </ul>
+        <p>（ただし、\(a \ge 0, b > 0\)）</p>
+        <p>つまり、ルートの掛け算や割り算は、中身同士で計算して良いということです。</p>
     </div>
 
-    <h3 id="discriminant-conditions">判別式による解の種類の判別 📜</h3>
-    <div class="theorem">
-        📜 <span class="importance">★★★</span>
-        <p>2次方程式 \(ax^2 + bx + c = 0\) の判別式を \(D = b^2-4ac\) とすると、解の種類は次のように判別できます。</p>
-        <ul>
-            <li>\(D > 0\) のとき: <span class="tooltip" data-tooltip="実数の範囲で異なる2つの解を持つこと。">異なる2つの実数解</span>を持つ。</li>
-            <li>\(D = 0\) のとき: <span class="tooltip" data-tooltip="実数の範囲でただ1つの解（重なった解）を持つこと。">重解</span>（ただ1つの実数解）を持つ。</li>
-            <li>\(D < 0\) のとき: <span class="tooltip" data-tooltip="実数の範囲では解を持たず、虚数単位iを含む2つの解を持つこと。">異なる2つの虚数解</span>を持つ。（実数解を持たない）</li>
-        </ul>
+    <h3 id="simplifying-radicals">ルートの中を簡単にする 💡</h3>
+    <div class="tips">
+        💡 <span class="importance">★★★</span>
+        <p>ルートの中の数が、ある数の2乗を因数に持つ場合、その数をルートの外に出すことができます。これを「ルートの中を簡単にする」または「平方因数を外に出す」と言います。</p>
+        <p>\[ \sqrt{a^2 b} = a\sqrt{b} \] （ただし、\(a \ge 0, b \ge 0\)）</p>
+        <p><strong>手順:</strong></p>
+        <ol>
+            <li>ルートの中の数を<span class="tooltip" data-tooltip="ある整数を素数の積の形で表すこと。例: 12 = 2^2 × 3">素因数分解</span>します。</li>
+            <li>同じ素数が2つペアであれば、その素数を1つルートの外に出します。</li>
+        </ol>
+        <p><strong>例:</strong> \(\sqrt{8}\)</p>
+        <p>\(8 = 2^2 \times 2\) なので、\(\sqrt{8} = \sqrt{2^2 \times 2} = 2\sqrt{2}\) となります。</p>
+        <p>この変形は、計算を簡潔にするために非常に重要です。計算問題では、常にルートの中を最も簡単な形にするよう心がけましょう。</p>
+    </div>
+    <div class="caution">
+      ⚠️ <h4>ルートの中を簡単にする際の注意点</h4>
+      <p><span class="importance">★★☆</span> ルートの中を簡単にする際、素因数分解を中途半端に行い、まだ外に出せる因数が残っていることに気づかない場合があります。</p>
+      <ul>
+        <li><strong>例:</strong> \(\sqrt{72}\) を計算するとき、\(72 = 4 \times 18 = 2^2 \times 18\) として \(2\sqrt{18}\) で止めてしまう。正しくは \(18 = 9 \times 2 = 3^2 \times 2\) なので、\(\sqrt{72} = \sqrt{36 \times 2} = 6\sqrt{2}\) となります。</li>
+        <li><strong>対策:</strong> 素因数分解を完全に行うか、大きな平方数（4, 9, 16, 25, 36, ...）で割れるかどうかを確認しましょう。</li>
+      </ul>
     </div>
 
-    <h2 id="roots-and-coefficients">解と係数の関係</h2>
-    <p>今回は、2次方程式の解と係数の間に成り立つ重要な関係について学びます。これにより、方程式を実際に解かなくても、解の性質について多くの情報を得ることができます。</p>
-
-    <h3 id="introduction-roots-coefficients">導入: 解と係数のつながり</h3>
-    <p>例えば、2次方程式 \(x^2 - 5x + 6 = 0\) を考えます。これを因数分解すると \((x-2)(x-3) = 0\) となり、解は \(x = 2, 3\) です。</p>
-    <p>ここで、解の和は \(2+3 = 5\)、解の積は \(2 \times 3 = 6\) となります。これらを元の方程式の係数と比較すると、</p>
-    <ul>
-        <li>解の和 \(5\) は、\(x\) の係数 \(-5\) の符号を変えたもの (\(-(-5)\))。</li>
-        <li>解の積 \(6\) は、定数項 \(6\) と一致します。</li>
-    </ul>
-    <p>この関係は一般的に成り立ちます。</p>
-
-    <h3 id="theorem-roots-coefficients">定理: 解と係数の関係 📜</h3>
-    <div class="theorem">
-        📜 <span class="importance">★★★</span>
-        <p>2次方程式 \(ax^2 + bx + c = 0\) (ただし \(a \neq 0\)) の2つの解を \(\alpha\), \(\beta\) とすると、次の関係が成り立ちます。</p>
-        <ul>
-            <li><strong>解の和:</strong> \(\alpha + \beta = -\frac{b}{a}\)</li>
-            <li><strong>解の積:</strong> \(\alpha \beta = \frac{c}{a}\)</li>
-        </ul>
+    <h3 id="addition-subtraction">加法・減法 ➕</h3>
+    <div class="definition">
+        📖 <span class="importance">★★★</span>
+        <p>ルートの足し算・引き算は、文字式と同じように、ルートの中が同じ数である場合にのみ、係数同士を計算することができます。</p>
+        <p>\[ m\sqrt{a} + n\sqrt{a} = (m+n)\sqrt{a} \]
+        \[ m\sqrt{a} - n\sqrt{a} = (m-n)\sqrt{a} \]
+        <p><strong>例:</strong> \(2\sqrt{3} + 5\sqrt{3} = (2+5)\sqrt{3} = 7\sqrt{3}\)</p>
+        <p><strong>注意:</strong> ルートの中が異なる場合は、それ以上簡単にすることはできません（例: \(\sqrt{2} + \sqrt{3}\) はこれ以上計算できません）。</p>
     </div>
     <div class="important">
       ⭐ <span class="importance">★★★</span>
-      <p>この関係式を用いることで、2次方程式を解くことなく、2つの解の和と積を係数から直接求めることができます。</p>
+      <p>ルートの足し算・引き算を行う前には、必ず各項のルートの中をできるだけ簡単な形にしましょう。そうすることで、同じルートの項が見つかり、計算できる場合があります。</p>
+      <p><strong>例:</strong> \(\sqrt{8} + \sqrt{18} = 2\sqrt{2} + 3\sqrt{2} = 5\sqrt{2}\)</p>
     </div>
 
-    <h3 id="example1-roots-coefficients">例題1: 解と係数の関係の基本的な利用 ✍️ <span class="difficulty">★☆☆</span> <span class="importance">★★★</span></h3>
-    <p>2次方程式 \(2x^2 - 3x + 5 = 0\) の2つの解を \(\alpha, \beta\) とするとき、次の式の値を求めなさい。</p>
-    <ol>
-        <li>\(\alpha + \beta\)</li>
-        <li>\(\alpha\beta\)</li>
-    </ol>
-    <details>
-        <summary>解答・解説</summary>
-        <p>解と係数の関係より、\(a=2, b=-3, c=5\)。</p>
-        <p>1. \(\alpha + \beta = -\frac{b}{a} = -\frac{-3}{2} = \frac{3}{2}\)</p>
-        <p>2. \(\alpha\beta = \frac{c}{a} = \frac{5}{2}\)</p>
-        <p><strong>答え:</strong> 1. \(\frac{3}{2}\), 2. \(\frac{5}{2}\)</p>
-    </details>
-
-    <div class="caution" id="common-mistakes-roots-coefficients">
-      ⚠️ <h4>間違いやすいポイント: 符号のミス</h4>
-      <p><span class="importance">★★☆</span> 解と係数の関係を適用する際、特に解の和 \(\alpha + \beta = -\frac{b}{a}\) の計算で、<strong>マイナス符号の扱い</strong>に注意が必要です。</p>
-      <ul>
-          <li>\(b\) が正の数の場合: \(\alpha+\beta = -\frac{b}{a}\) となり、結果は負の数（または \(a\) が負なら正の数）になります。</li>
-          <li>\(b\) が負の数の場合: \(\alpha+\beta = -\frac{-|b|}{a} = \frac{|b|}{a}\) となり、結果は正の数（または \(a\) が負なら負の数）になります。</li>
-      </ul>
-      <p>例題1の場合、\(b=-3\) なので、\(-\frac{-3}{2}\) となり、結果は \(\frac{3}{2}\) (正の数) となります。</p>
-    </div>
-
-    <div class="tips" id="tips-roots-coefficients">
-      💡 <h4>Tips: 解と係数の関係の活用場面</h4>
-      <p><span class="importance">★★★</span></p>
-      <ul>
-          <li><strong>方程式を解かずに解の性質を知りたいとき:</strong> 解の和や積は、解そのものを求めなくても簡単に計算できます。</li>
-          <li><strong>複雑な解を持つ方程式:</strong> 解の公式を使うと計算が煩雑になる場合でも、和と積は比較的シンプルに求まります。</li>
-          <li><strong>対称式の計算:</strong> \(\alpha^2 + \beta^2\) や \(\frac{1}{\alpha} + \frac{1}{\beta}\) のように、\(\alpha\) と \(\beta\) を入れ替えても値が変わらない<span class="tooltip" data-tooltip="変数を入れ替えても元の式と変わらない多項式。例: x+y, xy, x^2+y^2">対称式</span>の値を求めるのに非常に有効です。これらの式は基本対称式である \(\alpha+\beta\) と \(\alpha\beta\) を用いて表現できるためです。</li>
-      </ul>
-    </div>
-
-    <h2 id="calculation-with-roots">根号を含む式の計算</h2>
-    <p>ルート（根号）を含む式の計算にはいくつかの基本的なルールがあります。これらを正しく理解し、適用することが重要です。</p>
-
-    <h3 id="root-multiplication-division">根号の乗法・除法 📖</h3>
+    <h3 id="rationalization-basics">分母の有理化（基本） 📖</h3>
     <div class="definition">
         📖 <span class="importance">★★★</span>
-        <p>\(a > 0, b > 0\) のとき、次の計算が成り立ちます。</p>
+        <p><span class="tooltip" data-tooltip="分数の分母から平方根（ルート）の記号をなくす変形のこと。">分母の有理化</span>とは、分数の分母にルートが含まれている場合に、分母と分子に同じ数を掛けることで、分母からルートをなくす操作のことです。</p>
+        <p>最も基本的な有理化は、分母が \(\sqrt{b}\) の形の場合です。</p>
+        <p>\[ \frac{a}{\sqrt{b}} = \frac{a \times \sqrt{b}}{\sqrt{b} \times \sqrt{b}} = \frac{a\sqrt{b}}{b} \]
+        （ただし、\(b > 0\)）</p>
+        <p><strong>例:</strong> \(\frac{1}{\sqrt{2}} = \frac{1 \times \sqrt{2}}{\sqrt{2} \times \sqrt{2}} = \frac{\sqrt{2}}{2}\)</p>
+        <p>分母にルートが残っていると計算が複雑になったり、値の大きさが分かりにくかったりするため、有理化は計算の基本とされています。</p>
+    </div>
+    <div class="supplement">
+        ➕ <h4>補足: なぜ有理化するのか？</h4>
+        <p>有理化する主な理由は以下の通りです。</p>
         <ul>
-            <li>\(\sqrt{a} \times \sqrt{b} = \sqrt{ab}\) （ルート同士の掛け算は、中身同士を掛けてルートをつける）</li>
-            <li>\(\frac{\sqrt{a}}{\sqrt{b}} = \sqrt{\frac{a}{b}}\) （ルート同士の割り算は、中身同士を割ってルートをつける）</li>
+            <li><strong>計算の簡略化:</strong> 分母にルートがない方が、通分などの計算がしやすくなります。</li>
+            <li><strong>値の近似:</strong> 例えば \(\frac{1}{\sqrt{2}}\) よりも \(\frac{\sqrt{2}}{2} \approx \frac{1.414}{2} = 0.707\) の方が、値の大きさを把握しやすくなります。</li>
+            <li><strong>数学的な慣習:</strong> 特に指定がない限り、答えは分母を有理化した形で書くのが一般的です。</li>
         </ul>
-        <p>これらのルールは、ルートの中身をまとめて計算したり、逆にルートを分割したりする際に用いられます。</p>
+    </div>
+
+    <h2 id="rationalization-advanced">発展的な分母の有理化</h2>
+    <p>分母が \(\sqrt{a} + \sqrt{b}\) や \(\sqrt{a} - \sqrt{b}\) のような形（あるいは片方だけがルートで、もう片方が整数の場合も含む）の場合の有理化について学びます。</p>
+
+    <h3 id="conjugate-expression">共役な式を利用した有理化 📜</h3>
+    <div class="theorem">
+        📜 <span class="importance">★★★</span>
+        <p>分母が \(A+B\) または \(A-B\) の形（AかB、あるいは両方がルートを含む）の場合、<span class="tooltip" data-tooltip="ある式に対して、真ん中の符号だけが異なる式。例: a+b の共役な式は a-b。">共役な式</span>を利用して有理化します。</p>
+        <p>乗法の公式 \((x+y)(x-y) = x^2 - y^2\) を利用します。</p>
+        <ul>
+            <li>分母が \(\sqrt{a} + \sqrt{b}\) の場合、分子と分母に \(\sqrt{a} - \sqrt{b}\) を掛けます。
+                \[ \frac{c}{\sqrt{a}+\sqrt{b}} = \frac{c(\sqrt{a}-\sqrt{b})}{(\sqrt{a}+\sqrt{b})(\sqrt{a}-\sqrt{b})} = \frac{c(\sqrt{a}-\sqrt{b})}{a-b} \]
+            </li>
+            <li>分母が \(\sqrt{a} - \sqrt{b}\) の場合、分子と分母に \(\sqrt{a} + \sqrt{b}\) を掛けます。
+                \[ \frac{c}{\sqrt{a}-\sqrt{b}} = \frac{c(\sqrt{a}+\sqrt{b})}{(\sqrt{a}-\sqrt{b})(\sqrt{a}+\sqrt{b})} = \frac{c(\sqrt{a}+\sqrt{b})}{a-b} \]
+            </li>
+        </ul>
+        <p>（ただし、\(a \ge 0, b \ge 0, a \neq b\)）</p>
+        <p>この操作により、分母が \((\sqrt{a})^2 - (\sqrt{b})^2 = a-b\) となり、ルートが消えます。</p>
+    </div>
+    <div class="important">
+      ⭐ <span class="importance">★★★</span>
+      <p>分母が2項の和や差で、その中にルートが含まれる場合の有理化は、<strong>必ず共役な式を掛ける</strong>ということを覚えておきましょう。これにより、2乗引く2乗の形を作り出し、ルートを確実に消すことができます。</p>
+    </div>
+
+    <h3 id="example1-rationalization">例題1: 有理化 ✍️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>次の式の分母を有理化しなさい。</p>
+    <p>\( \frac{\sqrt{2}}{\sqrt{5}-\sqrt{3}} \)</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p>分母が \(\sqrt{5}-\sqrt{3}\) なので、その共役な式である \(\sqrt{5}+\sqrt{3}\) を分母と分子に掛けます。</p>
+        <p>
+        \[
+        \begin{aligned}
+        \frac{\sqrt{2}}{\sqrt{5}-\sqrt{3}} &= \frac{\sqrt{2}(\sqrt{5}+\sqrt{3})}{(\sqrt{5}-\sqrt{3})(\sqrt{5}+\sqrt{3})} \\
+        &= \frac{\sqrt{2}\sqrt{5} + \sqrt{2}\sqrt{3}}{(\sqrt{5})^2 - (\sqrt{3})^2} \\
+        &= \frac{\sqrt{10} + \sqrt{6}}{5-3} \\
+        &= \frac{\sqrt{10} + \sqrt{6}}{2}
+        \end{aligned}
+        \]
+        </p>
+        <p><strong>答え:</strong> \( \frac{\sqrt{10}+\sqrt{6}}{2} \)</p>
+    </details>
+
+    <h3 id="practice1-rationalization">練習問題1: 有理化 ✏️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>次の式の分母を有理化しなさい。</p>
+    <p>\( \frac{1}{\sqrt{3}+1} \)</p>
+    <details>
+        <summary>解答・解説</summary>
+        <p>分母が \(\sqrt{3}+1\) なので、その共役な式である \(\sqrt{3}-1\) を分母と分子に掛けます。</p>
+        <p>
+        \[
+        \begin{aligned}
+        \frac{1}{\sqrt{3}+1} &= \frac{1(\sqrt{3}-1)}{(\sqrt{3}+1)(\sqrt{3}-1)} \\
+        &= \frac{\sqrt{3}-1}{(\sqrt{3})^2 - (1)^2} \\
+        &= \frac{\sqrt{3}-1}{3-1} \\
+        &= \frac{\sqrt{3}-1}{2}
+        \end{aligned}
+        \]
+        </p>
+        <p><strong>答え:</strong> \( \frac{\sqrt{3}-1}{2} \)</p>
+    </details>
+
+    <div class="caution" id="common-mistakes-rationalization">
+      ⚠️ <h4>間違いやすいポイント: 有理化の際の符号ミス</h4>
+      <p><span class="importance">★★☆</span> 分母の有理化で共役な式を掛ける際、特に分子の計算で符号ミスが起こりやすいです。</p>
+      <ul>
+        <li><strong>例:</strong> \(\frac{\sqrt{2}}{\sqrt{5}-\sqrt{3}}\) を有理化する際、分子に \(\sqrt{5}+\sqrt{3}\) を掛けますが、この展開 \(\sqrt{2}(\sqrt{5}+\sqrt{3}) = \sqrt{10}+\sqrt{6}\) を丁寧に計算しないと間違いやすいです。</li>
+        <li><strong>分配法則の適用忘れ:</strong> 分子が多項式の場合、例えば \(\frac{\sqrt{2}+1}{\sqrt{3}-1}\) で分子に \(\sqrt{3}+1\) を掛けるとき、\((\sqrt{2}+1)(\sqrt{3}+1)\) のように括弧をつけて丁寧に展開する必要があります。括弧を忘れると、\(\sqrt{2}(\sqrt{3}+1)+1\) のように誤った計算をしてしまいます。</li>
+        <li><strong>対策:</strong> 焦らず、分配法則を一つ一つ確認しながら計算しましょう。特に分子が複数の項からなる場合は、括弧を付けてから展開する癖をつけることが重要です。</li>
+      </ul>
+    </div>
+
+    <div class="formula-guide" id="formula-guide-rationalization">
+      🧭 <h4>公式の使い分けガイド: 有理化のパターン</h4>
+      <p>分母の有理化は、分母の形によって対処法が異なります。</p>
+      <ul>
+          <li>
+              <strong>パターン1: 分母が \(\sqrt{a}\) の形</strong>
+              <p><strong>状況:</strong> 分母が一つのルートのみで構成されている場合。（例: \(\frac{2}{\sqrt{3}}\)）</p>
+              <p><strong>対処法:</strong> 分母と分子に同じ \(\sqrt{a}\) を掛けます。</p>
+              <p><strong>理由:</strong> \(\sqrt{a} \times \sqrt{a} = a\) となり、ルートが消えます。</p>
+          </li>
+          <li>
+              <strong>パターン2: 分母が \(m\sqrt{a}\) の形</strong>
+              <p><strong>状況:</strong> 分母がルートの係数付きの場合。（例: \(\frac{5}{2\sqrt{3}}\)）</p>
+              <p><strong>対処法:</strong> 分母と分子にルート部分である \(\sqrt{a}\) のみを掛ければ十分です。（もちろん \(m\sqrt{a}\) を掛けても良いですが、計算が少し煩雑になります）</p>
+              <p><strong>例:</strong> \(\frac{5}{2\sqrt{3}} = \frac{5\sqrt{3}}{2\sqrt{3}\sqrt{3}} = \frac{5\sqrt{3}}{2 \times 3} = \frac{5\sqrt{3}}{6}\)</p>
+          </li>
+          <li>
+              <strong>パターン3: 分母が \(\sqrt{a} \pm \sqrt{b}\) または \(a \pm \sqrt{b}\) または \(\sqrt{a} \pm b\) の形</strong>
+              <p><strong>状況:</strong> 分母が2つの項の和または差で、少なくとも一方にルートが含まれる場合。（例: \(\frac{1}{\sqrt{5}+\sqrt{2}}\), \(\frac{3}{4-\sqrt{7}}\)）</p>
+              <p><strong>対処法:</strong> 分母の<span class="tooltip" data-tooltip="ある式に対して、真ん中の符号だけが異なる式。例: a+b の共役な式は a-b。">共役な式</span>を分母と分子に掛けます。</p>
+              <p><strong>理由:</strong> 乗法公式 \((x+y)(x-y) = x^2-y^2\) を利用し、各項を2乗することでルートを消します。</p>
+              <p><strong>例:</strong> \(\sqrt{5}+\sqrt{2}\) の共役な式は \(\sqrt{5}-\sqrt{2}\)。\(4-\sqrt{7}\) の共役な式は \(4+\sqrt{7}\)。</p>
+          </li>
+      </ul>
     </div>
 
     <div class="quiz" id="understanding-check-1">
         ❓ <h4>理解度チェッククイズ 1</h4>
         <ol>
             <li>
-                <p>\(\sqrt{3} \times \sqrt{7}\) の計算結果として正しいものはどれですか？</p>
+                <p>\(\sqrt{18} - \sqrt{8} + \sqrt{50}\) を計算するとどうなりますか？</p>
                 <ol type="A">
-                    <li>\(\sqrt{10}\)</li>
-                    <li>\(\sqrt{21}\)</li>
-                    <li>\(3\sqrt{7}\)</li>
-                    <li>\(7\sqrt{3}\)</li>
+                    <li>\(6\sqrt{2}\)</li>
+                    <li>\(4\sqrt{2}\)</li>
+                    <li>\(\sqrt{60}\)</li>
+                    <li>計算できない</li>
                 </ol>
                 <details>
                     <summary>答えと解説</summary>
-                    <p><strong>答え:</strong> B. \(\sqrt{21}\)</p>
-                    <p><strong>解説:</strong> \(\sqrt{a} \times \sqrt{b} = \sqrt{ab}\) の公式より、\(\sqrt{3 \times 7} = \sqrt{21}\) となります。</p>
+                    <p><strong>答え:</strong> A. \(6\sqrt{2}\)</p>
+                    <p><strong>解説:</strong> まず各項を簡単にします。</p>
+                    <p>\(\sqrt{18} = \sqrt{9 \times 2} = 3\sqrt{2}\)</p>
+                    <p>\(\sqrt{8} = \sqrt{4 \times 2} = 2\sqrt{2}\)</p>
+                    <p>\(\sqrt{50} = \sqrt{25 \times 2} = 5\sqrt{2}\)</p>
+                    <p>よって、\(3\sqrt{2} - 2\sqrt{2} + 5\sqrt{2} = (3-2+5)\sqrt{2} = 6\sqrt{2}\)。</p>
                 </details>
             </li>
             <li>
-                <p>\(\frac{\sqrt{12}}{\sqrt{3}}\) の計算結果として正しいものはどれですか？</p>
+                <p>\(\frac{2}{\sqrt{3}-1}\) を有理化するとどうなりますか？</p>
                 <ol type="A">
-                    <li>\(\sqrt{4}\)</li>
-                    <li>\(2\)</li>
-                    <li>\(\sqrt{9}\)</li>
-                    <li>両方 A と B</li>
+                    <li>\(\sqrt{3}+1\)</li>
+                    <li>\(\sqrt{3}-1\)</li>
+                    <li>\(2(\sqrt{3}+1)\)</li>
+                    <li>\(\frac{\sqrt{3}+1}{2}\)</li>
                 </ol>
                 <details>
                     <summary>答えと解説</summary>
-                    <p><strong>答え:</strong> D. 両方 A と B</p>
-                    <p><strong>解説:</strong> \(\frac{\sqrt{a}}{\sqrt{b}} = \sqrt{\frac{a}{b}}\) の公式より、\(\sqrt{\frac{12}{3}} = \sqrt{4}\)。さらに \(\sqrt{4} = 2\) です。</p>
-                </details>
-            </li>
-        </ol>
-    </div>
-
-    <h3 id="root-simplification">根号の中を簡単にする</h3>
-    <div class="important">
-        ⭐ <span class="importance">★★★</span>
-        <p>ルートの中の数は、できるだけ小さい自然数にするのが基本です。ルートの中に \(k^2 \times m\) のように平方数（何かの2乗の数）の因数があれば、\(k\sqrt{m}\) の形に直すことができます。</p>
-        <p>例: \(\sqrt{12} = \sqrt{4 \times 3} = \sqrt{2^2 \times 3} = 2\sqrt{3}\)</p>
-        <p>\(\sqrt{48} = \sqrt{16 \times 3} = \sqrt{4^2 \times 3} = 4\sqrt{3}\)</p>
-    </div>
-
-    <h3 id="absolute-value-and-roots">平方根と絶対値 📖</h3>
-    <div class="definition">
-        📖 <span class="importance">★★★</span>
-        <p>実数 \(a\) について、\(\sqrt{a^2}\) の計算は次のようになります。</p>
-        <p>\[ \sqrt{a^2} = |a| \] </p>
-        <p>ここで、\(|a|\) は <span class="tooltip" data-tooltip="数直線上での原点(0)からの距離。常に0以上の値を取る。">絶対値</span> を表し、次のように定義されます。</p>
-        <ul>
-            <li>\(a \geq 0\) のとき: \(|a| = a\)</li>
-            <li>\(a < 0\) のとき: \(|a| = -a\) （例えば、\(|-3| = -(-3) = 3\)）</li>
-        </ul>
-        <p>つまり、\(\sqrt{a^2}\) は常に0以上の値になります。</p>
-    </div>
-    <div class="important">
-        ⭐ <span class="importance">★★★</span>
-        <p>特に \(a\) が負の数の場合、\(\sqrt{a^2} = a\) <strong>ではなく</strong> \(\sqrt{a^2} = -a\) となることに注意が必要です。例えば、\(\sqrt{(-3)^2} = \sqrt{9} = 3\) であり、これは \(-(-3)\) に等しいです。</p>
-        <p>このルールは、文字式を含むルートの計算で非常に重要になります。</p>
-    </div>
-
-    <h3 id="example2-simplifying-roots">例題2: 根号の計算と絶対値 ✍️</h3>
-    <p>次の式を簡単にしなさい。</p>
-    <ol>
-        <li>\(\sqrt{(-5)^2}\) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></li>
-        <li>\(a < 0\) のとき、\(\sqrt{a^2}\) <span class="difficulty">★★☆</span> <span class="importance">★★★</span></li>
-        <li>\(a-2 < 0\) のとき、\(\sqrt{(a-2)^2}\) <span class="difficulty">★★☆</span> <span class="importance">★★★</span></li>
-    </ol>
-    <details>
-        <summary>解答・解説</summary>
-        <p>1. \(\sqrt{(-5)^2} = |-5| = 5\)</p>
-        <p>2. \(a < 0\) なので、\(|a| = -a\)。よって \(\sqrt{a^2} = -a\)。</p>
-        <p>3. \(a-2 < 0\) なので、\(|a-2| = -(a-2) = -a+2 = 2-a\)。よって \(\sqrt{(a-2)^2} = 2-a\)。</p>
-    </details>
-
-    <div class="caution" id="caution-absolute-value">
-      ⚠️ <h4>注意点: ルートの中の2乗の外し方</h4>
-      <p><span class="importance">★★★</span> \(\sqrt{A^2}\) の形が出てきたら、<strong>必ず絶対値 \(|A|\) をつけてから外す</strong>習慣をつけましょう。\(A\) の中身が正か負かを確認し、場合分けをして絶対値を外します。</p>
-      <ul>
-        <li><strong>間違い例:</strong> \(\sqrt{(1-\sqrt{3})^2}\) を \(1-\sqrt{3}\) と計算してしまう。
-        \(\sqrt{3} \approx 1.732\) なので、\(1-\sqrt{3}\) は負の数です。</li>
-        <li><strong>正しい計算:</strong> \(\sqrt{(1-\sqrt{3})^2} = |1-\sqrt{3}|\)。ここで \(1-\sqrt{3} < 0\) なので、\(|1-\sqrt{3}| = -(1-\sqrt{3}) = -1+\sqrt{3} = \sqrt{3}-1\)。</li>
-        <li><strong>対策:</strong> まずは機械的に絶対値をつける。その後、絶対値の中身の符号を慎重に判断する。</li>
-      </ul>
-    </div>
-
-    <h3 id="rationalizing-denominator">分母の有理化 📖</h3>
-    <div class="definition">
-        📖 <span class="importance">★★★</span>
-        <p><span class="tooltip" data-tooltip="分数の分母から根号（ルート）をなくす操作のこと。">分母の有理化</span>（ぶんぼのゆうりか）とは、分数の分母に根号が含まれている場合に、分母と分子に同じ数を掛けることで、分母から根号をなくす変形のことです。</p>
-        <p><strong>基本的な有理化:</strong></p>
-        <p>\(\frac{c}{\sqrt{a}}\) の形の分数は、分母と分子に \(\sqrt{a}\) を掛けて、\(\frac{c\sqrt{a}}{a}\) とします。</p>
-        <p>例: \(\frac{1}{\sqrt{3}} = \frac{1 \times \sqrt{3}}{\sqrt{3} \times \sqrt{3}} = \frac{\sqrt{3}}{3}\)</p>
-        <p><strong>発展的な有理化（和や差の形）:</strong></p>
-        <p>分母が \(\sqrt{a} + \sqrt{b}\) や \(\sqrt{a} - \sqrt{b}\) の形の場合、<span class="tooltip" data-tooltip="乗法公式 \((x+y)(x-y)=x^2-y^2\) を利用して有理化する際に掛ける式のこと。">共役な式</span>（符号だけが異なる式）を分母と分子に掛けます。これは、乗法公式 \((x+y)(x-y) = x^2 - y^2\) を利用するものです。</p>
-        <ul>
-            <li>\(\frac{c}{\sqrt{a}+\sqrt{b}} = \frac{c(\sqrt{a}-\sqrt{b})}{(\sqrt{a}+\sqrt{b})(\sqrt{a}-\sqrt{b})} = \frac{c(\sqrt{a}-\sqrt{b})}{a-b}\)</li>
-            <li>\(\frac{c}{\sqrt{a}-\sqrt{b}} = \frac{c(\sqrt{a}+\sqrt{b})}{(\sqrt{a}-\sqrt{b})(\sqrt{a}+\sqrt{b})} = \frac{c(\sqrt{a}+\sqrt{b})}{a-b}\)</li>
-        </ul>
-    </div>
-
-    <h3 id="example3-rationalization">例題3: 分母の有理化 ✍️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
-    <p>次の式の分母を有理化しなさい。</p>
-    <ol>
-        <li>\(\frac{2}{\sqrt{6}}\)</li>
-        <li>\(\frac{1}{\sqrt{5}+\sqrt{2}}\)</li>
-    </ol>
-    <details>
-        <summary>解答・解説</summary>
-        <p>1. \(\frac{2}{\sqrt{6}}\)</p>
-        <p>分母と分子に \(\sqrt{6}\) を掛けます。</p>
-        <p>\(\frac{2 \times \sqrt{6}}{\sqrt{6} \times \sqrt{6}} = \frac{2\sqrt{6}}{6} = \frac{\sqrt{6}}{3}\)</p>
-        <p>2. \(\frac{1}{\sqrt{5}+\sqrt{2}}\)</p>
-        <p>分母と分子に、分母の共役な式である \(\sqrt{5}-\sqrt{2}\) を掛けます。</p>
-        <p>\(\frac{1 \times (\sqrt{5}-\sqrt{2})}{(\sqrt{5}+\sqrt{2})(\sqrt{5}-\sqrt{2})} = \frac{\sqrt{5}-\sqrt{2}}{(\sqrt{5})^2 - (\sqrt{2})^2} = \frac{\sqrt{5}-\sqrt{2}}{5-2} = \frac{\sqrt{5}-\sqrt{2}}{3}\)</p>
-    </details>
-
-    <div class="quiz" id="understanding-check-2">
-        ❓ <h4>理解度チェッククイズ 2</h4>
-        <ol>
-            <li>
-                <p>\(\sqrt{(x-3)^2}\) を \(x < 3\) の条件で簡単にしたものとして正しいのはどれですか？</p>
-                <ol type="A">
-                    <li>\(x-3\)</li>
-                    <li>\(-(x-3)\)</li>
-                    <li>\(x+3\)</li>
-                    <li>\(-x-3\)</li>
-                </ol>
-                <details>
-                    <summary>答えと解説</summary>
-                    <p><strong>答え:</strong> B. \(-(x-3)\) (または \(3-x\))</p>
-                    <p><strong>解説:</strong> \(x < 3\) のとき、\(x-3 < 0\) となります。したがって、\(\sqrt{(x-3)^2} = |x-3| = -(x-3) = 3-x\)。</p>
-                </details>
-            </li>
-            <li>
-                <p>\(\frac{2}{3-\sqrt{7}}\) の分母を有理化した結果として正しいものはどれですか？</p>
-                <ol type="A">
-                    <li>\(3+\sqrt{7}\)</li>
-                    <li>\(3-\sqrt{7}\)</li>
-                    <li>\(\frac{3+\sqrt{7}}{2}\)</li>
-                    <li>\(\frac{3-\sqrt{7}}{2}\)</li>
-                </ol>
-                <details>
-                    <summary>答えと解説</summary>
-                    <p><strong>答え:</strong> A. \(3+\sqrt{7}\)</p>
-                    <p><strong>解説:</strong> 分母と分子に \(3+\sqrt{7}\) を掛けます。</p>
-                    <p>\(\frac{2(3+\sqrt{7})}{(3-\sqrt{7})(3+\sqrt{7})} = \frac{2(3+\sqrt{7})}{3^2 - (\sqrt{7})^2} = \frac{2(3+\sqrt{7})}{9-7} = \frac{2(3+\sqrt{7})}{2} = 3+\sqrt{7}\)</p>
+                    <p><strong>答え:</strong> A. \(\sqrt{3}+1\)</p>
+                    <p><strong>解説:</strong> 分母の共役な式 \(\sqrt{3}+1\) を分母と分子に掛けます。</p>
+                    <p>\(\frac{2(\sqrt{3}+1)}{(\sqrt{3}-1)(\sqrt{3}+1)} = \frac{2(\sqrt{3}+1)}{3-1} = \frac{2(\sqrt{3}+1)}{2} = \sqrt{3}+1\)</p>
                 </details>
             </li>
         </ol>
@@ -396,23 +348,16 @@
     <div class="summary" id="summary-today">
       🔖 <h3>本日のまとめ</h3>
       <ul>
-          <li><strong>判別式 \(D=b^2-4ac\)</strong>: 2次方程式の解の性質を判別。\(D>0\)で異なる2実数解、\(D=0\)で重解、\(D<0\)で異なる2虚数解。</li>
-          <li><strong>解と係数の関係</strong>: 2次方程式 \(ax^2+bx+c=0\) の解を \(\alpha, \beta\) とすると、\(\alpha+\beta = -\frac{b}{a}\), \(\alpha\beta = \frac{c}{a}\)。</li>
-          <li><strong>ルートの計算</strong>:
+          <li>ルートの乗法・除法は、ルートの中身同士で計算できます: \(\sqrt{a}\sqrt{b}=\sqrt{ab}\), \(\frac{\sqrt{a}}{\sqrt{b}}=\sqrt{\frac{a}{b}}\)。</li>
+          <li>ルートの中は常に簡単な形にする: \(\sqrt{a^2b}=a\sqrt{b}\)。素因数分解や平方数で割ることで見つけます。</li>
+          <li>ルートの加法・減法は、ルートの中が同じ場合に係数同士を計算します: \(m\sqrt{a} \pm n\sqrt{a} = (m \pm n)\sqrt{a}\)。</li>
+          <li>分母の有理化:
               <ul>
-                  <li>乗法: \(\sqrt{a}\sqrt{b} = \sqrt{ab}\)</li>
-                  <li>除法: \(\frac{\sqrt{a}}{\sqrt{b}} = \sqrt{\frac{a}{b}}\)</li>
-                  <li>根号の中の簡略化: \(\sqrt{k^2m} = k\sqrt{m}\)</li>
-                  <li>平方根と絶対値: \(\sqrt{a^2}=|a|\)。\(A\) の符号に注意して絶対値を外す。</li>
+                  <li>分母が \(\sqrt{b}\) の形: 分母分子に \(\sqrt{b}\) を掛ける。</li>
+                  <li>分母が \(\sqrt{a} \pm \sqrt{b}\) や \(a \pm \sqrt{b}\) の形: 分母の共役な式を分母分子に掛ける。（乗法公式 \((x+y)(x-y)=x^2-y^2\) を利用）</li>
               </ul>
           </li>
-          <li><strong>分母の有理化</strong>: 分母から根号をなくす操作。
-              <ul>
-                  <li>基本: \(\frac{c}{\sqrt{a}} = \frac{c\sqrt{a}}{a}\)</li>
-                  <li>和・差の形: 共役な式を分母分子に掛ける。例: \(\frac{c}{\sqrt{a}+\sqrt{b}} = \frac{c(\sqrt{a}-\sqrt{b})}{a-b}\)</li>
-              </ul>
-          </li>
-          <li><strong>問題解決のステップ</strong>: 複雑な計算問題では、どのルールをどの順番で適用するかが重要。基本的な変形を一つ一つ丁寧に行うこと。</li>
+          <li>ルートの計算では、文字式と同じような扱いができる部分と、特有のルールがある部分を区別して理解することが大切です。</li>
       </ul>
     </div>
 
@@ -420,59 +365,32 @@
       ✏️ <h3>標準的な練習問題（追加生成）</h3>
       <ol>
           <li>
-              2次方程式 \(x^2 - 7x + 3 = 0\) の2つの解を \(\alpha, \beta\) とするとき、\(\alpha^3 + \beta^3\) の値を求めなさい。 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+              次の計算をしなさい。 <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span>
+              <ol type="a">
+                  <li>\(\sqrt{6} \times \sqrt{10}\)</li>
+                  <li>\(\sqrt{45} \div \sqrt{5}\)</li>
+                  <li>\(3\sqrt{7} - \sqrt{28} + \sqrt{63}\)</li>
+              </ol>
               <details>
                   <summary>解答・解説</summary>
-                  <p>解と係数の関係より、\(\alpha+\beta = 7\), \(\alpha\beta = 3\)。</p>
-                  <p>対称式の変形公式 \(\alpha^3+\beta^3 = (\alpha+\beta)^3 - 3\alpha\beta(\alpha+\beta)\) を利用します。</p>
-                  <p>\(\alpha^3+\beta^3 = (7)^3 - 3(3)(7) = 343 - 9 \times 7 = 343 - 63 = 280\)</p>
-                  <p><strong>別解:</strong> \(\alpha^3+\beta^3 = (\alpha+\beta)(\alpha^2-\alpha\beta+\beta^2)\) を利用。</p>
-                  <p>まず \(\alpha^2+\beta^2 = (\alpha+\beta)^2 - 2\alpha\beta = 7^2 - 2(3) = 49 - 6 = 43\)。</p>
-                  <p>よって、\(\alpha^3+\beta^3 = (7)(43 - 3) = 7 \times 40 = 280\)。</p>
+                  <p>a. \(\sqrt{6} \times \sqrt{10} = \sqrt{60} = \sqrt{4 \times 15} = 2\sqrt{15}\)</p>
+                  <p>b. \(\sqrt{45} \div \sqrt{5} = \sqrt{\frac{45}{5}} = \sqrt{9} = 3\)</p>
+                  <p>c. \(3\sqrt{7} - \sqrt{28} + \sqrt{63} = 3\sqrt{7} - \sqrt{4 \times 7} + \sqrt{9 \times 7} = 3\sqrt{7} - 2\sqrt{7} + 3\sqrt{7} = (3-2+3)\sqrt{7} = 4\sqrt{7}\)</p>
               </details>
           </li>
           <li>
-              次の式の分母を有理化しなさい: \(\frac{\sqrt{3}}{\sqrt{6}-\sqrt{2}}\) <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+              次の式の分母を有理化しなさい。 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span>
+              <ol type="a">
+                  <li>\(\frac{\sqrt{3}}{2\sqrt{6}}\)</li>
+                  <li>\(\frac{\sqrt{2}-1}{\sqrt{2}+1}\)</li>
+                  <li>\(\frac{1}{\sqrt{5}-\sqrt{2}}\)</li>
+              </ol>
               <details>
                   <summary>解答・解説</summary>
-                  <p>分母と分子に \(\sqrt{6}+\sqrt{2}\) を掛けます。</p>
-                  <p>
-                  \(\frac{\sqrt{3}(\sqrt{6}+\sqrt{2})}{(\sqrt{6}-\sqrt{2})(\sqrt{6}+\sqrt{2})} = \frac{\sqrt{18}+\sqrt{6}}{6-2} = \frac{3\sqrt{2}+\sqrt{6}}{4}\)
-                  </p>
-                  <p>（\(\sqrt{18} = \sqrt{9 \times 2} = 3\sqrt{2}\)）</p>
-              </details>
-          </li>
-          <li>
-              \(x=\frac{1}{\sqrt{3}-1}\) のとき、\(x^2+2x-1\) の値を求めなさい。 <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
-              <details>
-                  <summary>解答・解説</summary>
-                  <p>まず \(x\) の分母を有理化します。</p>
-                  <p>
-                  \(x = \frac{1}{\sqrt{3}-1} = \frac{1(\sqrt{3}+1)}{(\sqrt{3}-1)(\sqrt{3}+1)} = \frac{\sqrt{3}+1}{3-1} = \frac{\sqrt{3}+1}{2}\)
-                  </p>
-                  <p>次に、与えられた式に \(x\) を代入します。</p>
-                  <p>
-                  \(x^2+2x-1 = \left(\frac{\sqrt{3}+1}{2}\right)^2 + 2\left(\frac{\sqrt{3}+1}{2}\right) - 1\)
-                  </p>
-                  <p>
-                  \(= \frac{(\sqrt{3})^2 + 2\sqrt{3} \cdot 1 + 1^2}{4} + (\sqrt{3}+1) - 1\)
-                  </p>
-                  <p>
-                  \(= \frac{3+2\sqrt{3}+1}{4} + \sqrt{3} = \frac{4+2\sqrt{3}}{4} + \sqrt{3}\)
-                  </p>
-                  <p>
-                  \(= \frac{2(2+\sqrt{3})}{4} + \sqrt{3} = \frac{2+\sqrt{3}}{2} + \frac{2\sqrt{3}}{2}\)
-                  </p>
-                  <p>
-                  \(= \frac{2+\sqrt{3}+2\sqrt{3}}{2} = \frac{2+3\sqrt{3}}{2}\)
-                  </p>
-                  <p><strong>別解:</strong> \(x=\frac{\sqrt{3}+1}{2}\) より \(2x = \sqrt{3}+1 \Rightarrow 2x-1 = \sqrt{3}\)。</p>
-                  <p>両辺を2乗して、\((2x-1)^2 = (\sqrt{3})^2 \Rightarrow 4x^2-4x+1 = 3 \Rightarrow 4x^2-4x-2=0\)。</p>
-                  <p>両辺を2で割って、\(2x^2-2x-1=0\)。これは \(x\) が満たす関係式です。</p>
-                  <p>求める式 \(x^2+2x-1\) をこの関係式で割る（または変形する）ことを考えます。</p>
-                  <p>\(x^2+2x-1 = \frac{1}{2}(2x^2-2x-1) + 3x - \frac{1}{2}\)</p>
-                  <p>ここで \(2x^2-2x-1=0\) なので、</p>
-                  <p>\(x^2+2x-1 = 3x - \frac{1}{2} = 3\left(\frac{\sqrt{3}+1}{2}\right) - \frac{1}{2} = \frac{3\sqrt{3}+3-1}{2} = \frac{3\sqrt{3}+2}{2}\)</p>
+                  <p>a. \(\frac{\sqrt{3}}{2\sqrt{6}} = \frac{\sqrt{3}\sqrt{6}}{2\sqrt{6}\sqrt{6}} = \frac{\sqrt{18}}{2 \times 6} = \frac{3\sqrt{2}}{12} = \frac{\sqrt{2}}{4}\)</p>
+                  <p>   別解: \(\frac{\sqrt{3}}{2\sqrt{6}} = \frac{1}{2\sqrt{2}}\) (先に約分) \( = \frac{\sqrt{2}}{2\sqrt{2}\sqrt{2}} = \frac{\sqrt{2}}{4}\)</p>
+                  <p>b. \(\frac{\sqrt{2}-1}{\sqrt{2}+1} = \frac{(\sqrt{2}-1)(\sqrt{2}-1)}{(\sqrt{2}+1)(\sqrt{2}-1)} = \frac{(\sqrt{2}-1)^2}{(\sqrt{2})^2 - 1^2} = \frac{2 - 2\sqrt{2} + 1}{2-1} = \frac{3-2\sqrt{2}}{1} = 3-2\sqrt{2}\)</p>
+                  <p>c. \(\frac{1}{\sqrt{5}-\sqrt{2}} = \frac{1(\sqrt{5}+\sqrt{2})}{(\sqrt{5}-\sqrt{2})(\sqrt{5}+\sqrt{2})} = \frac{\sqrt{5}+\sqrt{2}}{(\sqrt{5})^2 - (\sqrt{2})^2} = \frac{\sqrt{5}+\sqrt{2}}{5-2} = \frac{\sqrt{5}+\sqrt{2}}{3}\)</p>
               </details>
           </li>
       </ol>
@@ -482,58 +400,52 @@
       ✏️ <h3>発展的な練習問題（追加生成）</h3>
       <ol>
           <li>
-              2次方程式 \(2x^2 - (m+1)x + m-1 = 0\) が異なる2つの実数解を持つような、定数 \(m\) の値の範囲を求めなさい。 <span class="difficulty">★★★</span> <span class="importance">★★★</span>
+              \(x = \sqrt{3}+2\) のとき、\(x^2 - 4x + 1\) の値を求めなさい。 <span class="difficulty">★★★</span> <span class="importance">★★☆</span>
               <details>
                   <summary>解答・解説</summary>
-                  <p>異なる2つの実数解を持つための条件は、判別式 \(D > 0\)。</p>
-                  <p>この方程式において、\(a=2, b=-(m+1), c=m-1\)。</p>
-                  <p>
-                  \(D = \{-(m+1)\}^2 - 4(2)(m-1)\)
-                  </p>
-                  <p>
-                  \(= (m+1)^2 - 8(m-1)\)
-                  </p>
-                  <p>
-                  \(= m^2 + 2m + 1 - 8m + 8\)
-                  </p>
-                  <p>
-                  \(= m^2 - 6m + 9\)
-                  </p>
-                  <p>
-                  \(= (m-3)^2\)
-                  </p>
-                  <p>\(D > 0\) より、\((m-3)^2 > 0\)。</p>
-                  <p>ここで、\((m-3)^2\) は \(m-3 \neq 0\) のとき常に正となります。\((m-3)^2 = 0\) となるのは \(m=3\) のときのみです。</p>
-                  <p>したがって、\((m-3)^2 > 0\) を満たす \(m\) の範囲は、\(m \neq 3\)。</p>
-                  <p><strong>答え:</strong> \(m \neq 3\) であるすべての実数。</p>
+                  <p>そのまま代入しても計算できますが、式変形を利用するとより簡単です。</p>
+                  <p>\(x = \sqrt{3}+2\) より、\(x-2 = \sqrt{3}\)。</p>
+                  <p>両辺を2乗すると、\((x-2)^2 = (\sqrt{3})^2\)</p>
+                  <p>\(x^2 - 4x + 4 = 3\)</p>
+                  <p>\(x^2 - 4x = 3 - 4 = -1\)</p>
+                  <p>よって、求める式の値は、\(x^2 - 4x + 1 = (-1) + 1 = 0\)。</p>
+                  <p><strong>別解 (直接代入):</strong></p>
+                  <p>\(x^2 - 4x + 1 = (\sqrt{3}+2)^2 - 4(\sqrt{3}+2) + 1\)</p>
+                  <p>\(= (3 + 4\sqrt{3} + 4) - (4\sqrt{3} + 8) + 1\)</p>
+                  <p>\(= 7 + 4\sqrt{3} - 4\sqrt{3} - 8 + 1\)</p>
+                  <p>\(= (7-8+1) + (4\sqrt{3}-4\sqrt{3}) = 0\)</p>
+                  <p><strong>答え:</strong> 0</p>
               </details>
           </li>
           <li>
-              \(a, b\) は実数とする。\(x\) についての2次方程式 \(x^2 - (a+b)x + ab - 1 = 0\) の解の1つが \(x=2\) であるとき、もう1つの解と \(a,b\) の関係式を求めなさい。 <span class="difficulty">★★★</span> <span class="importance">★★★</span>
+              \(\frac{1}{1+\sqrt{2}+\sqrt{3}}\) の分母を有理化しなさい。 <span class="difficulty">★★★</span> <span class="importance">★★★</span>
               <details>
                   <summary>解答・解説</summary>
-                  <p>解の1つが \(x=2\) であるから、この値を方程式に代入すると成り立つ。</p>
+                  <p>分母が3項ある場合は、2段階で有理化を行います。まず、\((1+\sqrt{2})\) を一つの塊と見て、\((1+\sqrt{2})-\sqrt{3}\) を分母分子に掛けます。</p>
                   <p>
-                  \(2^2 - (a+b)(2) + ab - 1 = 0\)
+                  \[
+                  \begin{aligned}
+                  \frac{1}{(1+\sqrt{2})+\sqrt{3}} &= \frac{(1+\sqrt{2})-\sqrt{3}}{((1+\sqrt{2})+\sqrt{3})((1+\sqrt{2})-\sqrt{3})} \\
+                  &= \frac{1+\sqrt{2}-\sqrt{3}}{(1+\sqrt{2})^2 - (\sqrt{3})^2} \\
+                  &= \frac{1+\sqrt{2}-\sqrt{3}}{(1+2\sqrt{2}+2) - 3} \\
+                  &= \frac{1+\sqrt{2}-\sqrt{3}}{3+2\sqrt{2} - 3} \\
+                  &= \frac{1+\sqrt{2}-\sqrt{3}}{2\sqrt{2}}
+                  \end{aligned}
+                  \]
                   </p>
+                  <p>次に、分母が \(2\sqrt{2}\) となったので、通常の有理化を行います。\(\sqrt{2}\) を分母分子に掛けます。</p>
                   <p>
-                  \(4 - 2a - 2b + ab - 1 = 0\)
+                  \[
+                  \begin{aligned}
+                  \frac{(1+\sqrt{2}-\sqrt{3})\sqrt{2}}{2\sqrt{2}\sqrt{2}} &= \frac{\sqrt{2}+(\sqrt{2})^2-\sqrt{3}\sqrt{2}}{2 \times 2} \\
+                  &= \frac{\sqrt{2}+2-\sqrt{6}}{4}
+                  \end{aligned}
+                  \]
                   </p>
-                  <p>
-                  \(ab - 2a - 2b + 3 = 0 \quad \cdots (*)\)
-                  </p>
-                  <p>これが \(a,b\) の関係式の一つです。</p>
-                  <p>もう1つの解を \(\beta\) とする。解と係数の関係より、</p>
-                  <p>2つの解の和: \(2 + \beta = - \frac{-(a+b)}{1} = a+b\)</p>
-                  <p>よって、\(\beta = a+b-2\)。</p>
-                  <p>これがもう1つの解です。</p>
-                  <p><strong>答え:</strong></p>
-                  <p>もう1つの解: \(\beta = a+b-2\)</p>
-                  <p>\(a,b\) の関係式: \(ab - 2a - 2b + 3 = 0\) (または \( (a-2)(b-2) = 1 \) )</p>
+                  <p><strong>答え:</strong> \( \frac{2+\sqrt{2}-\sqrt{6}}{4} \)</p>
               </details>
           </li>
       </ol>
     </div>
-
 </body>
 </html>
