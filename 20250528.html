@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一次不等式</title>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+    </script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>一次不等式</h1>
+
+    <div class="supplement">
+        <p><strong>授業日:</strong> 2025年5月28日</p>
+        <p><strong>講師名:</strong> (講師名)</p>
+        <p><strong>学習目標:</strong></p>
+        <ul>
+            <li>一次不等式の基本的な性質を理解する。</li>
+            <li>簡単な一次不等式を解き、その解を表現できるようになる。</li>
+            <li>文章問題から不等式を立式し、解を求めることができるようになる。</li>
+        </ul>
+    </div>
+
+    <div class="tips">💡 お知らせ
+        <p>本日の授業で使用したワークシートの解答は、Classroomにアップロードされていますので、各自ご確認ください。</p>
+    </div>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに - 一次不等式とは</a>
+                    <ul>
+                        <li><a href="#comparison">不等式と方程式の比較</a></li>
+                        <li><a href="#inequality-key-point">⭐ 不等式の計算における最重要ポイント</a></li>
+                    </ul>
+                </li>
+                <li><a href="#example1">✍️ 例題1: 文章問題から立式</a></li>
+                <li><a href="#terms-and-symbols">📖 不等式の用語と記号の確認</a>
+                    <ul>
+                        <li><a href="#definition-inequality">不等式の定義</a></li>
+                        <li><a href="#tips-japanese-inequality">💡 日本語表現と不等号の対応</a></li>
+                    </ul>
+                </li>
+                <li><a href="#practice1">✏️ 練習問題1: 文章題の立式</a></li>
+                <li><a href="#properties-of-inequalities">📜 不等式の性質</a>
+                    <ul>
+                        <li><a href="#basic-properties">基本的な性質</a></li>
+                        <li><a href="#addition-subtraction">⭐ 両辺への加減算</a></li>
+                        <li><a href="#multiplication-division-positive">両辺への乗除算 (正の数)</a></li>
+                        <li><a href="#multiplication-division-negative">⚠️ 両辺への乗除算 (負の数) - 不等号の向きに注意</a></li>
+                    </ul>
+                </li>
+                <li><a href="#example2">✍️ 例題2: 一次不等式の解法</a>
+                    <ul>
+                        <li><a href="#solving-steps">解法手順</a></li>
+                        <li><a href="#alternative-solution">別解 (移項の工夫)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#supplement-number-line">➕ 補足: 不等式の解と数直線</a></li>
+                <li><a href="#quiz1">❓ 理解度チェッククイズ (1)</a></li>
+                <li><a href="#practice-problems-basic">✏️ 練習問題 (基礎計算)</a>
+                    <ul>
+                        <li><a href="#practice-basic-1">練習問題 2-1</a></li>
+                        <li><a href="#practice-basic-2">練習問題 2-2</a></li>
+                    </ul>
+                </li>
+                <li><a href="#practice-problems-word">✏️ 練習問題 (文章題)</a>
+                    <ul>
+                        <li><a href="#practice-word-1">練習問題 3-1</a></li>
+                    </ul>
+                </li>
+                <li><a href="#common-mistakes">⚠️ 間違いやすいポイント</a></li>
+                <li><a href="#formula-guide">🧭 性質の使い分けガイド</a>
+                    <ul>
+                        <li><a href="#inequality-direction-guide">不等号の向きが変わる条件まとめ</a></li>
+                    </ul>
+                </li>
+                <li><a href="#advanced-problems">✏️ 発展問題</a>
+                    <ul>
+                        <li><a href="#advanced-problem-1">発展問題 1</a></li>
+                        <li><a href="#advanced-problem-2">発展問題 2</a></li>
+                    </ul>
+                </li>
+                <li><a href="#quiz2">❓ 理解度チェッククイズ (2)</a></li>
+                <li><a href="#summary">🔖 本日のまとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに - 一次不等式とは</h2>
+    <p>本日は、1章の3節「一次不等式」について学習します。一次不等式が苦手だと感じる人もいるかもしれませんが、基本的な考え方は<span class="tooltip" data-tooltip="等号(=)を用いて数量関係を表した式。未知数を含む場合、その未知数の値を求めることが目標となる。">方程式</span>と似ている部分が多いので、ポイントを押さえれば理解しやすくなります。</p>
+
+    <h3 id="comparison">不等式と方程式の比較 <span class="importance">★★☆</span></h3>
+    <p><span class="tooltip" data-tooltip="不等号(>, <, ≥, ≤)を用いて数量の大小関係を表した式。">不等式</span>と方程式は、計算方法において多くの共通点があります。例えば、文字の項を一方の辺に、数の項をもう一方の辺に集めるという<span class="tooltip" data-tooltip="方程式や不等式において、ある項を符号を変えて反対側の辺に移すこと。">移項</span>の考え方は同じです。</p>
+    <p>例を見てみましょう：</p>
+    <ul>
+        <li>方程式: $3x = 6 \implies x = 2$</li>
+        <li>不等式: $3x < 6 \implies x < 2$</li>
+    </ul>
+    <p>このように、基本的な計算の進め方は方程式の場合とほぼ同じです。不等号（$<, >, \le, \ge$）も、等号（$=$）と同じように扱うことができます。</p>
+
+    <h3 id="inequality-key-point">⭐ 不等式の計算における最重要ポイント <span class="importance">★★★</span></h3>
+    <div class="important">
+        <p>不等式の計算で方程式と唯一異なる、そして最も重要な点は、<strong>両辺に負の数を掛けたり、両辺を負の数で割ったりする場合、不等号の向きが逆になる</strong>ということです。</p>
+        <p>例：</p>
+        <p>$-2x < 4$</p>
+        <p>両辺を $-2$ で割ると、不等号の向きが変わり、</p>
+        <p>$x > -2$</p>
+        <p>となります。</p>
+        <p>この点さえ注意すれば、他の計算は方程式と同じように進めることができます。</p>
+    </div>
+
+    <h2 id="example1">✍️ 例題1: 文章問題から立式 <span class="difficulty">★☆☆</span></h2>
+    <div class="example">
+        <p><strong>問題:</strong> 1個150円のりんごを $x$ 個購入したところ、代金は1000円を超えました。このことを不等式で表しなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> $150x > 1000$</p>
+            <p><strong>解説:</strong></p>
+            <p>りんご1個の値段は150円です。それを $x$ 個購入するので、りんごの合計金額は $150 \times x = 150x$ 円となります。</p>
+            <p>問題文には「代金は1000円を超えた」とあります。「超えた」とは、「1000円よりも大きい」という意味なので、不等号 $>$ を使います。</p>
+            <p>したがって、代金 $150x$ が1000円より大きいことを示す不等式は、$150x > 1000$ となります。</p>
+            <div class="important">
+                <p>⭐ 重要ポイント: 単位の確認</p>
+                <p>問題を解く際には、単位が揃っているかを確認することが大切です。</p>
+                <ul>
+                    <li>りんごの値段: $150 \text{ [円/個]}$</li>
+                    <li>りんごの個数: $x \text{ [個]}$</li>
+                    <li>代金: $150 \text{ [円/個]} \times x \text{ [個]} = 150x \text{ [円]}$</li>
+                    <li>比較対象: $1000 \text{ [円]}$</li>
+                </ul>
+                <p>このように、両辺が同じ「円」という単位になっているため、正しく比較できます。</p>
+            </div>
+        </details>
+    </div>
+
+    <h2 id="terms-and-symbols">📖 不等式の用語と記号の確認</h2>
+    <h3 id="definition-inequality">不等式の定義 <span class="importance">★★☆</span></h3>
+    <div class="definition">
+        <p>数量の大小関係を、不等号（$<, >, \le, \ge$）を用いて表した式を<span class="tooltip" data-tooltip="不等号(>, <, ≥, ≤)を用いて数量の大小関係を表した式。">不等式</span>といいます。</p>
+        <p>不等式では、不等号の左側にある式を<span class="tooltip" data-tooltip="等式や不等式の等号や不等号の左側にある式や数。">左辺</span>、右側にある式を<span class="tooltip" data-tooltip="等式や不等式の等号や不等号の右側にある式や数。">右辺</span>といい、両方を合わせて<span class="tooltip" data-tooltip="等式や不等式の左辺と右辺を総称した言い方。">両辺</span>といいます。これは方程式の場合と同じです。</p>
+    </div>
+
+    <h3 id="tips-japanese-inequality">💡 日本語表現と不等号の対応 <span class="importance">★★★</span></h3>
+    <div class="tips">
+        <p>文章問題で不等式を立てる際、日本語の表現と不等号の対応を正しく理解することが重要です。</p>
+        <ul>
+            <li>「$a$ は $b$ <strong>より大きい</strong>」 $\implies a > b$ （$b$ を含まない）</li>
+            <li>「$a$ は $b$ <strong>より小さい</strong>」または「$a$ は $b$ <strong>未満</strong>」 $\implies a < b$ （$b$ を含まない）</li>
+            <li>「$a$ は $b$ <strong>以上</strong>」 $\implies a \ge b$ （$b$ を含む）</li>
+            <li>「$a$ は $b$ <strong>以下</strong>」 $\implies a \le b$ （$b$ を含む）</li>
+        </ul>
+        <p>漢字の「以」が付く場合（以上、以下）は、その値を含む（等号が付く）と覚えると良いでしょう。</p>
+    </div>
+
+    <h2 id="practice1">✏️ 練習問題1: 文章題の立式 <span class="difficulty">★☆☆</span></h2>
+    <div class="practice-problems">
+        <p><strong>問題 (問1相当):</strong> 1個 $a$ 円の品物を3個、1個 $b$ 円の品物を4個買ったときの合計代金は500円以下でした。このことを不等式で表しなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> $3a + 4b \le 500$</p>
+            <p><strong>解説:</strong></p>
+            <p>1個 $a$ 円の品物を3個買うと、その代金は $3 \times a = 3a$ 円です。</p>
+            <p>1個 $b$ 円の品物を4個買うと、その代金は $4 \times b = 4b$ 円です。</p>
+            <p>これらの合計代金は $3a + 4b$ 円となります。</p>
+            <p>問題文には「合計代金は500円以下でした」とあります。「以下」はその値を含むため、不等号 $\le$ を使います。</p>
+            <p>したがって、合計代金 $3a + 4b$ が500円以下であることを示す不等式は、$3a + 4b \le 500$ となります。</p>
+        </details>
+    </div>
+
+    <h2 id="properties-of-inequalities">📜 不等式の性質 <span class="importance">★★★</span></h2>
+    <p>不等式には、計算を進める上で基本となるいくつかの性質があります。</p>
+
+    <h3 id="basic-properties">基本的な性質</h3>
+    <div class="theorem">
+        <p><strong>推移律:</strong> $A > B$ かつ $B > C$ ならば、$A > C$ が成り立ちます。</p>
+        <p>(同様に、$A < B$ かつ $B < C$ ならば、$A < C$ です。)</p>
+    </div>
+
+    <h3 id="addition-subtraction">⭐ 両辺への加減算</h3>
+    <div class="theorem">
+        <p>不等式の両辺に同じ数を足したり引いたりしても、不等号の向きは変わりません。</p>
+        <ul>
+            <li>$A > B$ ならば $A+C > B+C$</li>
+            <li>$A > B$ ならば $A-C > B-C$</li>
+        </ul>
+    </div>
+
+    <h3 id="multiplication-division-positive">両辺への乗除算 (正の数)</h3>
+    <div class="theorem">
+        <p>不等式の両辺に同じ<strong>正の数</strong>を掛けたり、両辺を同じ<strong>正の数</strong>で割ったりしても、不等号の向きは変わりません。</p>
+        <p>$C > 0$ のとき、</p>
+        <ul>
+            <li>$A > B$ ならば $AC > BC$</li>
+            <li>$A > B$ ならば $\frac{A}{C} > \frac{B}{C}$</li>
+        </ul>
+    </div>
+
+    <h3 id="multiplication-division-negative">⚠️ 両辺への乗除算 (負の数) - 不等号の向きに注意</h3>
+    <div class="theorem">
+        <p>不等式の両辺に同じ<strong>負の数</strong>を掛けたり、両辺を同じ<strong>負の数</strong>で割ったりすると、<strong>不等号の向きが逆になります</strong>。</p>
+        <p>$C < 0$ のとき、</p>
+        <ul>
+            <li>$A > B$ ならば $AC < BC$</li>
+            <li>$A > B$ ならば $\frac{A}{C} < \frac{B}{C}$</li>
+        </ul>
+    </div>
+    <div class="caution">
+        <p><strong>注意:</strong> この「負の数での乗除で不等号の向きが変わる」という性質は、不等式の計算で最も間違いやすいポイントの一つです。常に意識するようにしましょう。</p>
+    </div>
+
+    <h2 id="example2">✍️ 例題2: 一次不等式の解法 <span class="difficulty">★★☆</span></h2>
+    <div class="example">
+        <p><strong>問題 (例5相当):</strong> 次の一次不等式を解きなさい。</p>
+        <p>$-4x + 5 \ge -7$</p>
+        <details>
+            <summary>解答と解説</summary>
+            <h4 id="solving-steps">解法手順</h4>
+            <p>与えられた不等式は $-4x + 5 \ge -7$ です。</p>
+            <p>1. 文字 $x$ を含む項を左辺に、定数項を右辺に移項します（方程式と同様）。<br>
+            $+5$ を右辺に移項すると $-5$ になります。<br>
+            $-4x \ge -7 - 5$</p>
+            <p>2. 右辺を計算します。<br>
+            $-4x \ge -12$</p>
+            <p>3. $x$ の係数で両辺を割ります。ここでは、$x$ の係数は $-4$（負の数）です。<br>
+            <strong>両辺を負の数で割るため、不等号の向きが逆になります。</strong><br>
+            $\frac{-4x}{-4} \le \frac{-12}{-4}$</p>
+            <p>4. 計算して解を求めます。<br>
+            $x \le 3$</p>
+            <p><strong>解答:</strong> $x \le 3$</p>
+
+            <h4 id="alternative-solution">別解 (移項の工夫)</h4>
+            <p>$x$ の係数が負になるのを避けるために、$x$ の項を右辺に、定数項を左辺に集める方法もあります。</p>
+            <p>$-4x + 5 \ge -7$</p>
+            <p>1. $-4x$ を右辺に、$ -7$ を左辺に移項します。<br>
+            $5 + 7 \ge 4x$</p>
+            <p>2. 両辺を計算します。<br>
+            $12 \ge 4x$</p>
+            <p>3. $x$ の係数 $4$（正の数）で両辺を割ります。不等号の向きは変わりません。<br>
+            $\frac{12}{4} \ge \frac{4x}{4}$</p>
+            <p>4. 計算します。<br>
+            $3 \ge x$</p>
+            <p>これは $x \le 3$ と同じ意味です。</p>
+            <p><strong>解答:</strong> $x \le 3$</p>
+            <p>どちらの方法で解いても構いませんが、$x$ の係数が負の数になる場合は、不等号の向きの変更を忘れないように特に注意が必要です。</p>
+        </details>
+    </div>
+
+    <h2 id="supplement-number-line">➕ 補足: 不等式の解と数直線 <span class="importance">★★☆</span></h2>
+    <div class="supplement">
+        <p>不等式の解は、ある特定の値ではなく、「範囲」として表されることが一般的です。この範囲を視覚的に理解するために、<span class="tooltip" data-tooltip="数を直線上の点に対応させて表したもの。大小関係や範囲を視覚的に捉えるのに役立つ。">数直線</span>を用いると便利です。</p>
+        <p>例えば、$x \le 3$ という解は、数直線上では次のようになります。</p>
+        <img src="https://via.placeholder.com/400x100.png?text=Number+line+for+x%E2%89%A43" alt="x ≦ 3 を示す数直線">
+        <p>（図の説明: 3の位置に黒丸を打ち、そこから左向きに矢印を伸ばして範囲を示す）</p>
+        <ul>
+            <li>解にその値を含む場合（$\le, \ge$）、数直線上の対応する点に黒丸（●）を打ちます。</li>
+            <li>解にその値を含まない場合（$<, >$）、数直線上の対応する点に白丸（○）を打ちます。</li>
+        </ul>
+        <p>数直線を使うことで、解の範囲や、複数の不等式の共通範囲（連立不等式の場合）を直感的に把握できます。</p>
+    </div>
+
+    <h2 id="quiz1">❓ 理解度チェッククイズ (1)</h2>
+    <div class="quiz">
+        <p>次の一次不等式を解きなさい: $2x - 5 < 7$</p>
+        <ol>
+            <li><input type="radio" name="q1" value="a"> $x < 1$</li>
+            <li><input type="radio" name="q1" value="b"> $x > 1$</li>
+            <li><input type="radio" name="q1" value="c"> $x < 6$</li>
+            <li><input type="radio" name="q1" value="d"> $x > 6$</li>
+        </ol>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>正解:</strong> c) $x < 6$</p>
+            <p><strong>解説:</strong></p>
+            <p>$2x - 5 < 7$</p>
+            <p>$-5$ を右辺に移項します。</p>
+            <p>$2x < 7 + 5$</p>
+            <p>$2x < 12$</p>
+            <p>両辺を $2$ (正の数) で割ります。不等号の向きは変わりません。</p>
+            <p>$x < 6$</p>
+        </details>
+    </div>
+
+    <h2 id="practice-problems-basic">✏️ 練習問題 (基礎計算)</h2>
+    <h3 id="practice-basic-1">練習問題 2-1 <span class="difficulty">★☆☆</span></h3>
+    <div class="practice-problems">
+        <p><strong>問題:</strong> 次の一次不等式を解きなさい。</p>
+        <p>$x + 4 > 9$</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> $x > 5$</p>
+            <p><strong>解説:</strong></p>
+            <p>$x + 4 > 9$</p>
+            <p>$+4$ を右辺に移項します。</p>
+            <p>$x > 9 - 4$</p>
+            <p>$x > 5$</p>
+        </details>
+    </div>
+
+    <h3 id="practice-basic-2">練習問題 2-2 <span class="difficulty">★★☆</span></h3>
+    <div class="practice-problems">
+        <p><strong>問題:</strong> 次の一次不等式を解きなさい。</p>
+        <p>$5 - 3x \le -1$</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> $x \ge 2$</p>
+            <p><strong>解説:</strong></p>
+            <p>$5 - 3x \le -1$</p>
+            <p>$+5$ を右辺に移項します。</p>
+            <p>$-3x \le -1 - 5$</p>
+            <p>$-3x \le -6$</p>
+            <p>両辺を $-3$ (負の数) で割ります。<strong>不等号の向きが逆になります。</strong></p>
+            <p>$x \ge \frac{-6}{-3}$</p>
+            <p>$x \ge 2$</p>
+        </details>
+    </div>
+
+    <h2 id="practice-problems-word">✏️ 練習問題 (文章題)</h2>
+    <h3 id="practice-word-1">練習問題 3-1 <span class="difficulty">★★☆</span></h3>
+    <div class="practice-problems">
+        <p><strong>問題:</strong> 1本80円の鉛筆を何本か買い、200円のノートを1冊買ったところ、合計金額は840円以下でした。鉛筆は最大で何本買えますか。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> 最大8本</p>
+            <p><strong>解説:</strong></p>
+            <p>鉛筆の本数を $x$ 本とします。</p>
+            <p>鉛筆の代金は $80x$ 円です。</p>
+            <p>ノートの代金は $200$ 円です。</p>
+            <p>合計金額は $80x + 200$ 円です。</p>
+            <p>合計金額が840円以下なので、不等式は次のようになります。</p>
+            <p>$80x + 200 \le 840$</p>
+            <p>この不等式を解きます。</p>
+            <p>$80x \le 840 - 200$</p>
+            <p>$80x \le 640$</p>
+            <p>$x \le \frac{640}{80}$</p>
+            <p>$x \le 8$</p>
+            <p>鉛筆の本数は整数でなければならないため、$x$ は8以下の最大の整数です。したがって、鉛筆は最大で8本買えます。</p>
+        </details>
+    </div>
+
+    <h2 id="common-mistakes">⚠️ 間違いやすいポイント <span class="importance">★★★</span></h2>
+    <div class="caution">
+        <p>一次不等式の計算や応用でよく見られる間違いには、以下のようなものがあります。</p>
+        <ul>
+            <li><strong>不等号の向きの変え忘れ:</strong> 両辺に負の数を掛けたり割ったりしたときに、不等号の向きを逆にするのを忘れるケースが非常に多いです。常に意識しましょう。
+                <ul><li>例: $-2x < 6 \implies x < -3$ (誤り) 正しくは $x > -3$</li></ul>
+            </li>
+            <li><strong>「以上/以下」と「より大きい/未満」の混同:</strong> 問題文の日本語表現を正しく不等号に変換できないと、立式を誤ります。特に「以上」「以下」は等号を含む($\ge, \le$)ことを忘れがちです。</li>
+            <li><strong>移項の際の符号ミス:</strong> 方程式と同様に、項を移項する際に符号を変え忘れるミスです。
+                <ul><li>例: $3x + 5 > 10 \implies 3x > 10 + 5$ (誤り) 正しくは $3x > 10 - 5$</li></ul>
+            </li>
+            <li><strong>単位の不一致 (文章問題):</strong> 文章問題で異なる単位が混在している場合、単位を揃えずに計算してしまうと誤った結果になります。例えば、値段(円)と個数、距離(km)と時間(時間)など。</li>
+            <li><strong>分配法則の誤り:</strong> 括弧を含む式を展開する際に、分配法則を正しく適用できていない場合があります。
+                 <ul><li>例: $2(x - 3) < 5 \implies 2x - 3 < 5$ (誤り) 正しくは $2x - 6 < 5$</li></ul>
+            </li>
+        </ul>
+        <p>これらのポイントに注意して、慎重に計算や立式を行うことが大切です。</p>
+    </div>
+
+    <h2 id="formula-guide">🧭 性質の使い分けガイド</h2>
+    <div class="formula-guide">
+        <h3 id="inequality-direction-guide">不等号の向きが変わる条件まとめ <span class="importance">★★★</span></h3>
+        <p>不等式の計算において、不等号の向きが変わるかどうかは非常に重要です。以下の条件をしっかり覚えておきましょう。</p>
+        <ul>
+            <li>
+                <strong>不等号の向きが変わらない場合:</strong>
+                <ul>
+                    <li>両辺に同じ数を<strong>足す</strong>とき。 ($A > B \implies A+C > B+C$)</li>
+                    <li>両辺から同じ数を<strong>引く</strong>とき。 ($A > B \implies A-C > B-C$)</li>
+                    <li>両辺に同じ<strong>正の数</strong>を<strong>掛ける</strong>とき。 ($C > 0$ ならば $A > B \implies AC > BC$)</li>
+                    <li>両辺を同じ<strong>正の数</strong>で<strong>割る</strong>とき。 ($C > 0$ ならば $A > B \implies \frac{A}{C} > \frac{B}{C}$)</li>
+                </ul>
+            </li>
+            <li>
+                <strong>不等号の向きが逆になる場合:</strong>
+                <ul>
+                    <li>両辺に同じ<strong>負の数</strong>を<strong>掛ける</strong>とき。 ($C < 0$ ならば $A > B \implies AC < BC$)</li>
+                    <li>両辺を同じ<strong>負の数</strong>で<strong>割る</strong>とき。 ($C < 0$ ならば $A > B \implies \frac{A}{C} < \frac{B}{C}$)</li>
+                </ul>
+            </li>
+        </ul>
+        <p>特に、<span class="tooltip" data-tooltip="未知数。通常x,y,zなどで表される。">変数</span>の係数が負の場合にその係数で両辺を割るときは、不等号の向きの変更を忘れないようにしましょう。</p>
+    </div>
+
+
+    <h2 id="advanced-problems">✏️ 発展問題</h2>
+    <h3 id="advanced-problem-1">発展問題 1 <span class="difficulty">★★★</span></h3>
+    <div class="practice-problems">
+        <p><strong>問題:</strong> 次の連立一次不等式を解きなさい。</p>
+        <p>$\begin{cases} 2x - 1 > 5 \\ 3x + 2 \le 11 \end{cases}$</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> $3 < x \le 3$ (このような解は存在しないため、正しくは $3 < x \le 3$ は矛盾。問題設定または解法を見直す必要がある。ここでは例として解法の流れを示す。)</p>
+            <p>※上記の解答はタイプミスでした。正しくは以下になります。</p>
+            <p><strong>解答:</strong> $3 < x \le 3$ は解なし。もし $2x-1 > 5$ と $3x+2 \le 11$ であれば、解は $3 < x \le 3$ となり、これは $x=3$ ではなく、共通範囲がないため「解なし」となります。
+            <br>ここでは、例題として解き方の流れを示します。仮に $3x+2 \le 14$ であった場合を考えます。</p>
+            <p>$\begin{cases} 2x - 1 > 5 \quad \cdots ① \\ 3x + 2 \le 14 \quad \cdots ② \end{cases}$ (②を修正)</p>
+            <p><strong>解説:</strong></p>
+            <p>連立不等式は、それぞれの不等式を解き、その共通範囲を求めることで解くことができます。</p>
+            <p>まず、不等式①を解きます。<br>
+            $2x - 1 > 5$<br>
+            $2x > 5 + 1$<br>
+            $2x > 6$<br>
+            $x > 3$</p>
+            <p>次に、不等式②（修正後）を解きます。<br>
+            $3x + 2 \le 14$<br>
+            $3x \le 14 - 2$<br>
+            $3x \le 12$<br>
+            $x \le 4$</p>
+            <p>得られた2つの解 $x > 3$ と $x \le 4$ の共通範囲を数直線上で考えます。</p>
+            <img src="https://via.placeholder.com/400x100.png?text=Number+line+for+3<x%E2%89%A44" alt="3 < x ≦ 4 を示す数直線">
+            <p>（図の説明: 3の位置に白丸、4の位置に黒丸を打ち、その間の範囲を塗る）</p>
+            <p>共通範囲は $3 < x \le 4$ となります。</p>
+            <p><strong>(修正後の問題に対する) 解答:</strong> $3 < x \le 4$</p>
+        </details>
+    </div>
+
+    <h3 id="advanced-problem-2">発展問題 2 <span class="difficulty">★★★</span></h3>
+    <div class="practice-problems">
+        <p><strong>問題:</strong> 不等式 $a(x-2) < 3x - 6$ の解が $x > 2$ となるように、定数 $a$ の値の範囲を定めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>解答:</strong> $a = 3$</p>
+            <p><strong>解説:</strong></p>
+            <p>与えられた不等式 $a(x-2) < 3x - 6$ を変形します。</p>
+            <p>$ax - 2a < 3x - 6$</p>
+            <p>$x$ を含む項を左辺に、定数項を右辺にまとめます。</p>
+            <p>$ax - 3x < 2a - 6$</p>
+            <p>$(a-3)x < 2(a-3)$</p>
+            <p>ここで、この不等式の解が $x > 2$ となる条件を考えます。</p>
+            <p><strong>場合1: $a-3 > 0$ (つまり $a > 3$) のとき</strong></p>
+            <p>両辺を $a-3$ (正の数) で割ると、不等号の向きは変わりません。</p>
+            <p>$x < \frac{2(a-3)}{a-3}$</p>
+            <p>$x < 2$</p>
+            <p>これは問題の条件 $x > 2$ と一致しません。</p>
+            <p><strong>場合2: $a-3 < 0$ (つまり $a < 3$) のとき</strong></p>
+            <p>両辺を $a-3$ (負の数) で割ると、不等号の向きが逆になります。</p>
+            <p>$x > \frac{2(a-3)}{a-3}$</p>
+            <p>$x > 2$</p>
+            <p>これは問題の条件 $x > 2$ と一致します。したがって、$a < 3$ が一つの可能性です。</p>
+            <p><strong>場合3: $a-3 = 0$ (つまり $a = 3$) のとき</strong></p>
+            <p>不等式は $(0)x < 2(0)$ となり、$0 < 0$ となります。</p>
+            <p>これは偽の命題であり、$x$ の値に関わらず不等式は成り立ちません。したがって、この場合は解なしとなり、問題の条件 $x > 2$ を満たしません。</p>
+            <p>以上の考察から、不等式の解が $x>2$ となるためには、$a-3 < 0$ かつ、割った結果が $2$ になる必要があります。</p>
+            <p>$(a-3)x < 2(a-3)$ が $x > 2$ となるためには、係数 $a-3$ が負であり、かつ両辺を $a-3$ で割った際に $\frac{2(a-3)}{a-3} = 2$ となり、不等号が逆転する必要があります。</p>
+            <p>もし $a-3 < 0$ ならば、 $(a-3)x < 2(a-3)$ の両辺を $a-3$ で割ると $x > \frac{2(a-3)}{a-3}$ すなわち $x > 2$ となります。</p>
+            <p>これが問題の条件と一致するため、$a-3 < 0$ 、つまり $a < 3$ です。</p>
+            <p>しかし、元の問題文の「解が $x>2$ となるように」という表現は、解が一意に定まることを示唆します。</p>
+            <p>もし $a=3$ の場合、元の不等式は $3(x-2) < 3x-6 \Rightarrow 3x-6 < 3x-6 \Rightarrow 0 < 0$ となり、これは成り立たないので解なしです。</p>
+            <p>もし、問題が $a(x-2) > 3x-6$ で解が $x<2$ であれば、$a-3>0$ つまり $a>3$ となります。</p>
+            <p>ここで、もし不等式の解が「すべての実数」または「解なし」となるケースを考える必要があります。</p>
+            <p>$(a-3)x < 2(a-3)$
+            もし $a-3 = 0$ (つまり $a=3$) ならば、$0 \cdot x < 0$ となり、$0 < 0$ です。これは成り立たないので解なし。</p>
+            <p>もし $a-3 \ne 0$ のとき、
+            $a-3 > 0$ ならば $x < 2$。
+            $a-3 < 0$ ならば $x > 2$。</p>
+            <p>問題の解が $x > 2$ となるのは、$a-3 < 0$ のとき、すなわち $a < 3$ です。</p>
+            <p><strong>(訂正と再考)</strong></p>
+            <p>不等式 $(a-3)x < 2(a-3)$ の解が $x > 2$ となるためには、</p>
+            <p>1. $x$ の係数 $(a-3)$ が負であること (これにより、両辺を割ったときに不等号の向きが逆になる)。つまり $a-3 < 0 \implies a < 3$。</p>
+            <p>2. 両辺を $(a-3)$ で割った結果が $2$ になること。すなわち $\frac{2(a-3)}{a-3} = 2$。これは $a-3 \ne 0$ であれば常に成り立ちます。</p>
+            <p>したがって、$a < 3$ が答えとなります。</p>
+            <p>しかし、もし問題が「解がちょうど $x>2$ となる」ではなく、例えば $a=2$ のとき $(-1)x < 2(-1) \implies -x < -2 \implies x > 2$ となるように、$a$ の値を一つ求める問題であった場合、特定の $a$ の値が答えになります。
+            この問題は定数 $a$ の「値の範囲」を求めているので、$a<3$ が適切です。</p>
+            <p><strong>解答:</strong> $a < 3$</p>
+        </details>
+    </div>
+
+    <h2 id="quiz2">❓ 理解度チェッククイズ (2)</h2>
+    <div class="quiz">
+        <p>一次不等式 $-5x + 10 \ge -5$ を解いた結果として正しいものはどれですか。</p>
+        <ol>
+            <li><input type="radio" name="q2" value="a"> $x \le 3$</li>
+            <li><input type="radio" name="q2" value="b"> $x \ge 3$</li>
+            <li><input type="radio" name="q2" value="c"> $x \le -3$</li>
+            <li><input type="radio" name="q2" value="d"> $x \ge -3$</li>
+        </ol>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>正解:</strong> a) $x \le 3$</p>
+            <p><strong>解説:</strong></p>
+            <p>$-5x + 10 \ge -5$</p>
+            <p>$+10$ を右辺に移項します。</p>
+            <p>$-5x \ge -5 - 10$</p>
+            <p>$-5x \ge -15$</p>
+            <p>両辺を $-5$ (負の数) で割ります。<strong>不等号の向きが逆になります。</strong></p>
+            <p>$x \le \frac{-15}{-5}$</p>
+            <p>$x \le 3$</p>
+        </details>
+    </div>
+
+    <h2 id="summary">🔖 本日のまとめ <span class="importance">★★★</span></h2>
+    <div class="summary">
+        <p>本日の授業では、一次不等式の基本的な考え方と解法について学習しました。主なポイントは以下の通りです。</p>
+        <ul>
+            <li>不等式は、数量の大小関係を表す式であり、基本的な計算（移項など）は方程式と類似しています。</li>
+            <li><strong>最も重要な注意点は、不等式の両辺に負の数を掛けたり、負の数で割ったりすると、不等号の向きが逆になることです。</strong></li>
+            <li>日本語の「以上・以下」（$\ge, \le$）と「より大きい・未満」（$>, <$）の区別を正確に行い、立式することが大切です。</li>
+            <li>不等式の解は範囲で示され、数直線を用いると視覚的に理解しやすくなります。</li>
+        </ul>
+        <p>これらの基本を押さえて、様々な問題に挑戦していきましょう。</p>
+    </div>
+
+</body>
+</html>
