@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[単元名 Placeholder]</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>[単元名 Placeholder]</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年05月29日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 連立不等式の解法を理解し、応用問題に取り組む力を養う。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに</a></li>
+                <li><a href="#review-theme">1. 連立不等式の復習と本日のテーマ 📖</a></li>
+                <li><a href="#examples">2. 例題解説 ✍️</a>
+                    <ul>
+                        <li><a href="#example6">例6: 基本的な連立不等式</a></li>
+                        <li><a href="#example3">例題3: A < B < C の形の不等式</a></li>
+                    </ul>
+                </li>
+                <li><a href="#common-mistakes">⚠️ 間違いやすいポイント</a></li>
+                <li><a href="#solving-guide">🧭 連立不等式の解法ステップガイド</a></li>
+                <li><a href="#standard-problems">✏️ 標準的な練習問題</a>
+                    <ul>
+                        <li><a href="#std-prob1">問題 1</a></li>
+                        <li><a href="#std-prob2">問題 2</a></li>
+                    </ul>
+                </li>
+                <li><a href="#advanced-problems">✏️ 発展的な練習問題</a>
+                    <ul>
+                        <li><a href="#adv-prob1">問題 1: 文章題</a></li>
+                    </ul>
+                </li>
+                <li><a href="#tips-supplement">💡 Tips/補足説明</a></li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに</h2>
+    <p>本日の授業は、5分後のチャイムが鳴り次第開始します。内容は、昨日に引き続き<span class="tooltip" data-tooltip="複数の不等式を同時に満たす解を求める問題">連立不等式</span>を扱います。具体的には、ワークシートの6枚目から解説を進めていきます。小テストについては通常通り実施します。</p>
+
+    <h2 id="review-theme">1. 連立不等式の復習と本日のテーマ 📖 <span class="importance">★★☆</span></h2>
+    <p>本日は、連立不等式の解法について、さらに理解を深めていきます。基本的な解き方は昨日学習した内容と変わりませんが、いくつかのパターンについて例題を通じて確認していきます。</p>
+
+    <h2 id="examples">2. 例題解説 ✍️</h2>
+    <h3 id="example6">例6: 基本的な連立不等式 <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h3>
+    <p>以下の連立不等式を解いてみましょう。</p>
+    <p>\[ \begin{cases} 2x - 3 \leq 4x - 7 & \cdots ① \\ 8x + 7 \leq 5x - 2 & \cdots ② \end{cases} \] </p>
+    <details>
+        <summary>解説（問題文に基づく解法と授業中の解説について）</summary>
+        <p>まず、提示された問題文に基づいて各不等式を個別に解きます。</p>
+        <p><strong>不等式①の解法 (問題文に基づく):</strong> \(2x - 3 \leq 4x - 7\)</p>
+        <p>xの項を右辺に、定数項を左辺に移項します。<br>
+        \(-3 + 7 \leq 4x - 2x\)<br>
+        \(4 \leq 2x\)<br>
+        両辺を2で割ります。<br>
+        \(2 \leq x\)<br>
+        すなわち、\(x \geq 2\) です。</p>
+
+        <p><strong>不等式②の解法 (問題文に基づく):</strong> \(8x + 7 \leq 5x - 2\)</p>
+        <p>xの項を左辺に、定数項を右辺に移項します。<br>
+        \(8x - 5x \leq -2 - 7\)<br>
+        \(3x \leq -9\)<br>
+        両辺を3で割ります。<br>
+        \(x \leq -3\) です。</p>
+
+        <p>次に、得られた解 \(x \geq 2\) と \(x \leq -3\) の共通範囲を<span class="tooltip" data-tooltip="数の大小関係を直線上に表した図。不等式の解の範囲を視覚化するのに役立つ">数直線</span>上で考えます。</p>
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22150%22%3E%3Cdefs%3E%3Cmarker%20id%3D%22arrowhead%22%20markerWidth%3D%2210%22%20markerHeight%3D%227%22%20refX%3D%220%22%20refY%3D%223.5%22%20orient%3D%22auto%22%3E%3Cpolygon%20points%3D%220%200%2C%2010%203.5%2C%200%207%22%20fill%3D%22black%22%2F%3E%3C%2Fmarker%3E%3C%2Fdefs%3E%3Cline%20x1%3D%2220%22%20y1%3D%2275%22%20x2%3D%22380%22%20y2%3D%2275%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23arrowhead)%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22black%22%2F%3E%3Ctext%20x%3D%22145%22%20y%3D%22100%22%20font-size%3D%2214%22%3E-3%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%2260%22%20x2%3D%2250%22%20y2%3D%2260%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20marker-start%3D%22url(%23arrowhead)%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2250%22%20fill%3D%22blue%22%20font-size%3D%2214%22%3Ex%20%E2%89%A4%20-3%3C%2Ftext%3E%3Ccircle%20cx%3D%22250%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22black%22%2F%3E%3Ctext%20x%3D%22248%22%20y%3D%22100%22%20font-size%3D%2214%22%3E2%3C%2Ftext%3E%3Cline%20x1%3D%22250%22%20y1%3D%2260%22%20x2%3D%22350%22%20y2%3D%2260%22%20stroke%3D%22red%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23arrowhead)%22%2F%3E%3Ctext%20x%3D%22280%22%20y%3D%2250%22%20fill%3D%22red%22%20font-size%3D%2214%22%3Ex%20%E2%89%A5%202%3C%2Ftext%3E%3C%2Fsvg%3E" alt="数直線 x>=2 と x<=-3 の範囲 (共通範囲なし)" />
+        <p>\(x \geq 2\) は数直線上で2を含み右側の範囲、\(x \leq -3\) は-3を含み左側の範囲です。<br>
+        これらの範囲に共通部分はないため、この連立不等式の解は「解なし」となります。</p>
+        <p class="important">⭐ 答え（問題文に基づく）: 解なし</p>
+
+        <div class="supplement">
+            <h4>➕ 授業中の解説について</h4>
+            <p>授業中の解説では、講師は不等式①の解を \(x > 2\)（問題文の \(2x-3 \leq 4x-7\) からは \(x \geq 2\) が導かれますが、解説では2を含まない白丸で説明していました）、不等式②の解を \(x \geq 3\)（問題文の \(8x+7 \leq 5x-2\) からは \(x \leq -3\) が導かれます）として扱っていました。</p>
+            <p>講師が解説で目指していたのは、これらの共通範囲 \(x \geq 3\) を求めることだったと推測されます。これは、講師が異なる問題設定（例えば、不等号の向きや等号の有無が異なるもの）を念頭に置いていたか、あるいは解説の途中で条件が変わったためと考えられます。以下に、講師が授業中に説明した \(x > 2\) と \(x \geq 3\) の組み合わせで共通範囲を求める場合の数直線を示します。</p>
+            <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22150%22%3E%3Cdefs%3E%3Cmarker%20id%3D%22arrowhead_alt%22%20markerWidth%3D%2210%22%20markerHeight%3D%227%22%20refX%3D%220%22%20refY%3D%223.5%22%20orient%3D%22auto%22%3E%3Cpolygon%20points%3D%220%200%2C%2010%203.5%2C%200%207%22%20fill%3D%22black%22%2F%3E%3C%2Fmarker%3E%3C%2Fdefs%3E%3Cline%20x1%3D%2220%22%20y1%3D%2275%22%20x2%3D%22380%22%20y2%3D%2275%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23arrowhead_alt)%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%2F%3E%3Ctext%20x%3D%22175%22%20y%3D%22100%22%20font-size%3D%2214%22%3E2%3C%2Ftext%3E%3Cline%20x1%3D%22180%22%20y1%3D%2260%22%20x2%3D%22350%22%20y2%3D%2260%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23arrowhead_alt)%22%2F%3E%3Ctext%20x%3D%22200%22%20y%3D%2250%22%20fill%3D%22blue%22%20font-size%3D%2214%22%3Ex%20>%202%3C%2Ftext%3E%3Ccircle%20cx%3D%22250%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22black%22%2F%3E%3Ctext%20x%3D%22245%22%20y%3D%22100%22%20font-size%3D%2214%22%3E3%3C%2Ftext%3E%3Cline%20x1%3D%22250%22%20y1%3D%2245%22%20x2%3D%22350%22%20y2%3D%2245%22%20stroke%3D%22red%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23arrowhead_alt)%22%2F%3E%3Ctext%20x%3D%22270%22%20y%3D%2235%22%20fill%3D%22red%22%20font-size%3D%2214%22%3Ex%20≥%203%3C%2Ftext%3E%3Crect%20x%3D%22250%22%20y%3D%2273%22%20width%3D%22100%22%20height%3D%224%22%20fill%3D%22purple%22%20opacity%3D%220.5%22%2F%3E%3Cline%20x1%3D%22250%22%20y1%3D%2275%22%20x2%3D%22350%22%20y2%3D%2275%22%20stroke%3D%22purple%22%20stroke-width%3D%223%22%20opacity%3D%220.7%22%20marker-end%3D%22url(%23arrowhead_alt)%22%2F%3E%3C%2Fsvg%3E" alt="数直線 x>2 と x>=3 の共通範囲" />
+            <p>この場合の共通範囲は \(x \geq 3\) となります。授業では、このような共通範囲が存在するケースを念頭に、数直線の読み取り方の練習が行われたものと解釈できます。</p>
+            <p class="important">⭐ 授業中の解説で目指した解（推測）: \(x \geq 3\)</p>
+        </div>
+    </details>
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★☆☆</span></h4>
+        <ol>
+            <li>連立不等式を解く際の最初のステップは何ですか？
+                <ol type="a">
+                    <li>共通範囲を数直線で探す</li>
+                    <li>それぞれの不等式を個別に解く</li>
+                    <li>不等式のグラフを描く</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: b. それぞれの不等式を個別に解く</strong></p>
+                    <p>解説: 連立不等式では、まず各不等式が示すxの範囲を求め、その後に共通範囲を探します。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <h3 id="example3">例題3: A < B < C の形の不等式 <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>不等式 \(3x - 8 < x + 4 < -2x + 7\) を解きなさい。</p>
+    <details>
+        <summary>解説</summary>
+        <p>この形の不等式は、\(A < B\) かつ \(B < C\) の形の連立不等式として考えます。</p>
+        <p>すなわち、<br>
+        \(3x - 8 < x + 4 \quad \cdots ①\)<br>
+        \(x + 4 < -2x + 7 \quad \cdots ②\)<br>
+        の2つの不等式を同時に満たす範囲を求めます。</p>
+
+        <p><strong>不等式①の解法:</strong> \(3x - 8 < x + 4\)</p>
+        <p>\(3x - x < 4 + 8\)<br>
+        \(2x < 12\)<br>
+        \(x < 6\)</p>
+
+        <p><strong>不等式②の解法:</strong> \(x + 4 < -2x + 7\)</p>
+        <p>\(x + 2x < 7 - 4\)<br>
+        \(3x < 3\)<br>
+        \(x < 1\)</p>
+
+        <p>得られた解 \(x < 6\) と \(x < 1\) の共通範囲を数直線上で考えます。</p>
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22150%22%3E%3Cdefs%3E%3Cmarker%20id%3D%22arrowhead2%22%20markerWidth%3D%2210%22%20markerHeight%3D%227%22%20refX%3D%220%22%20refY%3D%223.5%22%20orient%3D%22auto%22%3E%3Cpolygon%20points%3D%220%200%2C%2010%203.5%2C%200%207%22%20fill%3D%22black%22%2F%3E%3C%2Fmarker%3E%3C%2Fdefs%3E%3Cline%20x1%3D%2220%22%20y1%3D%2275%22%20x2%3D%22380%22%20y2%3D%2275%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20marker-end%3D%22url(%23arrowhead2)%22%2F%3E%3Ccircle%20cx%3D%22180%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%2F%3E%3Ctext%20x%3D%22175%22%20y%3D%22100%22%20font-size%3D%2214%22%3E1%3C%2Ftext%3E%3Cline%20x1%3D%22180%22%20y1%3D%2260%22%20x2%3D%2280%22%20y2%3D%2260%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20marker-start%3D%22url(%23arrowhead2)%22%2F%3E%3Ctext%20x%3D%2280%22%20y%3D%2250%22%20fill%3D%22blue%22%20font-size%3D%2214%22%3Ex%20%26lt%3B%201%3C%2Ftext%3E%3Ccircle%20cx%3D%22300%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%2F%3E%3Ctext%20x%3D%22295%22%20y%3D%22100%22%20font-size%3D%2214%22%3E6%3C%2Ftext%3E%3Cline%20x1%3D%22300%22%20y1%3D%2245%22%20x2%3D%2250%22%20y2%3D%2245%22%20stroke%3D%22red%22%20stroke-width%3D%222%22%20marker-start%3D%22url(%23arrowhead2)%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2235%22%20fill%3D%22red%22%20font-size%3D%2214%22%3Ex%20%26lt%3B%206%3C%2Ftext%3E%3Crect%20x%3D%2250%22%20y%3D%2258%22%20width%3D%22130%22%20height%3D%224%22%20fill%3D%22purple%22%20opacity%3D%220.5%22%2F%3E%3C%2Fsvg%3E" alt="数直線 x<6 と x<1 の共通範囲" />
+        <p>\(x < 6\) は6を含まず左側の範囲、\(x < 1\) は1を含まず左側の範囲です。<br>
+        これらの共通範囲は \(x < 1\) となります。</p>
+        <p class="important">⭐ 答え: \(x < 1\)</p>
+    </details>
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★★☆</span></h4>
+        <ol>
+            <li>不等式 \(2 < x+1 \leq 5\) を解く場合、どのように2つの不等式に分解しますか？
+                <ol type="a">
+                    <li>\(2 < x+1\) と \(2 \leq 5\)</li>
+                    <li>\(2 < x+1\) と \(x+1 \leq 5\)</li>
+                    <li>\(x+1 < 2\) と \(x+1 \leq 5\)</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: b. \(2 < x+1\) と \(x+1 \leq 5\)</strong></p>
+                    <p>解説: \(A < B \leq C\) の形の不等式は、\(A < B\) かつ \(B \leq C\) として分解します。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <div class="caution" id="common-mistakes">
+        <h3>⚠️ 間違いやすいポイント <span class="importance">★★☆</span></h3>
+        <ul>
+            <li><strong>不等号の向き:</strong> 不等式の両辺に負の数を掛けたり割ったりするときは、<span class="tooltip" data-tooltip="例: x < y ならば -x > -y">不等号の向きが逆転する</span>ことを見落としがちです。常に意識しましょう。</li>
+            <li><strong>\(A < B < C\) の分解ミス:</strong> \(A < B < C\) という形の不等式を解く際、\(A < B\) と \(A < C\) のように誤って分解してしまうことがあります。正しくは、\(A < B\) かつ \(B < C\) と分解します。</li>
+            <li><strong>共通範囲の誤解:</strong> 数直線上で共通範囲を求める際に、「かつ」と「または」を混同しやすいです。連立不等式の解は、全ての不等式を同時に満たす範囲（積集合）なので、「かつ」の範囲を正確に読み取る必要があります。</li>
+            <li><strong>等号の有無:</strong> 不等号に等号（\(\leq, \geq\)）が含まれるか否かで、解の端点を含むかどうかが変わります。数直線上では、含む場合は黒丸（●）、含まない場合は白丸（○）で区別し、最終的な解にも正しく反映させる必要があります。</li>
+        </ul>
+    </div>
+
+    <div class="formula-guide" id="solving-guide">
+        <h3>🧭 連立不等式の解法ステップガイド <span class="importance">★★★</span></h3>
+        <p>連立不等式や \(A < B < C\) 型の不等式を解く際の基本的なステップは以下の通りです。</p>
+        <ul>
+            <li>
+                <strong>1. 不等式の分解（必要な場合）:</strong>
+                <ul>
+                    <li>通常の連立不等式: そのまま各不等式を扱います。</li>
+                    <li>\(A < B < C\) 型の不等式: \(A < B\) と \(B < C\) の2つの不等式に分解します。</li>
+                </ul>
+            </li>
+            <li>
+                <strong>2. 各不等式の単純化:</strong>
+                <ul>
+                    <li>移項や両辺への加減乗除を行い、それぞれの不等式を \(x > a\), \(x \leq b\) のような最も単純な形に変形します。</li>
+                    <li><span class="caution">注意:</span> 負の数で両辺を掛けたり割ったりする際は、不等号の向きを逆にすることを忘れないでください。</li>
+                </ul>
+            </li>
+            <li>
+                <strong>3. 数直線による図示:</strong>
+                <ul>
+                    <li>得られた各不等式の解を、一本の数直線上に図示します。</li>
+                    <li>等号を含む場合は黒丸（●）、含まない場合は白丸（○）で端点を明確にします。</li>
+                    <li>各解が示す範囲を矢印で示します。</li>
+                </ul>
+            </li>
+            <li>
+                <strong>4. 共通範囲の特定:</strong>
+                <ul>
+                    <li>数直線上で、全ての不等式の解が重なっている部分（共通範囲）を見つけます。</li>
+                    <li>この共通範囲が、連立不等式の最終的な解となります。</li>
+                    <li>共通範囲が存在しない場合は「解なし」となります。</li>
+                </ul>
+            </li>
+            <li>
+                <strong>5. 解の記述:</strong>
+                <ul>
+                    <li>特定した共通範囲を、不等式を用いて正確に記述します。例: \(a < x \leq b\), \(x > c\), 解なし。</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="practice-problems" id="standard-problems">
+        <h3>✏️ 標準的な練習問題 <span class="importance">★★☆</span></h3>
+        <h4 id="std-prob1">問題 1 <span class="difficulty">★☆☆</span></h4>
+        <p>次の連立不等式を解きなさい。</p>
+        <p>\[ \begin{cases} 3x + 5 > -4 \\ 2x - 1 \leq x + 3 \end{cases} \] </p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>① \(3x + 5 > -4\)<br>
+            \(3x > -4 - 5\)<br>
+            \(3x > -9\)<br>
+            \(x > -3\)</p>
+            <p>② \(2x - 1 \leq x + 3\)<br>
+            \(2x - x \leq 3 + 1\)<br>
+            \(x \leq 4\)</p>
+            <p>共通範囲は \(-3 < x \leq 4\)。</p>
+            <p><strong>答え: \(-3 < x \leq 4\)</strong></p>
+        </details>
+
+        <h4 id="std-prob2">問題 2 <span class="difficulty">★★☆</span></h4>
+        <p>次の不等式を解きなさい。</p>
+        <p>\[-x < 2x + 6 \leq 15\]</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>この不等式は、次の2つの不等式に分解して考えます。<br>
+            ① \(-x < 2x + 6\)<br>
+            ② \(2x + 6 \leq 15\)</p>
+            <p>① \(-x < 2x + 6\)<br>
+            \(-x - 2x < 6\)<br>
+            \(-3x < 6\)<br>
+            両辺を-3で割ると不等号の向きが変わります。<br>
+            \(x > -2\)</p>
+            <p>② \(2x + 6 \leq 15\)<br>
+            \(2x \leq 15 - 6\)<br>
+            \(2x \leq 9\)<br>
+            \(x \leq \frac{9}{2}\)</p>
+            <p>共通範囲は \(-2 < x \leq \frac{9}{2}\)。</p>
+            <p><strong>答え: \(-2 < x \leq \frac{9}{2}\)</strong></p>
+        </details>
+    </div>
+
+    <div class="practice-problems" id="advanced-problems">
+        <h3>✏️ 発展的な練習問題 <span class="importance">★★★</span></h3>
+        <h4 id="adv-prob1">問題 1: 文章題 <span class="difficulty">★★★</span></h4>
+        <p>あるクラスで、生徒にクッキーを配ります。1人に5個ずつ配ると12個余り、1人に7個ずつ配ると4個以上不足します。このクラスの生徒の人数として考えられる最小の人数と最大の人数を求めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>生徒の人数を \(x\) 人とします。(ただし \(x\) は正の整数)</p>
+            <p>条件1: 「1人に5個ずつ配ると12個余る」<br>
+            クッキーの総数は \(5x + 12\) 個と表せます。</p>
+            <p>条件2: 「1人に7個ずつ配ると4個以上不足する」<br>
+            これは、もし \(x\) 人全員に7個ずつ配ろうとした場合、用意されているクッキーの個数 \(5x+12\) は、\(7x\) 個に対して4個以上足りない状態です。
+            つまり、必要な個数 \(7x\) から実際の個数 \(5x+12\) を引いた差（不足分）が4以上である、と考えることができます。<br>
+            \(7x - (5x + 12) \geq 4\)<br>
+            \(7x - 5x - 12 \geq 4\)<br>
+            \(2x - 12 \geq 4\)<br>
+            \(2x \geq 16\)<br>
+            \(x \geq 8 \quad \cdots (A)\)</p>
+            <p>また、「不足する」という状況から、クッキーの総数 \(5x+12\) は、\(x\) 人全員に7個ずつ配るには足りない、つまり \(7x\) 個よりは少ないと言えます。<br>
+            \(5x + 12 < 7x\)<br>
+            \(12 < 2x\)<br>
+            \(6 < x \quad \cdots (B)\)</p>
+            <p>さらに、条件2を別の角度から考えると、
+            \(x-1\) 人には7個ずつ配ることができ、最後の1人(\(x\)人目)には7個配れない（4個以上不足するため、配れるのは最大でも \(7-4=3\) 個）と解釈できます。
+            クッキーの総数 \(5x+12\) は、\(x-1\) 人に7個ずつ配った数 \(7(x-1)\) よりは多く（または等しく、0個配る場合）、\(7(x-1)\) に \(x\)人目に配れる最大個数3を加えたもの以下になります。<br>
+            \(7(x-1) \leq 5x+12 \leq 7(x-1) + 3\)<br>
+            この連立不等式を解きます。<br>
+            左側: \(7x - 7 \leq 5x + 12 \Rightarrow 2x \leq 19 \Rightarrow x \leq 9.5 \quad \cdots (C)\)<br>
+            右側: \(5x + 12 \leq 7x - 7 + 3 \Rightarrow 5x + 12 \leq 7x - 4 \Rightarrow 16 \leq 2x \Rightarrow x \geq 8 \quad \cdots (D)\)</p>
+            <p>条件 (A), (B), (C), (D) をすべて満たす整数 \(x\) を考えます。<br>
+            (A) \(x \geq 8\)<br>
+            (B) \(x > 6\)<br>
+            (C) \(x \leq 9.5\)<br>
+            (D) \(x \geq 8\)<br>
+            これらの共通範囲は \(8 \leq x \leq 9.5\) です。<br>
+            \(x\) は整数なので、考えられる \(x\) は 8 または 9 です。</p>
+            <p>したがって、生徒の人数として考えられる最小の人数は8人、最大の人数は9人です。</p>
+            <p><strong>答え: 最小8人、最大9人</strong></p>
+        </details>
+    </div>
+
+    <div class="tips" id="tips-supplement">
+        <h3>💡 Tips/補足説明 <span class="importance">★★☆</span></h3>
+        <ul>
+            <li><strong>数直線の活用:</strong> 連立不等式の解を視覚的に理解するために、数直線は非常に有効なツールです。特に範囲が複雑な場合や、「解なし」となる可能性を判断する際に役立ちます。等号の有無を白丸・黒丸で正確に表現しましょう。</li>
+            <li><strong>移項の基本:</strong> 不等式でも方程式と同様に、項を移項する際は符号を変えます。この基本操作を間違えないように注意しましょう。</li>
+            <li><strong>A < B < C の変形:</strong> この形の不等式は、必ず \(A < B\) と \(B < C\) の2つの部分に分けて考えます。\(A < C\) を単独で使わないように注意してください。</li>
+            <li><strong>検算の習慣:</strong> もし時間に余裕があれば、得られた解の範囲から適当な値を元の不等式に代入して、成り立っているか確認する（検算する）習慣をつけると、ミスを減らせます。例えば、\(x < 1\) が解ならば、\(x=0\) を代入して確認するなど。</li>
+            <li><strong>文章題の立式:</strong> 文章題から不等式を立てる際は、問題文の「以上」「以下」「より大きい（超過）」「より小さい（未満）」といった言葉を正確に不等号に置き換えることが重要です。</li>
+        </ul>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li>連立不等式を解くには、まずそれぞれの不等式を個別に解き、その後に共通の範囲（解）を求めます。</li>
+            <li>\(A < B < C\) の形の不等式は、\(A < B\) かつ \(B < C\) という連立不等式として扱います。</li>
+            <li>数直線を利用すると、複数の不等式の解の共通範囲を視覚的に把握しやすくなります。</li>
+            <li>不等式の両辺に負の数を掛けたり割ったりする際は、不等号の向きが逆になることに注意が必要です。</li>
+            <li>最終的な解は、全ての条件を満たす範囲であり、「解なし」となる場合もあります。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
