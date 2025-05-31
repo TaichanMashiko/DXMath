@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>合成関数と関数の極限</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>合成関数と関数の極限</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年05月31日</p>
+    <p>講師: 講師</p>
+    <p>教科書: 44ページ</p>
+    <p>学習目標: 合成関数の概念を理解し、関数の極限の計算に応用できるようになる。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに</a></li>
+                <li><a href="#review-inverse">1. 逆関数(fインバース)の復習と本日のテーマ 📖</a></li>
+                <li><a href="#composite-functions">2. 合成関数とは 📖</a>
+                    <ul>
+                        <li><a href="#composite-def">定義: 合成関数</a></li>
+                        <li><a href="#composite-notation">合成関数の表記法</a></li>
+                        <li><a href="#composite-example1">例: 具体的な合成関数の計算</a></li>
+                    </ul>
+                </li>
+                <li><a href="#limits-of-functions">3. 関数の極限 📈</a>
+                    <ul>
+                        <li><a href="#limit-concept">極限の基本的な考え方</a></li>
+                        <li><a href="#limit-example1">例題8: 簡単な関数の極限</a></li>
+                        <li><a href="#limit-example2">例題10: 分数関数の極限（約分が必要な場合）</a></li>
+                    </ul>
+                </li>
+                <li><a href="#caution-points">⚠️ 注意点と間違いやすいポイント</a></li>
+                <li><a href="#formula-guide-composite">🧭 合成関数の計算ガイド</a></li>
+                <li><a href="#formula-guide-limit">🧭 関数の極限計算ガイド</a></li>
+                <li><a href="#standard-problems">✏️ 標準的な練習問題</a>
+                    <ul>
+                        <li><a href="#std-prob-comp1">合成関数の問題 1</a></li>
+                        <li><a href="#std-prob-limit1">極限の問題 1</a></li>
+                    </ul>
+                </li>
+                <li><a href="#advanced-problems">✏️ 発展的な練習問題</a>
+                    <ul>
+                        <li><a href="#adv-prob-comp1">合成関数の問題 1: 3つの関数の合成</a></li>
+                        <li><a href="#adv-prob-limit1">極限の問題 1: 不定形の極限</a></li>
+                    </ul>
+                </li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに</h2>
+    <p>本日の授業では、教科書44ページの内容を中心に学習します。テーマは昨日学習した<span class="tooltip" data-tooltip="関数f(x)の逆の操作を行う関数。f(y)=xのとき、y=f⁻¹(x)と表す">逆関数（fインバース）</span>に関連する内容から始まり、<span class="tooltip" data-tooltip="複数の関数を順に適用して得られる新しい関数">合成関数</span>、そして関数の<span class="tooltip" data-tooltip="変数が特定の値に近づくときの関数の値の振る舞い">極限</span>へと進みます。これらの概念は、将来的に微分・積分を学ぶ上で非常に重要になります。</p>
+
+    <h2 id="review-inverse">1. 逆関数(fインバース)の復習と本日のテーマ 📖 <span class="importance">★★☆</span></h2>
+    <p>昨日は逆関数について学びました。関数 \(f(x)\) がある値を別の値に対応させる「トンネル」だとすると、逆関数 \(f^{-1}(x)\) はその逆方向の「トンネル」と考えることができます。例えば、\(f(x) = x+4\) という関数で3を入力すると7が出力されます。この逆関数 \(f^{-1}(x) = x-4\) では、7を入力すると3が出力されます。</p>
+    <p>この逆関数の \(^{-1}\) という表記がなぜ使われるのか、という疑問は、本日学習する合成関数の概念と関連しています。</p>
+
+    <h2 id="composite-functions">2. 合成関数とは 📖 <span class="importance">★★★</span></h2>
+    <p>合成関数とは、ある関数で処理した結果を、さらに別の関数で処理するという、関数を連続して適用する考え方です。関数を「トンネル」に例えると、一つのトンネルを通過した後に、続けてもう一つの異なるトンネルを通過するイメージです。</p>
+    <p>例えば、関数 \(f(x)\) が「入力された値に4を足す」処理 (\(f(x) = x+4\)) で、関数 \(g(x)\) が「入力された値を2乗する」処理 (\(g(x) = x^2\)) だとします。</p>
+    <p>このとき、まず \(f(x)\) を通し、その結果を \(g(x)\) に通すという合成関数を考えてみましょう。
+    入力が3の場合：
+    <ol>
+        <li>\(f(3) = 3+4 = 7\)</li>
+        <li>\(g(7) = 7^2 = 49\)</li>
+    </ol>
+    したがって、この合成関数に3を入力すると49が出力されます。</p>
+    <p>重要なのは、関数を適用する順番によって結果が変わる可能性があるということです。上記の例で、もし先に \(g(x)\) を通し、その結果を \(f(x)\) に通すと：
+    <ol>
+        <li>\(g(3) = 3^2 = 9\)</li>
+        <li>\(f(9) = 9+4 = 13\)</li>
+    </ol>
+    となり、結果は13と、先程の49とは異なります。</p>
+
+    <h3 id="composite-def" class="definition">定義: 合成関数 📖 <span class="importance">★★★</span></h3>
+    <p>2つの関数 \(f(x)\) と \(g(x)\) があるとき、まず \(f(x)\) を作用させ、その結果 \(f(x)\) を \(g(x)\) の \(x\) に代入して得られる関数を、\(f\) と \(g\) の合成関数といい、\((g \circ f)(x)\) または \(g(f(x))\) と表します。</p>
+    <p>\((g \circ f)(x) = g(f(x))\)</p>
+    <p>同様に、まず \(g(x)\) を作用させ、その結果 \(g(x)\) を \(f(x)\) の \(x\) に代入して得られる関数は \((f \circ g)(x)\) または \(f(g(x))\) と表します。</p>
+    <p>\((f \circ g)(x) = f(g(x))\)</p>
+
+    <h3 id="composite-notation">合成関数の表記法 <span class="importance">★★☆</span></h3>
+    <p>合成関数 \(g(f(x))\) は、\((g \circ f)(x)\) とも書きます。この「\(\circ\)」（マル）の記号は合成を表します。読む順番は右から左で、まず \(x\) に \(f\) を作用させ、その結果に \(g\) を作用させます。</p>
+    <div class="tips">
+        💡 <strong>逆関数と合成関数の関係</strong><br>
+        関数 \(f(x)\) とその逆関数 \(f^{-1}(x)\) を合成すると、元の値に戻ります。つまり、
+        \[ (f^{-1} \circ f)(x) = f^{-1}(f(x)) = x \]
+        \[ (f \circ f^{-1})(x) = f(f^{-1}(x)) = x \]
+        が成り立ちます。これは、ある処理をしてからその逆の処理をすると元に戻る、という直感的な理解と一致します。指数法則で \(a^1 \cdot a^{-1} = a^{1-1} = a^0 = 1\) となるように、関数とその逆関数を合成すると「何もしない」操作（恒等関数）になる、というアナロジーから \(^{-1}\) の記号が使われていると考えることができます。
+    </div>
+
+    <h3 id="composite-example1" class="example">例: 具体的な合成関数の計算 ✍️ <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h3>
+    <p>関数 \(f(x) = 2x^3\) と \(g(x) = x-4\) があるとき、次の合成関数を求めなさい。</p>
+    <ol>
+        <li>\((g \circ f)(x)\)</li>
+        <li>\((f \circ g)(x)\)</li>
+    </ol>
+    <details>
+        <summary>解答と解説</summary>
+        <p><strong>1. \((g \circ f)(x) = g(f(x))\)</strong></p>
+        <p>\(g(x)\) の \(x\) の部分に \(f(x)\) を代入します。<br>
+        \(f(x) = 2x^3\) なので、<br>
+        \(g(f(x)) = g(2x^3)\)<br>
+        \(g(x) = x-4\) の \(x\) に \(2x^3\) を代入するので、<br>
+        \(g(2x^3) = (2x^3) - 4 = 2x^3 - 4\)</p>
+        <p><strong>答え: \(2x^3 - 4\)</strong></p>
+
+        <p><strong>2. \((f \circ g)(x) = f(g(x))\)</strong></p>
+        <p>\(f(x)\) の \(x\) の部分に \(g(x)\) を代入します。<br>
+        \(g(x) = x-4\) なので、<br>
+        \(f(g(x)) = f(x-4)\)<br>
+        \(f(x) = 2x^3\) の \(x\) に \(x-4\) を代入するので、<br>
+        \(f(x-4) = 2(x-4)^3\)</p>
+        <p class="caution">⚠️ 注意: ここで計算を止めても構いませんが、展開する場合は \( (a-b)^3 = a^3 - 3a^2b + 3ab^2 - b^3 \) の公式を使います。
+        \(2(x^3 - 3x^2 \cdot 4 + 3x \cdot 4^2 - 4^3)\)<br>
+        \(= 2(x^3 - 12x^2 + 48x - 64)\)<br>
+        \(= 2x^3 - 24x^2 + 96x - 128\)</p>
+        <p><strong>答え: \(2(x-4)^3\) または \(2x^3 - 24x^2 + 96x - 128\)</strong></p>
+    </details>
+
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★★☆</span></h4>
+        <ol>
+            <li>\(f(x) = x+1\), \(g(x) = 3x\) のとき、\((g \circ f)(2)\) の値は？
+                <ol type="a">5</ol>
+                <ol type="a">7</ol>
+                <ol type="a">9</ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: c. 9</strong></p>
+                    <p>解説: まず \(f(2) = 2+1 = 3\)。次に \(g(f(2)) = g(3) = 3 \times 3 = 9\)。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <h2 id="limits-of-functions">3. 関数の極限 📈 <span class="importance">★★★</span></h2>
+    <h3 id="limit-concept">極限の基本的な考え方 <span class="importance">★★★</span></h3>
+    <p>関数の極限とは、変数が特定の値に限りなく近づくとき、関数の値がどのような値に近づくか、またはどのように振る舞うかを調べる概念です。「\(\lim_{x \to a} f(x)\)」と書き、「\(x\) が \(a\) に近づくときの \(f(x)\) の極限」と読みます。</p>
+    <p>例えば、関数 \(y=x\) のグラフを考えます。\(x\) が0に近づくとき、\(y\) の値も0に近づきます。この場合、0が「存在する」かどうかは問題ではなく、0に近づくときの「行き先」が重要です。</p>
+    <p>関数によっては、分母が0になるために特定の値で定義されない場合があります。例えば、\(y = \frac{x^2-4}{x-2}\) という関数は \(x=2\) では定義されません（分母が0になるため）。しかし、\(x\) が2に限りなく近づくときの \(y\) の値（極限値）は考えることができます。</p>
+
+    <h3 id="limit-example1" class="example">例題8: 簡単な関数の極限 ✍️ <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h3>
+    <p>関数 \(f(x) = x^2\) のとき、\(\lim_{x \to 2} f(x)\) を求めなさい。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>この関数は \(x=2\) で定義されており、連続です。そのため、単純に \(x=2\) を代入することで極限値を求めることができます。<br>
+        \(\lim_{x \to 2} x^2 = 2^2 = 4\)</p>
+        <p><strong>答え: 4</strong></p>
+    </details>
+
+    <h3 id="limit-example2" class="example">例題10: 分数関数の極限（約分が必要な場合） ✍️ <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>次の極限値を求めなさい。</p>
+    <p>\[ \lim_{x \to 2} \frac{x^2 + x - 6}{x - 2} \]</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>このまま \(x=2\) を代入すると、分母が \(2-2=0\)、分子が \(2^2+2-6 = 4+2-6=0\) となり、\(\frac{0}{0}\) の<span class="tooltip" data-tooltip="そのままでは極限値が確定しない形。式変形やロピタルの定理などで値を求める">不定形</span>となります。このような場合は、式を変形して不定形を解消する必要があります。</p>
+        <p>分子を因数分解します。<br>
+        \(x^2 + x - 6 = (x-2)(x+3)\)</p>
+        <p>よって、与えられた式は次のように変形できます。<br>
+        \[ \lim_{x \to 2} \frac{(x-2)(x+3)}{x - 2} \]</p>
+        <p>\(x \to 2\) であり、\(x \neq 2\) なので、分母と分子の \((x-2)\) を約分することができます。<br>
+        \[ \lim_{x \to 2} (x+3) \]</p>
+        <p>ここで \(x=2\) を代入すると、<br>
+        \(2+3 = 5\)</p>
+        <p><strong>答え: 5</strong></p>
+    </details>
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★★☆</span></h4>
+        <ol>
+            <li>\(\lim_{x \to 1} (x^2 + 2x + 3)\) の値は？
+                <ol type="a">3</ol>
+                <ol type="a">5</ol>
+                <ol type="a">6</ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: c. 6</strong></p>
+                    <p>解説: \(x=1\) を代入して、\(1^2 + 2(1) + 3 = 1+2+3 = 6\)。</p>
+                </details>
+            </li>
+            <li>\(\lim_{x \to 3} \frac{x^2-9}{x-3}\) の値は？
+                <ol type="a">0</ol>
+                <ol type="a">3</ol>
+                <ol type="a">6</ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: c. 6</strong></p>
+                    <p>解説: \(\frac{x^2-9}{x-3} = \frac{(x-3)(x+3)}{x-3} = x+3\)。よって \(\lim_{x \to 3} (x+3) = 3+3 = 6\)。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <div class="caution" id="caution-points">
+        <h3>⚠️ 注意点と間違いやすいポイント <span class="importance">★★★</span></h3>
+        <ul>
+            <li><strong>合成関数の順番:</strong> \((g \circ f)(x)\) と \((f \circ g)(x)\) は一般に異なります。関数の適用順序を間違えないようにしましょう。\((g \circ f)(x)\) は「まず \(f\)、次に \(g\)」です。</li>
+            <li><strong>極限の不定形:</strong> \(\lim_{x \to a} f(x)\) を求める際、\(f(a)\) が \(\frac{0}{0}\) や \(\frac{\infty}{\infty}\) の形になる場合は不定形です。そのまま値を代入するのではなく、因数分解して約分する、有理化するなどの式変形が必要です。</li>
+            <li><strong>分母が0になる場合:</strong> 関数の極限を考える上で、分母が0に近づく場合は特に注意が必要です。単純に0になる場合（例: \(\lim_{x \to 0} \frac{1}{x}\) のように発散する）と、約分によって不定形が解消される場合があります。</li>
+            <li><strong>極限の存在:</strong> 全ての関数で極限値が存在するわけではありません。右側極限と左側極限が一致しない場合など、極限が存在しないケースもあります（今回は扱いませんが、今後の学習で重要になります）。</li>
+        </ul>
+    </div>
+
+    <div class="formula-guide" id="formula-guide-composite">
+        <h3>🧭 合成関数の計算ガイド <span class="importance">★★☆</span></h3>
+        <p>合成関数 \((g \circ f)(x)\) または \(g(f(x))\) を求める手順は以下の通りです。</p>
+        <ol>
+            <li><strong>内側の関数を特定:</strong> まず、\(f(x)\)（内側の関数）がどのような式であるかを確認します。</li>
+            <li><strong>外側の関数に代入:</strong> 次に、\(g(x)\)（外側の関数）の式中の全ての \(x\) を、手順1で特定した \(f(x)\) の式全体で置き換えます。
+                <ul>
+                    <li>例: \(f(x) = x+1\), \(g(x) = x^2\) のとき、\(g(f(x))\) は \(g(x+1)\) となり、\(g(x)\) の \(x\) を \((x+1)\) で置き換えるので \((x+1)^2\) となります。</li>
+                </ul>
+            </li>
+            <li><strong>式を整理（必要な場合）:</strong> 代入後の式を展開したり、簡単にしたりします。</li>
+        </ol>
+        <p><strong>ポイント:</strong> どの関数が「内側」で、どの関数が「外側」かを正確に把握することが重要です。\(g(f(x))\) なら \(f\) が内側、\(g\) が外側です。</p>
+    </div>
+
+    <div class="formula-guide" id="formula-guide-limit">
+        <h3>🧭 関数の極限計算ガイド <span class="importance">★★★</span></h3>
+        <p>関数の極限 \(\lim_{x \to a} f(x)\) を求める際の基本的なアプローチです。</p>
+        <ul>
+            <li>
+                <strong>ステップ1: 直接代入を試みる</strong>
+                <ul>
+                    <li>まず、\(f(x)\) に \(x=a\) を代入してみます。</li>
+                    <li>代入して有限の値が得られる場合（分母が0にならないなど）、それが極限値となることが多いです（連続関数の場合）。</li>
+                    <li>例: \(\lim_{x \to 2} (x^2+1) = 2^2+1 = 5\)</li>
+                </ul>
+            </li>
+            <li>
+                <strong>ステップ2: 不定形の場合の対処</strong>
+                <ul>
+                    <li>\(x=a\) を代入して \(\frac{0}{0}\) や \(\frac{\infty}{\infty}\) などの不定形になる場合は、式変形が必要です。</li>
+                    <li><strong>因数分解と約分:</strong> 分数関数で分子・分母が多項式の場合、共通因数で約分できることがあります。
+                        <ul><li>例: \(\lim_{x \to 1} \frac{x^2-1}{x-1} = \lim_{x \to 1} \frac{(x-1)(x+1)}{x-1} = \lim_{x \to 1} (x+1) = 2\)</li></ul>
+                    </li>
+                    <li><strong>有理化:</strong> 無理関数（ルートを含む関数）の場合、分子または分母を有理化することで不定形が解消されることがあります。
+                        <ul><li>例: \(\lim_{x \to 0} \frac{\sqrt{x+1}-1}{x}\) (今回は扱いませんが、今後の学習範囲です)</li></ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <strong>ステップ3: 式変形後に再度代入</strong>
+                <ul>
+                    <li>式変形によって不定形が解消されたら、再度 \(x=a\) を代入して極限値を求めます。</li>
+                </ul>
+            </li>
+        </ul>
+        <p class="caution">⚠️ <strong>0除算の回避:</strong> 極限の計算過程で、安易に分母が0となる操作をしないように注意が必要です。\(x \to a\) は「\(x\) が \(a\) に近づく」という意味であり、「\(x=a\) である」とは限りません。このため、\(x \neq a\) の条件下で約分などを行います。</p>
+    </div>
+
+
+    <div class="practice-problems" id="standard-problems">
+        <h3>✏️ 標準的な練習問題 <span class="importance">★★☆</span></h3>
+        <h4 id="std-prob-comp1">合成関数の問題 1 <span class="difficulty">★★☆</span></h4>
+        <p>\(f(x) = x^2 - 1\), \(g(x) = \sqrt{x+1}\) のとき、\((f \circ g)(x)\) と \((g \circ f)(x)\) をそれぞれ求めなさい。また、それぞれの定義域も答えなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p><strong>\((f \circ g)(x) = f(g(x))\)</strong><br>
+            \(f(g(x)) = f(\sqrt{x+1}) = (\sqrt{x+1})^2 - 1 = (x+1) - 1 = x\)<br>
+            定義域: \(g(x)\) の根号内が \(x+1 \geq 0 \Rightarrow x \geq -1\)。また、\(f(x)\) の定義域は全ての実数。よって合成関数の定義域は \(x \geq -1\)。</p>
+
+            <p><strong>\((g \circ f)(x) = g(f(x))\)</strong><br>
+            \(g(f(x)) = g(x^2-1) = \sqrt{(x^2-1)+1} = \sqrt{x^2} = |x|\)<br>
+            定義域: \(f(x)\) の定義域は全ての実数。\(g(x)\) の根号内が \(x^2-1+1 = x^2 \geq 0\)。これは全ての実数で成り立つ。よって合成関数の定義域は全ての実数。</p>
+            <p><strong>答え: \((f \circ g)(x) = x\) (定義域: \(x \geq -1\)), \((g \circ f)(x) = |x|\) (定義域: 全ての実数)</strong></p>
+        </details>
+
+        <h4 id="std-prob-limit1">極限の問題 1 <span class="difficulty">★☆☆</span></h4>
+        <p>次の極限値を求めなさい。</p>
+        <p>\[ \lim_{x \to -1} \frac{x^2 - 2x - 3}{x + 1} \]</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(x = -1\) を代入すると \(\frac{1+2-3}{-1+1} = \frac{0}{0}\) の不定形。<br>
+            分子を因数分解: \(x^2 - 2x - 3 = (x-3)(x+1)\)<br>
+            \[ \lim_{x \to -1} \frac{(x-3)(x+1)}{x + 1} = \lim_{x \to -1} (x-3) = -1-3 = -4 \]</p>
+            <p><strong>答え: -4</strong></p>
+        </details>
+    </div>
+
+    <div class="practice-problems" id="advanced-problems">
+        <h3>✏️ 発展的な練習問題 <span class="importance">★★★</span></h3>
+        <h4 id="adv-prob-comp1">合成関数の問題 1: 3つの関数の合成 <span class="difficulty">★★★</span></h4>
+        <p>\(f(x) = x+2\), \(g(x) = 3x\), \(h(x) = x^2\) のとき、\((h \circ g \circ f)(x)\) を求めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\((h \circ g \circ f)(x) = h(g(f(x)))\)<br>
+            まず \(g(f(x))\) を計算します。<br>
+            \(g(f(x)) = g(x+2) = 3(x+2) = 3x+6\)<br>
+            次に \(h(g(f(x)))\) を計算します。<br>
+            \(h(3x+6) = (3x+6)^2 = (3(x+2))^2 = 9(x+2)^2 = 9(x^2+4x+4) = 9x^2+36x+36\)</p>
+            <p><strong>答え: \(9(x+2)^2\) または \(9x^2+36x+36\)</strong></p>
+        </details>
+
+        <h4 id="adv-prob-limit1">極限の問題 1: 不定形の極限 <span class="difficulty">★★★</span></h4>
+        <p>次の極限値を求めなさい。</p>
+        <p>\[ \lim_{h \to 0} \frac{(2+h)^3 - 8}{h} \]</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>\(h=0\) を代入すると \(\frac{2^3-8}{0} = \frac{0}{0}\) の不定形。<br>
+            分子を展開します: \((a+b)^3 = a^3+3a^2b+3ab^2+b^3\)<br>
+            \((2+h)^3 = 2^3 + 3 \cdot 2^2 \cdot h + 3 \cdot 2 \cdot h^2 + h^3 = 8 + 12h + 6h^2 + h^3\)<br>
+            よって、分子は \((8 + 12h + 6h^2 + h^3) - 8 = 12h + 6h^2 + h^3 = h(12 + 6h + h^2)\)<br>
+            \[ \lim_{h \to 0} \frac{h(12 + 6h + h^2)}{h} = \lim_{h \to 0} (12 + 6h + h^2) \]</p>
+            <p>\(h=0\) を代入して、\(12 + 6(0) + 0^2 = 12\)</p>
+            <p class="supplement">➕ この形は微分係数の定義 \(f'(a) = \lim_{h \to 0} \frac{f(a+h)-f(a)}{h}\) に似ています。実際、\(f(x)=x^3\) とすると \(f'(2)\) の計算に相当します。</p>
+            <p><strong>答え: 12</strong></p>
+        </details>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li><strong>合成関数:</strong> 複数の関数を順に適用すること。\(g(f(x))\) や \((g \circ f)(x)\) と表記し、まず \(f(x)\) を計算し、その結果を \(g(x)\) に代入する。</li>
+            <li><strong>関数の極限:</strong> 変数がある値に近づくときの関数の値の近づき先。 \(\lim_{x \to a} f(x)\) と表記する。</li>
+            <li><strong>極限の計算:</strong>
+                <ul>
+                    <li>基本は \(x=a\) を代入する。</li>
+                    <li>\(\frac{0}{0}\) の不定形になる場合は、因数分解して約分するなどの式変形を行う。</li>
+                </ul>
+            </li>
+            <li>分母が0になることの重要性: 関数の定義や極限計算において、分母が0になる場合は特別な注意が必要。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
