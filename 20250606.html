@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[単元名 Placeholder]</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>[単元名 Placeholder]</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年06月06日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 関数の定義とグラフの理解、特に定義域と値域の概念を把握する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに - 第3章について</a></li>
+                <li><a href="#function-def">1. 関数の定義と表記 📖</a>
+                    <ul>
+                        <li><a href="#what-is-function">関数とは何か？</a></li>
+                        <li><a href="#function-notation">関数の表記方法: y=f(x)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#domain-range">2. 定義域と値域 📖</a>
+                    <ul>
+                        <li><a href="#domain">定義域について</a></li>
+                        <li><a href="#range">値域について</a></li>
+                        <li><a href="#example-graph">グラフを用いた視覚的理解</a></li>
+                    </ul>
+                </li>
+                <li><a href="#example-problems">3. 例題演習 ✍️</a>
+                    <ul>
+                        <li><a href="#ex1-domain-range">例題1: 一次関数の定義域と値域</a></li>
+                    </ul>
+                </li>
+                <li><a href="#common-mistakes">⚠️ 間違いやすいポイント</a></li>
+                <li><a href="#practice-standard">✏️ 標準的な練習問題</a></li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに - 第3章について</h2>
+    <p>本日から第3章に入ります。第2章（集合と論理など）は一旦飛ばし、第3章の関数とグラフの内容を学習します。この第3章は、数学Iで最も重要かつ難しい単元であり、今後の数学II、数学III、さらには大学入試や模試にも頻繁に出題される分野です。ここでしっかりと理解を深めることが重要になります。</p>
+    <p class="important">⭐ この単元は、今後の学習の基礎となるため、特に集中して取り組みましょう。</p>
+
+    <h2 id="function-def">1. 関数の定義と表記 📖 <span class="importance">★★★</span></h2>
+    <h3 id="what-is-function">関数とは何か？</h3>
+    <p><span class="tooltip" data-tooltip="ある変数xの値を定めると、それに対応して変数yの値がただ一つ定まるとき、yはxの関数であるという">関数</span>とは、簡単に言うと「関係する数」のことです。ある値（例えば \(x\)）が決まると、それに対応して別の値（例えば \(y\)）が<strong>ただ一つ</strong>決まる関係を指します。</p>
+    <div class="definition">
+        <p><strong>関数</strong>: 変数 \(x\) の値を定めると、それに対応して変数 \(y\) の値がただ一つ定まるとき、\(y\) は \(x\) の関数であるといいます。</p>
+    </div>
+    <p>例：</p>
+    <ul>
+        <li>小学校で学習した比例: \(y = 2x\) （\(x\) が決まれば \(y\) がただ一つ決まる）</li>
+        <li>中学校で学習した一次関数: \(y = 2x + 1\)</li>
+        <li>中学校で学習した二次関数: \(y = x^2\)</li>
+    </ul>
+    <p class="caution">⚠️ 関数ではない例: \(y^2 = x\)。例えば \(x=4\) のとき、\(y^2=4\) より \(y = \pm 2\) となり、\(y\) の値が2つ定まってしまうため、これは \(y\) が \(x\) の関数であるとは言えません（ただし、\(x\) が \(y\) の関数であるとは言えます）。</p>
+
+    <h3 id="function-notation">関数の表記方法: y=f(x) <span class="importance">★★★</span></h3>
+    <p>関数は、しばしば \(y = f(x)\) のように表記されます。ここで、\(f\) は英語の function（関数）の頭文字です。これは「\(y\) は \(x\) の関数である」という意味を表します。</p>
+    <p>\(f(x)\) は「エフ・エックス」と読みます。\(f(x)\) の \(x\) の部分には具体的な数値が入ることがあり、例えば \(f(1)\) は「関数 \(f(x)\) の \(x\) に1を代入したときの \(y\) の値」を意味します。</p>
+    <p class="example">✍️ 例: \(f(x) = 5x - 2\) のとき</p>
+    <ul>
+        <li>\(f(1)\) は \(x=1\) を代入して、\(5 \times 1 - 2 = 3\)</li>
+        <li>\(f(-2)\) は \(x=-2\) を代入して、\(5 \times (-2) - 2 = -10 - 2 = -12\)</li>
+        <li>\(f(a)\) は \(x=a\) を代入して、\(5a - 2\)</li>
+    </ul>
+
+    <h2 id="domain-range">2. 定義域と値域 📖 <span class="importance">★★★</span></h2>
+    <h3 id="domain">定義域について</h3>
+    <div class="definition">
+        <p><strong>定義域（ていぎいき）</strong>: 関数 \(y=f(x)\) において、変数 \(x\) がとりうる値の範囲のこと。</p>
+    </div>
+    <p>定義域は、問題文で指定される場合と、関数の形から暗黙的に決まる場合があります。</p>
+    <p>例: \(y = \frac{1}{x}\) の場合、分母が0になってはいけないので、\(x \neq 0\) が暗黙の定義域となります。</p>
+
+    <h3 id="range">値域について</h3>
+    <div class="definition">
+        <p><strong>値域（ちいき）</strong>: 関数 \(y=f(x)\) において、定義域の \(x\) の値に対応して \(y\) がとりうる値の範囲のこと。</p>
+    </div>
+    <p>値域は、定義域と関数の形によって決まります。</p>
+
+    <h3 id="example-graph">グラフを用いた視覚的理解</h3>
+    <p>関数 \(y = x^2\) のグラフを例に、定義域と値域を考えてみましょう。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22280%22%20y2%3D%22200%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22205%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%22230%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2220%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22215%22%3EO%3C%2Ftext%3E%3C!--%20Parabola%20y=x^2%20--%3E%3Cpath%20d%3D%22M50%2C50%20Q150%2C200%20250%2C50%22%20transform%3D%22translate(0%2C150)%20scale(1%2C-1)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3C!--%20Example%20Domain%20and%20Range%20--%3E%3Cdefs%3E%3Cmarker%20id%3D%22arrow%22%20markerWidth%3D%225%22%20markerHeight%3D%223.5%22%20refX%3D%220%22%20refY%3D%221.75%22%20orient%3D%22auto%22%3E%3Cpolygon%20points%3D%220%200%2C%205%201.75%2C%200%203.5%22%20fill%3D%22red%22%2F%3E%3C%2Fmarker%3E%3C%2Fdefs%3E%3C!--%20Domain%20highlight%20x-axis%20--%3E%3Crect%20x%3D%22150%22%20y%3D%22198%22%20width%3D%22100%22%20height%3D%224%22%20fill%3D%22red%22%20opacity%3D%220.5%22%2F%3E%3Ctext%20x%3D%22180%22%20y%3D%22190%22%20fill%3D%22red%22%3E%E5%AE%9A%E7%BE%A9%E5%9F%9F%20(x%E2%89%A50)%3C%2Ftext%3E%3C!--%20Range%20highlight%20y-axis%20--%3E%3Crect%20x%3D%22148%22%20y%3D%2225%22%20width%3D%224%22%20height%3D%22175%22%20fill%3D%22green%22%20opacity%3D%220.5%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%22100%22%20fill%3D%22green%22%3E%E5%80%A4%E5%9F%9F%20(y%E2%89%A50)%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=x^2のグラフと定義域・値域の例">
+    <ul>
+        <li>もし定義域が指定されていなければ、実数全体と考えられます。このとき、\(y\) は \(y \geq 0\) の範囲の値をとり、これが値域となります。</li>
+        <li>もし定義域が \(0 \leq x \leq 2\) と指定された場合、\(x\) は0から2までの値をとります。このとき、\(y\) は \(y = 0^2 = 0\) から \(y = 2^2 = 4\) までの値をとり、値域は \(0 \leq y \leq 4\) となります。</li>
+    </ul>
+
+    <h2 id="example-problems">3. 例題演習 ✍️</h2>
+    <h3 id="ex1-domain-range">例題1: 一次関数の定義域と値域 <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h3>
+    <p>関数 \(y = -2x + 3\) について、定義域が \(-1 \leq x \leq 2\) のときの値域を求めなさい。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>この関数は一次関数であり、傾きが-2（負）なので、グラフは右下がりの直線になります。</p>
+        <p>定義域の端点における \(y\) の値を求めます。</p>
+        <ul>
+            <li>\(x = -1\) のとき: \(y = -2(-1) + 3 = 2 + 3 = 5\)</li>
+            <li>\(x = 2\) のとき: \(y = -2(2) + 3 = -4 + 3 = -1\)</li>
+        </ul>
+        <p>グラフが右下がりなので、\(x\) が増加すると \(y\) は減少します。したがって、</p>
+        <ul>
+            <li>定義域の最小値 \(x=-1\) のときに \(y\) は最大値 \(5\) をとる。</li>
+            <li>定義域の最大値 \(x=2\) のときに \(y\) は最小値 \(-1\) をとる。</li>
+        </ul>
+        <p>よって、値域は \(-1 \leq y \leq 5\) となります。</p>
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22125%22%20x2%3D%22280%22%20y2%3D%22125%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22130%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22100%22%20y1%3D%22230%22%20x2%3D%22100%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22105%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%2290%22%20y%3D%22140%22%3EO%3C%2Ftext%3E%3C!--%20Line%20y=-2x+3%20--%3E%3Cline%20x1%3D%2250%22%20y1%3D%2275%22%20x2%3D%22200%22%20y2%3D%22-75%22%20transform%3D%22translate(0%2C50)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%2F%3E%3C!--%20Domain%20points%20--%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%2275%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%2270%22%20y%3D%2265%22%20fill%3D%22red%22%3E(-1%2C%205)%3C%2Ftext%3E%3Ccircle%20cx%3D%22140%22%20cy%3D%22135%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22130%22%20y%3D%22150%22%20fill%3D%22red%22%3E(2%2C%20-1)%3C%2Ftext%3E%3C!--%20Domain%20highlight%20x-axis%20--%3E%3Crect%20x%3D%2280%22%20y%3D%22123%22%20width%3D%2260%22%20height%3D%224%22%20fill%3D%22red%22%20opacity%3D%220.5%22%2F%3E%3Ctext%20x%3D%2285%22%20y%3D%22115%22%20fill%3D%22red%22%3E-1%E2%89%A4x%E2%89%A42%3C%2Ftext%3E%3C!--%20Range%20highlight%20y-axis%20--%3E%3Crect%20x%3D%2298%22%20y%3D%2275%22%20width%3D%224%22%20height%3D%2260%22%20fill%3D%22green%22%20opacity%3D%220.5%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%22105%22%20fill%3D%22green%22%3E-1%E2%89%A4y%E2%89%A45%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=-2x+3 のグラフと定義域・値域">
+        <p class="important">⭐ 答え: \(-1 \leq y \leq 5\)</p>
+    </details>
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★☆☆</span></h4>
+        <ol>
+            <li>関数 \(y = 3x - 1\) の定義域が \(0 \leq x \leq 3\) のとき、値域はどうなりますか？
+                <ol type="a">
+                    <li>\(-1 \leq y \leq 8\)</li>
+                    <li>\(0 \leq y \leq 3\)</li>
+                    <li>\(2 \leq y \leq 8\)</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: a. \(-1 \leq y \leq 8\)</strong></p>
+                    <p>解説: \(x=0\) のとき \(y = 3(0) - 1 = -1\)。\(x=3\) のとき \(y = 3(3) - 1 = 9 - 1 = 8\)。傾きが正なので、値域は \(-1 \leq y \leq 8\) となります。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <div class="caution" id="common-mistakes">
+        <h3>⚠️ 間違いやすいポイント <span class="importance">★★☆</span></h3>
+        <ul>
+            <li><strong>定義域と値域の混同:</strong> \(x\) の範囲が定義域、\(y\) の範囲が値域です。どちらを問われているのかを正確に把握しましょう。</li>
+            <li><strong>グラフの傾きと値域:</strong> 一次関数の場合、グラフが右上がり（傾きが正）か右下がり（傾きが負）かで、定義域の端点が値域の最大・最小にどう対応するかが変わります。二次関数の場合は、頂点の位置が重要になります。</li>
+            <li><strong>関数の表記 \(f(x)\) の誤解:</strong> \(f(x)\) は \(f \times x\) ではなく、\(x\) の関数 \(f\) であることを示します。\(f(3)\) は \(x=3\) を関数に代入したときの \(y\) の値を意味します。</li>
+            <li><strong>「ただ一つ決まる」の理解:</strong> 関数の定義において「\(y\) の値がただ一つ決まる」という点が重要です。\(x\) の値に対して複数の \(y\) が対応する場合は関数ではありません。</li>
+        </ul>
+    </div>
+
+    <div class="practice-problems" id="practice-standard">
+        <h3>✏️ 標準的な練習問題</h3>
+        <h4>問題 1 <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h4>
+        <p>関数 \(f(x) = x^2 - 3x + 5\) について、次の値を求めなさい。</p>
+        <ol>
+            <li>\(f(0)\)</li>
+            <li>\(f(2)\)</li>
+            <li>\(f(-1)\)</li>
+        </ol>
+        <details>
+            <summary>解答と解説</summary>
+            <ol>
+                <li>\(f(0) = 0^2 - 3(0) + 5 = 0 - 0 + 5 = 5\)</li>
+                <li>\(f(2) = 2^2 - 3(2) + 5 = 4 - 6 + 5 = 3\)</li>
+                <li>\(f(-1) = (-1)^2 - 3(-1) + 5 = 1 + 3 + 5 = 9\)</li>
+            </ol>
+            <p><strong>答え: 1. 5, 2. 3, 3. 9</strong></p>
+        </details>
+        <h4>問題 2 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h4>
+        <p>関数 \(y = \frac{1}{2}x + 1\) について、定義域が \(-2 \leq x < 4\) のときの値域を求めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>この関数は一次関数で、傾きが \(\frac{1}{2}\)（正）なので、グラフは右上がりの直線です。</p>
+            <p>定義域の端点における \(y\) の値を求めます。</p>
+            <ul>
+                <li>\(x = -2\) のとき: \(y = \frac{1}{2}(-2) + 1 = -1 + 1 = 0\)</li>
+                <li>\(x = 4\) のとき: \(y = \frac{1}{2}(4) + 1 = 2 + 1 = 3\)</li>
+            </ul>
+            <p>グラフが右上がりなので、\(x\) が増加すると \(y\) も増加します。
+            定義域の左端 \(x=-2\) は含まれるため、\(y=0\) は値域に含まれます。
+            定義域の右端 \(x=4\) は含まれないため、\(y=3\) は値域に含まれません。</p>
+            <p>よって、値域は \(0 \leq y < 3\) となります。</p>
+            <p class="important">⭐ 答え: \(0 \leq y < 3\)</p>
+        </details>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li><strong>関数:</strong> 変数 \(x\) の値を定めると、それに対応して変数 \(y\) の値が<strong>ただ一つ</strong>定まるとき、\(y\) は \(x\) の関数である。表記は \(y=f(x)\) など。</li>
+            <li><strong>定義域:</strong> 関数 \(y=f(x)\) において、変数 \(x\) がとりうる値の範囲。</li>
+            <li><strong>値域:</strong> 関数 \(y=f(x)\) において、定義域の \(x\) の値に対応して \(y\) がとりうる値の範囲。</li>
+            <li>定義域が指定されている場合、関数のグラフ（直線の傾きや放物線の頂点など）を考慮して値域を求める。</li>
+            <li>数学Iの第3章は、今後の数学の学習において非常に重要な土台となる。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
