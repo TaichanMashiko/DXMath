@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[単元名 Placeholder]</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>[単元名 Placeholder]</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年06月11日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 2次関数のグラフと最大値・最小値の関係を理解し、定義域が変化する場合の最大値・最小値の求め方を習得する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに</a></li>
+                <li><a href="#review-max-min">1. 2次関数の最大値・最小値の復習 📖</a></li>
+                <li><a href="#example-range-max-min">2. 例題解説: 定義域がある場合の最大値・最小値 ✍️</a>
+                    <ul>
+                        <li><a href="#ex7">例題7: 基本的な定義域での最大・最小</a></li>
+                    </ul>
+                </li>
+                <li><a href="#parabola-features">💡 放物線の特徴と最大・最小</a></li>
+                <li><a href="#practice-standard">✏️ 標準的な練習問題</a></li>
+                <li><a href="#common-mistakes">⚠️ 間違いやすいポイント</a></li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+                <li><a href="#next-class">次回予告</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに</h2>
+    <p>本日は、ワークシート2枚目、教科書77ページの2次関数の最大値・最小値の問題から解説を始めます。</p>
+    <p class="supplement">➕ 前回までの連絡事項: 2章は一度飛ばし、3章の関数とグラフに進んでいます。3章は数学Iで最も重要な単元であり、数II・数III、入試・模試にも頻出するため、しっかり学習しましょう。また、7月の模試の範囲にもこの3章が含まれます。</p>
+
+    <h2 id="review-max-min">1. 2次関数の最大値・最小値の復習 📖 <span class="importance">★★☆</span></h2>
+    <p>2次関数のグラフは<span class="tooltip" data-tooltip="2次関数 y=ax<sup>2</sup>+bx+c のグラフ。a>0で下に凸、a<0で上に凸の曲線。">放物線</span>を描きます。グラフの最も高い点または最も低い点を<span class="tooltip" data-tooltip="放物線の対称軸と放物線との交点。グラフが最も曲がっている点。">頂点</span>と呼びます。</p>
+    <ul>
+        <li>グラフが<strong>下に凸</strong>（\(x^2\) の係数が正）の場合、頂点で<strong>最小値</strong>をとります。最大値は、定義域が制限されていなければ存在しません（無限に大きくなるため）。</li>
+        <li>グラフが<strong>上に凸</strong>（\(x^2\) の係数が負）の場合、頂点で<strong>最大値</strong>をとります。最小値は、定義域が制限されていなければ存在しません（無限に小さくなるため）。</li>
+    </ul>
+    <p>最大値・最小値を求める問題では、まずグラフの形（凸の向き）と頂点の座標を把握することが基本となります。頂点を求めるには、<span class="tooltip" data-tooltip="2次関数を y=a(x-p)<sup>2</sup>+q の形に変形すること。頂点の座標(p,q)がわかる。">平方完成</span>が有効です。</p>
+
+    <h2 id="example-range-max-min">2. 例題解説: 定義域がある場合の最大値・最小値 ✍️</h2>
+    <h3 id="ex7">例題7: 基本的な定義域での最大・最小 <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>関数 \(y = x + 2\) について、定義域が \(1 \leq x \leq 5\) のときの最大値と最小値を求めなさい。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>この関数は一次関数で、傾きが1（正）なので、グラフは右上がりの直線です。</p>
+        <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22280%22%20y2%3D%22200%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22205%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%2250%22%20y1%3D%22230%22%20x2%3D%2250%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%2255%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%2235%22%20y%3D%22215%22%3EO%3C%2Ftext%3E%3C!--%20Line%20y=x+2%20--%3E%3Cline%20x1%3D%2230%22%20y1%3D%22190%22%20x2%3D%22250%22%20y2%3D%2270%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%2F%3E%3C!--%20Points%20--%3E%3Ccircle%20cx%3D%2280%22%20cy%3D%22170%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%2285%22%20y%3D%22175%22%20fill%3D%22red%22%3E(1%2C%203)%3C%2Ftext%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22110%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22205%22%20y%3D%22115%22%20fill%3D%22red%22%3E(5%2C%207)%3C%2Ftext%3E%3C!--%20Domain%20highlight%20--%3E%3Crect%20x%3D%2280%22%20y%3D%22198%22%20width%3D%22120%22%20height%3D%224%22%20fill%3D%22red%22%20opacity%3D%220.5%22%2F%3E%3Ctext%20x%3D%22130%22%20y%3D%22190%22%20fill%3D%22red%22%3E1%E2%89%A4x%E2%89%A45%3C%2Ftext%3E%3C!--%20Range%20highlight%20--%3E%3Crect%20x%3D%2248%22%20y%3D%22110%22%20width%3D%224%22%20height%3D%2260%22%20fill%3D%22green%22%20opacity%3D%220.5%22%2F%3E%3Ctext%20x%3D%225%22%20y%3D%22140%22%20fill%3D%22green%22%3E3%E2%89%A4y%E2%89%A47%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=x+2のグラフと定義域・値域">
+        <p>定義域 \(1 \leq x \leq 5\) において、</p>
+        <ul>
+            <li>\(x=1\) のとき、\(y = 1+2 = 3\) (これが最小値)</li>
+            <li>\(x=5\) のとき、\(y = 5+2 = 7\) (これが最大値)</li>
+        </ul>
+        <p>したがって、この関数の値域は \(3 \leq y \leq 7\) となります。</p>
+        <p class="important">⭐ 答え: 最大値 7 (x=5のとき), 最小値 3 (x=1のとき)</p>
+    </details>
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★☆☆</span></h4>
+        <ol>
+            <li>関数 \(y = -2x + 7\) の定義域が \(-1 \leq x \leq 3\) のとき、最大値と最小値はそれぞれいくつですか？
+                <ol type="a">
+                    <li>最大値 9 (x=-1), 最小値 1 (x=3)</li>
+                    <li>最大値 1 (x=3), 最小値 9 (x=-1)</li>
+                    <li>最大値 7 (x=0), 最小値 なし</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: a. 最大値 9 (x=-1), 最小値 1 (x=3)</strong></p>
+                    <p>解説: 傾きが-2（負）なので右下がりのグラフです。\(x=-1\) のとき \(y = -2(-1)+7 = 9\)。\(x=3\) のとき \(y = -2(3)+7 = 1\)。したがって、\(x=-1\) で最大値9、\(x=3\) で最小値1をとります。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <div class="tips" id="parabola-features">
+        <h3>💡 放物線の特徴と最大・最小 <span class="importance">★★★</span></h3>
+        <p>2次関数のグラフ（放物線）の最大値・最小値を考える際には、以下の3点を意識することが非常に重要です。</p>
+        <ol>
+            <li><strong>グラフの凸の向き:</strong>
+                <ul>
+                    <li>下に凸（\(x^2\) の係数が正）: 頂点が最小値。</li>
+                    <li>上に凸（\(x^2\) の係数が負）: 頂点が最大値。</li>
+                </ul>
+            </li>
+            <li><strong>頂点の位置:</strong> 平方完成 \(y = a(x-p)^2 + q\) を行うことで、頂点の座標 \((p, q)\) がわかります。この \(p\) が定義域に含まれるかどうかで、最大・最小の取り方が変わります。</li>
+            <li><strong>定義域の端の値:</strong> 定義域が \(\alpha \leq x \leq \beta\) のように与えられている場合、\(x=\alpha\) と \(x=\beta\) のときの \(y\) の値も最大・最小の候補となります。</li>
+        </ol>
+        <p>これらの情報を総合的に判断して、最大値と最小値を決定します。特に、頂点が定義域内に含まれる場合と含まれない場合、定義域の端が最大・最小になる場合など、いくつかのパターンがあります。</p>
+    </div>
+
+    <div class="practice-problems" id="practice-standard">
+        <h3>✏️ 標準的な練習問題</h3>
+        <h4>問題 1 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h4>
+        <p>関数 \(y = x^2 - 4x + 1\) について、次の定義域における最大値と最小値を求めなさい。</p>
+        <ol>
+            <li>定義域なし（実数全体）</li>
+            <li>\(0 \leq x \leq 3\)</li>
+            <li>\(-1 \leq x \leq 1\)</li>
+        </ol>
+        <details>
+            <summary>解答と解説</summary>
+            <p>まず、平方完成して頂点を求めます。<br>
+            \(y = (x^2 - 4x) + 1 = (x-2)^2 - 4 + 1 = (x-2)^2 - 3\)<br>
+            頂点は \((2, -3)\) で、下に凸の放物線です。</p>
+            <ol>
+                <li><strong>定義域なし:</strong><br>
+                    下に凸の放物線なので、頂点が最小値となります。<br>
+                    最小値: \(-3\) (\(x=2\) のとき)<br>
+                    最大値: なし
+                </li>
+                <li><strong>\(0 \leq x \leq 3\):</strong><br>
+                    頂点 \(x=2\) は定義域 \(0 \leq x \leq 3\) 内にあります。<br>
+                    最小値: 頂点の \(y\) 座標である \(-3\) (\(x=2\) のとき)。<br>
+                    最大値を求めるために定義域の端の値を計算します。<br>
+                    \(x=0\) のとき: \(y = 0^2 - 4(0) + 1 = 1\)<br>
+                    \(x=3\) のとき: \(y = 3^2 - 4(3) + 1 = 9 - 12 + 1 = -2\)<br>
+                    よって、最大値は \(1\) (\(x=0\) のとき)。
+                </li>
+                <li><strong>\(-1 \leq x \leq 1\):</strong><br>
+                    頂点 \(x=2\) は定義域 \(-1 \leq x \leq 1\) 内にありません。<br>
+                    この場合、最大値・最小値は定義域の端でとります。<br>
+                    \(x=-1\) のとき: \(y = (-1)^2 - 4(-1) + 1 = 1 + 4 + 1 = 6\)<br>
+                    \(x=1\) のとき: \(y = 1^2 - 4(1) + 1 = 1 - 4 + 1 = -2\)<br>
+                    よって、最大値は \(6\) (\(x=-1\) のとき)、最小値は \(-2\) (\(x=1\) のとき)。
+                </li>
+            </ol>
+            <p><strong>答え:</strong></p>
+            <ol>
+                <li>最小値 -3 (x=2のとき), 最大値 なし</li>
+                <li>最大値 1 (x=0のとき), 最小値 -3 (x=2のとき)</li>
+                <li>最大値 6 (x=-1のとき), 最小値 -2 (x=1のとき)</li>
+            </ol>
+        </details>
+    </div>
+
+    <div class="caution" id="common-mistakes">
+        <h3>⚠️ 間違いやすいポイント <span class="importance">★★☆</span></h3>
+        <ul>
+            <li><strong>平方完成の計算ミス:</strong> 頂点を求めるための平方完成は計算ミスが起こりやすい箇所です。符号や係数に注意して丁寧に行いましょう。</li>
+            <li><strong>定義域と頂点の関係の見落とし:</strong> 頂点が定義域内に含まれるか、含まれないかで最大・最小の取り方が大きく変わります。必ず確認が必要です。
+                <ul>
+                    <li>頂点が定義域内にある場合: 下に凸なら頂点が最小値、上に凸なら頂点が最大値。もう一方の最大値または最小値は定義域の端でとります。</li>
+                    <li>頂点が定義域外にある場合: 最大値も最小値も定義域の端でとります。</li>
+                </ul>
+            </li>
+            <li><strong>「最大値なし」「最小値なし」の判断:</strong> 定義域が実数全体で、グラフが無限に続く場合（下に凸で最大値がない、上に凸で最小値がない）や、定義域の端が含まれない場合（例: \(x > 1\)）に、「なし」となることがあります。</li>
+            <li><strong>問題文の条件の読み飛ばし:</strong> 「最大値を求めよ」「最小値を求めよ」「最大値と最小値を求めよ」など、何を問われているかを正確に把握しましょう。</li>
+        </ul>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li>2次関数の最大値・最小値を求める基本は、グラフの形状（下に凸か上に凸か）と頂点の座標を把握することです。</li>
+            <li>平方完成 \(y = a(x-p)^2 + q\) を行うことで、頂点の座標 \((p, q)\) がわかります。</li>
+            <li>定義域が指定されている場合は、頂点の \(x\) 座標が定義域内に含まれるかどうかを確認します。
+                <ul>
+                    <li><strong>頂点が定義域内にある場合:</strong> 頂点の \(y\) 座標と、定義域の両端での \(y\) の値を比較して最大値・最小値を決定します。</li>
+                    <li><strong>頂点が定義域外にある場合:</strong> 定義域の両端での \(y\) の値が最大値・最小値となります（グラフの傾きに注意）。</li>
+                </ul>
+            </li>
+            <li>最大値・最小値を答える際は、そのときの \(x\) の値も併記するのが一般的です（例: \(x=2\) のとき最大値 5）。</li>
+            <li>グラフを簡単に描いて視覚的に確認することが、理解を助け、ミスを防ぐのに有効です。</li>
+        </ul>
+    </div>
+
+    <h2 id="next-class">次回予告</h2>
+    <p>次回は、定義域が動く場合の2次関数の最大値・最小値の問題（例題8など）に進みます。これは場合分けが必要になるため、より複雑になりますが、今日の基本が理解できていれば対応可能です。</p>
+
+</body>
+</html>
