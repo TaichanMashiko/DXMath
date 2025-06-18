@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2次関数のグラフと最大・最小</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>2次関数のグラフと最大・最小</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年06月18日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 2次関数のグラフの平行移動と、定義域・値域、最大値・最小値の関係を理解する。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに - 授業連絡と復習</a></li>
+                <li><a href="#parabola-features">1. 放物線の特徴 📖</a>
+                    <ul>
+                        <li><a href="#vertex-axis">頂点と軸</a></li>
+                        <li><a href="#convexity">グラフの凸の向き</a></li>
+                    </ul>
+                </li>
+                <li><a href="#graphing-practice">2. グラフの作図と平行移動の理解 ✍️</a>
+                    <ul>
+                        <li><a href="#basic-graph">基本形: \(y=ax^2\)</a></li>
+                        <li><a href="#y-axis-shift">y軸方向の平行移動: \(y=ax^2+q\)</a></li>
+                        <li><a href="#x-axis-shift">x軸方向の平行移動: \(y=a(x-p)^2\)</a></li>
+                        <li><a href="#general-shift">一般形への拡張: \(y=a(x-p)^2+q\)</a></li>
+                    </ul>
+                </li>
+                <li><a href="#domain-range-recap">3. 定義域と値域の再確認 📖</a></li>
+                <li><a href="#max-min-fixed-domain">4. 例題演習: 固定された定義域における最大値・最小値 ✍️</a>
+                    <ul>
+                        <li><a href="#ex-fixed-domain">問9, 例題7</a></li>
+                    </ul>
+                </li>
+                <li><a href="#common-mistakes">⚠️ 間違いやすいポイント</a></li>
+                <li><a href="#tips-graphing">💡 グラフ作成のコツ</a></li>
+                <li><a href="#practice-standard">✏️ 標準的な練習問題</a></li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに - 授業連絡と復習</h2>
+    <p>本日は、教科書77ページの「2次関数の最大・最小」から学習を始めます。テストが2週間後に迫っているので、集中して取り組みましょう。</p>
+    <p>まず、前回の内容の復習です。関数 \(y=f(x)\) における<span class="tooltip" data-tooltip="関数において、独立変数xが取りうる値の範囲">定義域</span>とは \(x\) の範囲のことで、<span class="tooltip" data-tooltip="関数において、定義域のxの値に対応して従属変数yが取りうる値の範囲">値域</span>とは \(y\) の範囲のことでした。この基本的な用語はしっかりと覚えておきましょう。</p>
+
+    <h2 id="parabola-features">1. 放物線の特徴 📖 <span class="importance">★★★</span></h2>
+    <p>2次関数のグラフは<span class="tooltip" data-tooltip="物を投げた時に描く軌跡のような形の曲線">放物線</span>と呼ばれます。放物線にはいくつかの重要な特徴があります。</p>
+    <h3 id="vertex-axis">頂点と軸</h3>
+    <div class="definition">
+        <p><strong>頂点（ちょうてん）</strong>: 放物線の最も尖った部分。グラフが折り返す点です。</p>
+        <p><strong>軸（じく）</strong>: 放物線が対称となる直線のこと。頂点を通り、放物線を左右対称に分けます。</p>
+    </div>
+    <h3 id="convexity">グラフの凸の向き</h3>
+    <p>放物線は、\(x^2\) の係数（一般的に \(a\) と表される）の符号によって、開く向き（凸の向き）が決まります。</p>
+    <ul>
+        <li>\(a > 0\) のとき: グラフは<strong>下に凸</strong>（谷型）。頂点で最小値をとります。</li>
+        <li>\(a < 0\) のとき: グラフは<strong>上に凸</strong>（山型）。頂点で最大値をとります。</li>
+    </ul>
+    <p class="important">⭐ この凸の向きと頂点の関係は、最大値・最小値を求める上で非常に重要です。</p>
+
+    <h2 id="graphing-practice">2. グラフの作図と平行移動の理解 ✍️ <span class="importance">★★★</span></h2>
+    <p>2次関数のグラフを正確に描くためには、まず基本形を理解し、それがどのように平行移動するかを把握する必要があります。</p>
+
+    <h3 id="basic-graph">基本形: \(y=ax^2\)</h3>
+    <p>最も基本的な2次関数のグラフは \(y=ax^2\) です。このグラフの頂点は原点 \((0,0)\) であり、軸は \(y\)軸（直線 \(x=0\)）です。</p>
+    <p class="example">✍️ 例: \(y=2x^2\) のグラフ</p>
+    <p>このグラフは下に凸で、頂点は \((0,0)\) です。いくつかの点をプロットしてみましょう。</p>
+    <ul>
+        <li>\(x=0 \Rightarrow y=0\)</li>
+        <li>\(x=1 \Rightarrow y=2\)</li>
+        <li>\(x=2 \Rightarrow y=8\)</li>
+        <li>\(x=-1 \Rightarrow y=2\)</li>
+        <li>\(x=-2 \Rightarrow y=8\)</li>
+    </ul>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22280%22%20y2%3D%22200%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22205%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%22230%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2220%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22215%22%3EO%3C%2Ftext%3E%3C!--%20Parabola%20y=2x^2%20--%3E%3Cpath%20d%3D%22M100%2C120%20Q150%2C200%20200%2C120%22%20transform%3D%22translate(0%2C80)%20scale(1%2C-1)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ctext%20x%3D%22180%22%20y%3D%2250%22%20fill%3D%22blue%22%3Ey=2x%C2%B2%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=2x^2のグラフ">
+
+    <h3 id="y-axis-shift">y軸方向の平行移動: \(y=ax^2+q\) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h3>
+    <p>\(y=ax^2\) のグラフを \(y\)軸方向に \(q\) だけ平行移動すると、\(y=ax^2+q\) のグラフになります。頂点は \((0, q)\)、軸は \(y\)軸（直線 \(x=0\)）のままです。</p>
+    <p class="example">✍️ 例: \(y=2x^2+4\) のグラフ</p>
+    <p>これは \(y=2x^2\) のグラフを \(y\)軸方向に \(+4\) だけ平行移動したものです。頂点は \((0, 4)\) になります。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22280%22%20y2%3D%22200%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22205%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%22230%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2220%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22215%22%3EO%3C%2Ftext%3E%3C!--%20Parabola%20y=2x^2+4%20--%3E%3Cpath%20d%3D%22M100%2C120%20Q150%2C200%20200%2C120%22%20transform%3D%22translate(0%2C40)%20scale(1%2C-1)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22160%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%22155%22%20fill%3D%22red%22%3E(0%2C%204)%3C%2Ftext%3E%3Ctext%20x%3D%22180%22%20y%3D%2250%22%20fill%3D%22blue%22%3Ey=2x%C2%B2+4%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=2x^2+4のグラフ">
+
+    <h3 id="x-axis-shift">x軸方向の平行移動: \(y=a(x-p)^2\) <span class="difficulty">★☆☆</span> <span class="importance">★★☆</span></h3>
+    <p>\(y=ax^2\) のグラフを \(x\)軸方向に \(p\) だけ平行移動すると、\(y=a(x-p)^2\) のグラフになります。頂点は \((p, 0)\)、軸は直線 \(x=p\) になります。</p>
+    <p class="important">⭐ 注意: \(x\)軸方向の移動では、\(x-p\) のように符号が逆になる点に注意してください。\(p\) だけ移動なら \((x-p)\)、\(-p\) だけ移動なら \((x-(-p)) = (x+p)\) となります。</p>
+    <p class="example">✍️ 例: \(y=2(x-3)^2\) のグラフ</p>
+    <p>これは \(y=2x^2\) のグラフを \(x\)軸方向に \(+3\) だけ平行移動したものです。頂点は \((3, 0)\) になります。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22280%22%20y2%3D%22200%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22205%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%22230%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2220%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22215%22%3EO%3C%2Ftext%3E%3C!--%20Parabola%20y=2(x-3)^2%20--%3E%3Cpath%20d%3D%22M100%2C120%20Q150%2C200%20200%2C120%22%20transform%3D%22translate(60%2C80)%20scale(1%2C-1)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22210%22%20cy%3D%22200%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22215%22%20y%3D%22195%22%20fill%3D%22red%22%3E(3%2C%200)%3C%2Ftext%3E%3Ctext%20x%3D%22180%22%20y%3D%2250%22%20fill%3D%22blue%22%3Ey=2(x-3)%C2%B2%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=2(x-3)^2のグラフ">
+
+    <h3 id="general-shift">一般形への拡張: \(y=a(x-p)^2+q\) <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p>\(y=ax^2\) のグラフを \(x\)軸方向に \(p\)、\(y\)軸方向に \(q\) だけ平行移動すると、\(y=a(x-p)^2+q\) のグラフになります。これが2次関数の標準形です。</p>
+    <div class="definition">
+        <p><strong>2次関数の標準形</strong>: \(y = a(x-p)^2 + q\)</p>
+        <ul>
+            <li>頂点: \((p, q)\)</li>
+            <li>軸: 直線 \(x=p\)</li>
+        </ul>
+    </div>
+    <p class="example">✍️ 例: \(y=2(x-3)^2+4\) のグラフ</p>
+    <p>これは \(y=2x^2\) のグラフを \(x\)軸方向に \(+3\)、\(y\)軸方向に \(+4\) だけ平行移動したものです。頂点は \((3, 4)\) になります。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22200%22%20x2%3D%22280%22%20y2%3D%22200%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22205%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%22230%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2220%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22215%22%3EO%3C%2Ftext%3E%3C!--%20Parabola%20y=2(x-3)^2+4%20--%3E%3Cpath%20d%3D%22M100%2C120%20Q150%2C200%20200%2C120%22%20transform%3D%22translate(60%2C40)%20scale(1%2C-1)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%2F%3E%3Ccircle%20cx%3D%22210%22%20cy%3D%22160%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22215%22%20y%3D%22155%22%20fill%3D%22red%22%3E(3%2C%204)%3C%2Ftext%3E%3Ctext%20x%3D%22160%22%20y%3D%2250%22%20fill%3D%22blue%22%3Ey=2(x-3)%C2%B2+4%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=2(x-3)^2+4のグラフ">
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★★☆</span></h4>
+        <ol>
+            <li>関数 \(y = -3(x+1)^2 - 2\) の頂点の座標と軸の方程式を答えなさい。
+                <ol type="a">
+                    <li>頂点(1, -2), 軸 x=1</li>
+                    <li>頂点(-1, -2), 軸 x=-1</li>
+                    <li>頂点(1, 2), 軸 x=1</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: b. 頂点(-1, -2), 軸 x=-1</strong></p>
+                    <p>解説: 標準形 \(y=a(x-p)^2+q\) と比較すると、\(a=-3, p=-1, q=-2\) です。したがって、頂点は \((-1, -2)\)、軸は \(x=-1\) です。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <h2 id="domain-range-recap">3. 定義域と値域の再確認 📖 <span class="importance">★★☆</span></h2>
+    <p>グラフを描く際には、定義域（xの範囲）と、それに対応する値域（yの範囲）を意識することが大切です。特に問題で定義域が指定されている場合は、その範囲内でのグラフの動きに注目し、最大値・最小値を考えます。</p>
+    <p class="tips">💡 グラフを描く練習の重要性: グラフを自分で描けるようになると、最大値・最小値の問題が格段に解きやすくなります。面倒くさがらずに、いくつかの点をプロットして、滑らかな放物線を描く練習をしましょう。</p>
+
+    <h2 id="max-min-fixed-domain">4. 例題演習: 固定された定義域における最大値・最小値 ✍️</h2>
+    <h3 id="ex-fixed-domain">問9, 例題7 <span class="difficulty">★★☆</span> <span class="importance">★★★</span></h3>
+    <p><strong>問9(1):</strong> \(y = 2x^2\) （定義域 \(1 \leq x \leq 2\)）</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>グラフは下に凸、頂点は \((0,0)\) です。定義域は \(1 \leq x \leq 2\) なので、グラフの右側の一部を考えます。</p>
+        <ul>
+            <li>\(x=1\) のとき、\(y=2(1)^2=2\) (最小値)</li>
+            <li>\(x=2\) のとき、\(y=2(2)^2=8\) (最大値)</li>
+        </ul>
+        <p><strong>答え:</strong> 最大値 8 (x=2のとき), 最小値 2 (x=1のとき)</p>
+    </details>
+    <p><strong>例題7:</strong> \(y = -2x+7\) （定義域 \(-1 \leq x \leq 3\)）</p>
+    <p class="supplement">➕ 注: 授業ではこの問題を問9(2)として扱っていましたが、教科書等では一次関数の例として扱われることが多い内容です。ここでは例題7として提示します。</p>
+    <details>
+        <summary>解答と解説</summary>
+        <p>この関数は一次関数で、傾きが-2（負）なので右下がりの直線です。</p>
+        <ul>
+            <li>\(x=-1\) のとき、\(y=-2(-1)+7 = 2+7=9\) (最大値)</li>
+            <li>\(x=3\) のとき、\(y=-2(3)+7 = -6+7=1\) (最小値)</li>
+        </ul>
+        <p><strong>答え:</strong> 最大値 9 (x=-1のとき), 最小値 1 (x=3のとき)</p>
+    </details>
+
+    <div class="caution" id="common-mistakes">
+        <h3>⚠️ 間違いやすいポイント <span class="importance">★★☆</span></h3>
+        <ul>
+            <li><strong>グラフの平行移動の方向の誤解:</strong> \(y=a(x-p)^2+q\) の形において、\(x\)軸方向の移動は \(p\)（符号が逆）、\(y\)軸方向の移動は \(q\)（符号そのまま）です。特に \(x\)軸方向の \(p\) の符号を間違えやすいので注意が必要です。</li>
+            <li><strong>定義域の端だけを見て判断するミス:</strong> 2次関数の最大・最小は、必ずしも定義域の端でとるとは限りません。頂点が定義域内にあれば、頂点が最大値または最小値になる可能性があります。</li>
+            <li><strong>平方完成の省略:</strong> グラフの頂点を正確に求めるためには平方完成が不可欠です。暗算で済ませようとせず、丁寧に計算する習慣をつけましょう。</li>
+            <li><strong>「最大値なし」「最小値なし」の判断:</strong> 定義域が制限されていない場合や、グラフが定義域の端を含まない場合など、「なし」と答えるべき状況を正確に判断することが大切です。</li>
+        </ul>
+    </div>
+
+    <div class="tips" id="tips-graphing">
+        <h3>💡 グラフ作成のコツ <span class="importance">★★★</span></h3>
+        <ul>
+            <li><strong>頂点を最優先でプロット:</strong> まず平方完成して頂点の座標を求め、グラフ用紙にプロットします。これがグラフの基準点となります。</li>
+            <li><strong>軸を描く:</strong> 頂点を通る縦線（軸 \(x=p\)）を薄く描くと、左右対称性を意識しやすくなります。</li>
+            <li><strong>\(y\)切片を求める:</strong> \(x=0\) を代入して \(y\)切片（グラフが\(y\)軸と交わる点）を求めると、グラフの通過点が一つ増え、より正確なグラフが描けます。</li>
+            <li><strong>もう1～2点プロット:</strong> 頂点の近くや定義域の端など、あと1～2点計算してプロットすると、グラフの曲がり具合がより正確になります。軸に対称な点を利用するのも有効です。</li>
+            <li><strong>滑らかな曲線で結ぶ:</strong> プロットした点を、放物線の特徴（滑らかな曲線）を意識して結びます。直線でカクカクと結ばないように注意しましょう。</li>
+            <li><strong>定義域を明示する:</strong> 定義域が指定されている場合は、グラフ上でその範囲を太線で示すなど、明確に区別できるようにしましょう。</li>
+        </ul>
+    </div>
+
+    <div class="practice-problems" id="practice-standard">
+        <h3>✏️ 標準的な練習問題</h3>
+        <h4>問題 1 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h4>
+        <p>関数 \(y = -(x+2)^2 + 1\) のグラフを描き、その頂点と軸、および定義域が \(-3 \leq x \leq 0\) のときの最大値と最小値を求めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>この関数は上に凸の放物線です。</p>
+            <p>頂点: \((-2, 1)\)</p>
+            <p>軸: \(x = -2\)</p>
+            <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22250%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22150%22%20x2%3D%22280%22%20y2%3D%22150%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22285%22%20y%3D%22155%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22150%22%20y1%3D%22230%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%22140%22%20y%3D%22165%22%3EO%3C%2Ftext%3E%3C!--%20Parabola%20y=-(x+2)^2+1%20--%3E%3Cpath%20d%3D%22M100%2C100%20Q130%2C140%20160%2C100%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20transform%3D%22translate(0%2C0)%22%2F%3E%3Ccircle%20cx%3D%22130%22%20cy%3D%22140%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22100%22%20y%3D%22135%22%20fill%3D%22red%22%3E(-2%2C%201)%3C%2Ftext%3E%3C!--%20Domain%20Points%20--%3E%3Ccircle%20cx%3D%22120%22%20cy%3D%22150%22%20r%3D%223%22%20fill%3D%22green%22%2F%3E%3Ctext%20x%3D%2290%22%20y%3D%22155%22%20fill%3D%22green%22%3E(-3%2C%200)%3C%2Ftext%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22110%22%20r%3D%223%22%20fill%3D%22green%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%22105%22%20fill%3D%22green%22%3E(0%2C%20-3)%3C%2Ftext%3E%3C!--%20Axis%20of%20symmetry%20--%3E%3Cline%20x1%3D%22130%22%20y1%3D%2220%22%20x2%3D%22130%22%20y2%3D%22230%22%20stroke%3D%22gray%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%223%2C3%22%2F%3E%3Ctext%20x%3D%22135%22%20y%3D%2235%22%20fill%3D%22gray%22%3Ex=-2%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=-(x+2)^2+1 のグラフ">
+            <p>定義域 \(-3 \leq x \leq 0\):</p>
+            <p>頂点 \(x=-2\) は定義域内にあります。上に凸なので、頂点が最大値です。<br>
+            最大値: \(1\) (\(x=-2\) のとき)</p>
+            <p>最小値を求めるために定義域の端の値を計算します。<br>
+            \(x=-3\) のとき: \(y = -(-3+2)^2 + 1 = -(-1)^2 + 1 = -1 + 1 = 0\)<br>
+            \(x=0\) のとき: \(y = -(0+2)^2 + 1 = -(2)^2 + 1 = -4 + 1 = -3\)<br>
+            よって、最小値は \(-3\) (\(x=0\) のとき)。</p>
+            <p><strong>答え:</strong> 頂点 \((-2, 1)\), 軸 \(x=-2\)。<br>定義域 \(-3 \leq x \leq 0\) において、最大値 1 (x=-2のとき), 最小値 -3 (x=0のとき)</p>
+        </details>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li>2次関数 \(y=ax^2+bx+c\) のグラフは放物線。</li>
+            <li>標準形 \(y=a(x-p)^2+q\) から、頂点 \((p,q)\)、軸 \(x=p\) がわかる。</li>
+            <li>\(a>0\) なら下に凸（頂点で最小値）、\(a<0\) なら上に凸（頂点で最大値）。</li>
+            <li>定義域が指定されている場合、最大値・最小値は「頂点のy座標」と「定義域の端のy座標」を比較して決定する。</li>
+            <li>グラフを描くことで、最大値・最小値の判断が容易になる。定義域の範囲を意識してグラフを正確に描くことが重要。</li>
+            <li>表を作成して具体的なx,yの値を求めることは、グラフの形状を理解する上で有効。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
