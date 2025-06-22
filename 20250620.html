@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[単元名 Placeholder]</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* 基本的なページスタイル */
+        body { font-family: sans-serif; line-height: 1.6; margin: 20px; max-width: 800px; margin-left: auto; margin-right: auto; padding: 0 15px;}
+        h1, h2, h3, h4, h5, h6 { margin-top: 1.5em; margin-bottom: 0.5em; }
+        h1 { border-bottom: 2px solid #005ab3; padding-bottom: 0.3em; } /* 単元名用 */
+        h2 { border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+        p { margin-bottom: 1em; }
+        ul, ol { margin-bottom: 1em; padding-left: 2em; }
+        pre { background-color: #f4f4f4; padding: 10px; border: 1px solid #ddd; border-radius: 4px; overflow-x: auto; font-size: 0.95em; white-space: pre-wrap; word-wrap: break-word; }
+        code { font-family: monospace; background-color: #f0f0f0; padding: 0.2em 0.4em; border-radius: 3px; }
+        pre code { background-color: transparent; padding: 0; border-radius: 0; white-space: inherit; }
+        blockquote { border-left: 4px solid #ccc; padding: 0.5em 1em; margin-left: 0; color: #555; background-color: #f9f9f9; }
+        details { margin-bottom: 1em; border: 1px solid #ccc; border-radius: 4px; }
+        summary { font-weight: bold; padding: 0.5em 1em; background-color: #f9f9f9; cursor: pointer; border-radius: 4px 4px 0 0; position: relative; /* アイコン配置用 */ }
+        details[open] > summary { border-bottom: 1px solid #ccc; }
+        details > *:not(summary) { padding: 1em; border-top: 1px solid #eee; overflow-wrap: break-word; word-wrap: break-word; overflow-x: auto; }
+        mjx-container[jax="SVG"], mjx-container[jax="CHTML"] { overflow-x: auto; max-width: 100%; }
+        img { max-width: 100%; height: auto; display: block; margin: 1em auto; border: 1px solid #ddd; padding: 3px; border-radius: 4px;}
+        a { color: #005ab3; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 1em;}
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+
+        /* 各セクションのスタイル */
+        .definition, .theorem, .example, .practice-problems, .tips, .supplement, .important, .caution, .summary, .quiz, .formula-guide {
+            margin-top: 1.5em; margin-bottom: 1.5em; padding: 1em 1.5em; border-radius: 5px; border-left-width: 5px; border-left-style: solid; position: relative; padding-left: 2.5em; /* アイコンスペース確保 */
+        }
+        /* アイコン共通スタイル */
+        .definition::before, .theorem::before, .example::before, .practice-problems::before, .tips::before, .supplement::before, .important::before, .caution::before, .summary::before, .quiz::before, .formula-guide::before {
+            position: absolute; left: 1em; top: 0.9em; /* 位置調整 */ font-size: 1.1em; width: 1.5em; /* アイコン幅 */ text-align: center;
+        }
+        /* 個別アイコン設定 */
+        .definition::before { content: '📖'; }
+        .theorem::before { content: '📜'; }
+        .example::before { content: '✍️'; }
+        .practice-problems::before { content: '✏️'; }
+        .tips::before { content: '💡'; }
+        .supplement::before { content: '➕'; }
+        .important::before { content: '⭐'; }
+        .caution::before { content: '⚠️'; }
+        .summary::before { content: '🔖'; }
+        .quiz::before { content: '❓'; } /* クイズ用アイコン例 */
+        .formula-guide::before { content: '🧭'; } /* ガイド用アイコン例 */
+
+        /* 各セクションの背景色・ボーダー色 */
+        .definition { background-color: #e0f7fa; border-left-color: #00bcd4; }
+        .theorem { background-color: #e8f5e9; border-left-color: #4caf50; }
+        .example { background-color: #fff3e0; border-left-color: #ff9800; }
+        .practice-problems { background-color: #fce4ec; border-left-color: #e91e63; }
+        .tips { background-color: #fffde7; border-left-color: #ffeb3b; }
+        .supplement { background-color: #f3e5f5; border-left-color: #9c27b0; }
+        .important { background-color: #ffebee; border-left-color: #f44336; font-weight: bold; }
+        .caution { background-color: #ffebee; border-left-color: #f44336; }
+        .summary { background-color: #e3f2fd; border-left-color: #2196f3; }
+        .quiz { background-color: #e8eaf6; border-left-color: #3f51b5; }
+        .formula-guide { background-color: #e0f2f1; border-left-color: #009688; }
+
+        /* ツールチップ */
+        .tooltip { position: relative; border-bottom: 1px dotted black; cursor: help; }
+        .tooltip::after { content: attr(data-tooltip); position: absolute; left: 50%; transform: translateX(-50%); bottom: 130%; background-color: rgba(0, 0, 0, 0.85); color: white; padding: 6px 10px; border-radius: 4px; font-size: 0.9em; white-space: nowrap; visibility: hidden; opacity: 0; transition: opacity 0.3s, visibility 0.3s; z-index: 100; pointer-events: none; }
+        .tooltip:hover::after { visibility: visible; opacity: 1; }
+
+        /* 難易度・重要度 */
+        .difficulty, .importance { display: inline-block; font-size: 0.85em; padding: 0.1em 0.5em; margin-left: 0.5em; border-radius: 3px; vertical-align: middle; }
+        .difficulty { background-color: #eee; color: #333; }
+        .importance { background-color: #ffeb3b; color: #5f4c00; } /* 重要度用: 黄色地に濃い文字 */
+
+        /* クイズ用 */
+        .quiz ol { list-style-type: none; padding-left: 0; }
+        .quiz li { margin-bottom: 0.5em; }
+
+        /* 使い分けガイド用 */
+        .formula-guide ul { list-style-type: none; padding-left: 0; }
+        .formula-guide li { margin-bottom: 1em; border-bottom: 1px dashed #ccc; padding-bottom: 1em; }
+        .formula-guide strong { display: block; margin-bottom: 0.5em; font-size: 1.1em; }
+
+        /* 目次トグル用 */
+        .toc-toggle { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 1.5em; background-color: #f9f9f9; }
+        .toc-toggle summary { padding: 0.8em 1em; cursor: pointer; font-weight: bold; background-color: transparent; border-radius: 4px; margin: 0; }
+        details[open].toc-toggle > summary { border-bottom: 1px solid #ccc; border-radius: 4px 4px 0 0; }
+        .toc-toggle summary h2 { display: inline; margin: 0; border: none; padding: 0; font-size: 1.2em; }
+        .toc-toggle nav { padding: 0 1.5em 1em 1.5em; background-color: white; border-radius: 0 0 4px 4px; }
+        .toc-toggle nav h2 { display: none; } /* nav内の目次タイトルは非表示 */
+        .toc-toggle nav ul { padding-left: 1.5em; } /* 目次リストのインデント調整 */
+        .toc-toggle nav ul ul { padding-left: 1.5em; } /* サブリストのインデント */
+
+    </style>
+</head>
+<body>
+    <h1>[単元名 Placeholder]</h1>
+    <h2>授業概要</h2>
+    <p>授業日: 2025年06月20日</p>
+    <p>講師: 講師</p>
+    <p>学習目標: 2次関数の最大値・最小値の求め方（定義域が動く場合）を理解し、グラフと定義域、軸の位置関係を考察できるようになる。</p>
+
+    <details class="toc-toggle">
+        <summary><h2>目次</h2></summary>
+        <nav>
+            <ul>
+                <li><a href="#intro">はじめに</a></li>
+                <li><a href="#review-quadratic">1. 2次関数の基本事項の復習 📖</a>
+                    <ul>
+                        <li><a href="#graph-features">グラフの特徴（凸の向き、頂点、軸）</a></li>
+                        <li><a href="#max-min-basic">最大値・最小値の基本</a></li>
+                    </ul>
+                </li>
+                <li><a href="#example-moving-domain">2. 例題解説: 定義域が動く場合の最大値・最小値 ✍️</a>
+                    <ul>
+                        <li><a href="#ex8-1">例題8(1): 軸が定義域の左外側にある場合</a></li>
+                        <li><a href="#ex8-2">例題8(2): 軸が定義域内にある場合</a></li>
+                        <li><a href="#ex8-3">例題8(3): 軸が定義域の右外側にある場合</a></li>
+                    </ul>
+                </li>
+                <li><a href="#important-points-moving-domain">⭐ 重要ポイント: 定義域が動く場合の考察手順</a></li>
+                <li><a href="#common-mistakes">⚠️ 間違いやすいポイント</a></li>
+                <li><a href="#practice-standard">✏️ 標準的な練習問題</a></li>
+                <li><a href="#practice-advanced">✏️ 発展的な練習問題</a></li>
+                <li><a href="#summary">🔖 授業の要点まとめ</a></li>
+            </ul>
+        </nav>
+    </details>
+
+    <h2 id="intro">はじめに</h2>
+    <p>本日は、前回の続きとして、2次関数の最大値・最小値について学習します。特に、<span class="tooltip" data-tooltip="関数の値を考えるxの範囲が固定されていない、または文字で表されている場合">定義域が動く</span>場合の問題に取り組みます。ワークシートは8ページ、教科書は該当箇所を参照してください。</p>
+    <p class="important">⭐ この内容は、2次関数の理解を深める上で非常に重要であり、今後の応用問題にも繋がります。グラフのイメージを掴むことがポイントです。</p>
+
+    <h2 id="review-quadratic">1. 2次関数の基本事項の復習 📖 <span class="importance">★★★</span></h2>
+    <h3 id="graph-features">グラフの特徴（凸の向き、頂点、軸）</h3>
+    <p>2次関数 \(y = ax^2 + bx + c\) のグラフは放物線です。</p>
+    <ul>
+        <li>\(a > 0\) のとき：グラフは<strong>下に凸</strong>。</li>
+        <li>\(a < 0\) のとき：グラフは<strong>上に凸</strong>。</li>
+    </ul>
+    <p>グラフの最も低い点（下に凸の場合）または最も高い点（上に凸の場合）を<strong>頂点</strong>と呼びます。頂点の \(x\) 座標を通る鉛直な線を<strong>軸</strong>と呼び、放物線はこの軸に関して対称です。</p>
+    <p>頂点の座標は、平方完成により \(y = a(x-p)^2 + q\) の形に変形することで \((p, q)\) と求められます。このとき、軸の方程式は \(x=p\) です。</p>
+
+    <h3 id="max-min-basic">最大値・最小値の基本</h3>
+    <p>2次関数の最大値・最小値は、グラフの形状と定義域によって決まります。</p>
+    <ul>
+        <li>下に凸のグラフ：頂点で最小値をとる。定義域がなければ最大値はなし。</li>
+        <li>上に凸のグラフ：頂点で最大値をとる。定義域がなければ最小値はなし。</li>
+    </ul>
+    <p>定義域が指定されている場合は、以下の3つの場所での \(y\) の値を比較します。</p>
+    <ol>
+        <li>頂点の \(y\) 座標（頂点が定義域内にある場合）</li>
+        <li>定義域の左端の \(y\) 座標</li>
+        <li>定義域の右端の \(y\) 座標</li>
+    </ol>
+
+    <h2 id="example-moving-domain">2. 例題解説: 定義域が動く場合の最大値・最小値 ✍️</h2>
+    <p>関数 \(y = (x-1)^2 + 2\) について、定義域が \(a \leq x \leq a+2\) のときの最大値と最小値を求めます。この問題では、定義域の幅は2で固定されていますが、その位置が \(a\) の値によって変わります。</p>
+    <p>この関数のグラフは、頂点が \((1, 2)\) で、下に凸の放物線です。軸は \(x=1\) です。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22300%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22250%22%20x2%3D%22380%22%20y2%3D%22250%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22385%22%20y%3D%22255%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22100%22%20y1%3D%22280%22%20x2%3D%22100%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22105%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3Ctext%20x%3D%2285%22%20y%3D%22265%22%3E0%3C%2Ftext%3E%3C!--%20Parabola%20y=(x-1)^2+2%20(Shifted%20x=100%20to%20x=1%2C%20y=250%20to%20y=2)%20Let%201%20unit%20=%2050px%20--%3E%3Cpath%20d%3D%22M0%2C225%20Q50%2C150%20100%2C225%22%20transform%3D%22translate(100%2C0)%20scale(1%2C-1)%20translate(-50%2C-200)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20transform%3D%22translate(0%2C250)%20scale(1%2C-1)%20translate(0%2C-250)%20translate(50%2C-25)%22%2F%3E%3C!--%20Vertex%20(1%2C2)%20--%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%22200%22%20r%3D%223%22%20fill%3D%22red%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%22195%22%20fill%3D%22red%22%3E(1%2C%202)%3C%2Ftext%3E%3C!--%20Axis%20of%20symmetry%20x=1%20--%3E%3Cline%20x1%3D%22150%22%20y1%3D%22280%22%20x2%3D%22150%22%20y2%3D%2220%22%20stroke%3D%22green%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%22%2F%3E%3Ctext%20x%3D%22155%22%20y%3D%2235%22%20fill%3D%22green%22%3Ex=1%3C%2Ftext%3E%3C%2Fsvg%3E" alt="y=(x-1)^2+2 のグラフ">
+    <p>定義域 \(a \leq x \leq a+2\) と軸 \(x=1\) の位置関係で場合分けして考えます。</p>
+
+    <h3 id="ex8-1">例題8(1): 軸が定義域の左外側にある場合 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h3>
+    <p><strong>場合1: \(a+2 < 1\) すなわち \(a < -1\) のとき</strong></p>
+    <p>定義域が軸 \(x=1\) よりも完全に左側にある場合です。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22300%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22250%22%20x2%3D%22380%22%20y2%3D%22250%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22385%22%20y%3D%22255%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22100%22%20y1%3D%22280%22%20x2%3D%22100%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22105%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3C!--%20Parabola%20--%3E%3Cpath%20d%3D%22M50%2C225%20Q100%2C150%20150%2C225%22%20transform%3D%22translate(100%2C0)%20scale(1%2C-1)%20translate(-50%2C-200)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20transform%3D%22translate(0%2C250)%20scale(1%2C-1)%20translate(0%2C-250)%20translate(50%2C-25)%22%2F%3E%3C!--%20Axis%20x=1%20--%3E%3Cline%20x1%3D%22200%22%20y1%3D%22280%22%20x2%3D%22200%22%20y2%3D%2220%22%20stroke%3D%22green%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%22%2F%3E%3Ctext%20x%3D%22205%22%20y%3D%2235%22%20fill%3D%22green%22%3Ex=1%3C%2Ftext%3E%3C!--%20Domain%20a%20to%20a+2%20(a%2B2%20%3C%201)%20--%3E%3Crect%20x%3D%2280%22%20y%3D%2250%22%20width%3D%2280%22%20height%3D%22200%22%20fill%3D%22red%22%20opacity%3D%220.2%22%2F%3E%3Ctext%20x%3D%2275%22%20y%3D%22265%22%20fill%3D%22red%22%3Ea%3C%2Ftext%3E%3Ctext%20x%3D%22150%22%20y%3D%22265%22%20fill%3D%22red%22%3Ea+2%3C%2Ftext%3E%3C%2Fsvg%3E" alt="軸が定義域の左外側">
+    <p>このとき、グラフは定義域内で単調減少します。</p>
+    <ul>
+        <li>最大値: \(x=a\) のとき \(y = (a-1)^2 + 2\)</li>
+        <li>最小値: \(x=a+2\) のとき \(y = (a+2-1)^2 + 2 = (a+1)^2 + 2\)</li>
+    </ul>
+
+    <h3 id="ex8-2">例題8(2): 軸が定義域内にある場合 <span class="difficulty">★★★</span> <span class="importance">★★★</span></h3>
+    <p><strong>場合2: \(a \leq 1 \leq a+2\) すなわち \(-1 \leq a \leq 1\) のとき</strong></p>
+    <p>定義域内に軸 \(x=1\) が含まれる場合です。この場合、最小値は頂点でとります。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22300%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22250%22%20x2%3D%22380%22%20y2%3D%22250%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22385%22%20y%3D%22255%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22100%22%20y1%3D%22280%22%20x2%3D%22100%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22105%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3C!--%20Parabola%20--%3E%3Cpath%20d%3D%22M50%2C225%20Q100%2C150%20150%2C225%22%20transform%3D%22translate(100%2C0)%20scale(1%2C-1)%20translate(-50%2C-200)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20transform%3D%22translate(0%2C250)%20scale(1%2C-1)%20translate(0%2C-250)%20translate(50%2C-25)%22%2F%3E%3C!--%20Axis%20x=1%20--%3E%3Cline%20x1%3D%22200%22%20y1%3D%22280%22%20x2%3D%22200%22%20y2%3D%2220%22%20stroke%3D%22green%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%22%2F%3E%3Ctext%20x%3D%22205%22%20y%3D%2235%22%20fill%3D%22green%22%3Ex=1%3C%2Ftext%3E%3C!--%20Domain%20a%20to%20a+2%20(a%20%3C=%201%20%3C=%20a+2)%20--%3E%3Crect%20x%3D%22150%22%20y%3D%2250%22%20width%3D%22100%22%20height%3D%22200%22%20fill%3D%22red%22%20opacity%3D%220.2%22%2F%3E%3Ctext%20x%3D%22145%22%20y%3D%22265%22%20fill%3D%22red%22%3Ea%3C%2Ftext%3E%3Ctext%20x%3D%22240%22%20y%3D%22265%22%20fill%3D%22red%22%3Ea+2%3C%2Ftext%3E%3C%2Fsvg%3E" alt="軸が定義域内">
+    <ul>
+        <li>最小値: \(x=1\) のとき \(y = 2\) (頂点のy座標)</li>
+    </ul>
+    <p>最大値は、定義域の両端 \(x=a\) と \(x=a+2\) のどちらでとるかを考える必要があります。これは、軸 \(x=1\) が定義域 \(a \leq x \leq a+2\) の中央より左にあるか右にあるかで変わります。定義域の中央は \(a+1\) です。</p>
+    <ul>
+        <li><strong>場合2-1: \(1 < a+1\) すなわち \(a > 0\) のとき</strong> (軸が中央より左: \(-1 \leq a < 0\) ではなく \(0 < a \leq 1\))<br>
+        この場合、定義域の右端 \(x=a+2\) が軸から遠いので、ここで最大値をとります。<br>
+        最大値: \(x=a+2\) のとき \(y = (a+1)^2 + 2\)</li>
+        <li><strong>場合2-2: \(1 = a+1\) すなわち \(a = 0\) のとき</strong> (軸が中央)<br>
+        この場合、定義域の両端 \(x=0\) と \(x=2\) で同じ最大値をとります。<br>
+        最大値: \(y = (0-1)^2+2 = 3\) または \(y = (2-1)^2+2 = 3\)</li>
+        <li><strong>場合2-3: \(1 > a+1\) すなわち \(a < 0\) のとき</strong> (軸が中央より右: \(-1 \leq a < 0\))<br>
+        この場合、定義域の左端 \(x=a\) が軸から遠いので、ここで最大値をとります。<br>
+        最大値: \(x=a\) のとき \(y = (a-1)^2 + 2\)</li>
+    </ul>
+    <p class="supplement">➕ 授業中の解説では、最大値について \(a\) と \(a+2\) のどちらが軸から遠いか、で場合分けしていました。具体的には、\(1-a\) と \((a+2)-1 = a+1\) の大小比較をしていました。</p>
+    <ul>
+        <li>\(1-a < a+1 \implies -2a < 0 \implies a > 0\) のとき、\(a+2\) が軸から遠いので、\(x=a+2\) で最大値。</li>
+        <li>\(1-a > a+1 \implies -2a > 0 \implies a < 0\) のとき、\(a\) が軸から遠いので、\(x=a\) で最大値。</li>
+        <li>\(1-a = a+1 \implies a = 0\) のとき、両端で最大値。</li>
+    </ul>
+
+    <h3 id="ex8-3">例題8(3): 軸が定義域の右外側にある場合 <span class="difficulty">★★☆</span> <span class="importance">★★☆</span></h3>
+    <p><strong>場合3: \(a > 1\) のとき</strong></p>
+    <p>定義域が軸 \(x=1\) よりも完全に右側にある場合です。</p>
+    <img src="data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22300%22%3E%3C!--%20Axes%20--%3E%3Cline%20x1%3D%2220%22%20y1%3D%22250%22%20x2%3D%22380%22%20y2%3D%22250%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22385%22%20y%3D%22255%22%3Ex%3C%2Ftext%3E%3Cline%20x1%3D%22100%22%20y1%3D%22280%22%20x2%3D%22100%22%20y2%3D%2220%22%20stroke%3D%22black%22%20stroke-width%3D%221%22%2F%3E%3Ctext%20x%3D%22105%22%20y%3D%2225%22%3Ey%3C%2Ftext%3E%3C!--%20Parabola%20--%3E%3Cpath%20d%3D%22M50%2C225%20Q100%2C150%20150%2C225%22%20transform%3D%22translate(100%2C0)%20scale(1%2C-1)%20translate(-50%2C-200)%22%20stroke%3D%22blue%22%20stroke-width%3D%222%22%20fill%3D%22none%22%20transform%3D%22translate(0%2C250)%20scale(1%2C-1)%20translate(0%2C-250)%20translate(50%2C-25)%22%2F%3E%3C!--%20Axis%20x=1%20--%3E%3Cline%20x1%3D%22200%22%20y1%3D%22280%22%20x2%3D%22200%22%20y2%3D%2220%22%20stroke%3D%22green%22%20stroke-width%3D%221%22%20stroke-dasharray%3D%224%22%2F%3E%3Ctext%20x%3D%22205%22%20y%3D%2235%22%20fill%3D%22green%22%3Ex=1%3C%2Ftext%3E%3C!--%20Domain%20a%20to%20a+2%20(a%20>%201)%20--%3E%3Crect%20x%3D%22220%22%20y%3D%2250%22%20width%3D%2280%22%20height%3D%22200%22%20fill%3D%22red%22%20opacity%3D%220.2%22%2F%3E%3Ctext%20x%3D%22215%22%20y%3D%22265%22%20fill%3D%22red%22%3Ea%3C%2Ftext%3E%3Ctext%20x%3D%22290%22%20y%3D%22265%22%20fill%3D%22red%22%3Ea+2%3C%2Ftext%3E%3C%2Fsvg%3E" alt="軸が定義域の右外側">
+    <p>このとき、グラフは定義域内で単調増加します。</p>
+    <ul>
+        <li>最小値: \(x=a\) のとき \(y = (a-1)^2 + 2\)</li>
+        <li>最大値: \(x=a+2\) のとき \(y = (a+1)^2 + 2\)</li>
+    </ul>
+    <details>
+        <summary>まとめ（解答形式）</summary>
+        <p>関数 \(y = (x-1)^2 + 2\) の軸は \(x=1\)。定義域は \(a \leq x \leq a+2\)。</p>
+        <p><strong>最小値:</strong></p>
+        <ul>
+            <li>\(a+2 < 1\) すなわち \(a < -1\) のとき、最小値は \( (a+1)^2+2 \) (\(x=a+2\) のとき)</li>
+            <li>\(a \leq 1 \leq a+2\) すなわち \(-1 \leq a \leq 1\) のとき、最小値は \( 2 \) (\(x=1\) のとき)</li>
+            <li>\(a > 1\) のとき、最小値は \( (a-1)^2+2 \) (\(x=a\) のとき)</li>
+        </ul>
+        <p><strong>最大値:</strong></p>
+        <ul>
+            <li>\(a < 0\) のとき（軸が定義域の中央 \(a+1\) より右にある、または定義域が軸より左にある場合を含む \(a < -1\) と \(-1 \leq a < 0\) を合わせた範囲）、最大値は \( (a-1)^2+2 \) (\(x=a\) のとき)</li>
+            <li>\(a = 0\) のとき（軸が定義域の中央にある）、最大値は \( 3 \) (\(x=0, 2\) のとき)</li>
+            <li>\(a > 0\) のとき（軸が定義域の中央 \(a+1\) より左にある、または定義域が軸より右にある場合を含む \(0 < a \leq 1\) と \(a > 1\) を合わせた範囲）、最大値は \( (a+1)^2+2 \) (\(x=a+2\) のとき)</li>
+        </ul>
+    </details>
+    <div class="quiz">
+        <h4>理解度チェッククイズ ❓ <span class="importance">★★☆</span></h4>
+        <ol>
+            <li>関数 \(y=(x-3)^2+1\) の軸の方程式は何ですか？
+                <ol type="a">
+                    <li>\(x=1\)</li>
+                    <li>\(x=3\)</li>
+                    <li>\(y=1\)</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: b. \(x=3\)</strong></p>
+                    <p>解説: 平方完成された形 \(y=a(x-p)^2+q\) から、軸の方程式は \(x=p\) です。この場合 \(p=3\) です。</p>
+                </details>
+            </li>
+            <li>下に凸の2次関数で、頂点が定義域の右外側にある場合、最小値はどこでとりますか？
+                <ol type="a">
+                    <li>頂点</li>
+                    <li>定義域の左端</li>
+                    <li>定義域の右端</li>
+                </ol>
+                <details>
+                    <summary>解答と解説</summary>
+                    <p><strong>解答: c. 定義域の右端</strong></p>
+                    <p>解説: 下に凸のグラフで頂点が定義域の右外側にあるということは、定義域内ではグラフは単調減少しています。したがって、定義域の最も右の点で最小値をとります。</p>
+                </details>
+            </li>
+        </ol>
+    </div>
+
+    <div class="important" id="important-points-moving-domain">
+        <h3>⭐ 重要ポイント: 定義域が動く場合の考察手順 <span class="importance">★★★</span></h3>
+        <p>定義域が \(a \leq x \leq a+k\) のように文字 \(a\) を含んで動く場合、最大値・最小値を求めるには、定義域と放物線の軸の位置関係による場合分けが必要です。</p>
+        <ol>
+            <li><strong>関数の基本形を把握する:</strong>
+                <ul>
+                    <li>まず、与えられた2次関数を平方完成し、\(y = A(x-p)^2 + q\) の形にします。</li>
+                    <li>これにより、グラフの凸の向き（\(A\)の符号）、頂点の座標 \((p, q)\)、軸の方程式 \(x=p\) を明確にします。</li>
+                </ul>
+            </li>
+            <li><strong>場合分けの基準を考える:</strong>
+                <ul>
+                    <li><strong>最小値の場合 (下に凸のグラフ):</strong>
+                        <ol type="a">
+                            <li>定義域が軸より完全に左 (\(a+k < p\))</li>
+                            <li>定義域が軸を含む (\(a \leq p \leq a+k\))</li>
+                            <li>定義域が軸より完全に右 (\(a > p\))</li>
+                        </ol>
+                    </li>
+                    <li><strong>最大値の場合 (下に凸のグラフ):</strong>
+                        <ol type="a">
+                            <li>定義域の中央 \(\frac{a + (a+k)}{2} = a + \frac{k}{2}\) と軸 \(p\) の位置関係で場合分けします。
+                                <ul>
+                                    <li>軸が定義域の中央より左 (\(p < a + \frac{k}{2}\)): 右端 \(x=a+k\) で最大値。</li>
+                                    <li>軸が定義域の中央と一致 (\(p = a + \frac{k}{2}\)): 両端 \(x=a, x=a+k\) で最大値。</li>
+                                    <li>軸が定義域の中央より右 (\(p > a + \frac{k}{2}\)): 左端 \(x=a\) で最大値。</li>
+                                </ul>
+                            </li>
+                        </ol>
+                    </li>
+                    <li>(上に凸のグラフの場合は、最小値と最大値の考え方が逆になります)</li>
+                </ul>
+            </li>
+            <li><strong>各場合で最大値・最小値を求める:</strong>
+                <ul>
+                    <li>場合分けした各範囲において、頂点または定義域の端点の \(y\) の値を計算し、最大値・最小値を特定します。</li>
+                    <li>そのときの \(x\) の値も忘れずに記述します。</li>
+                </ul>
+            </li>
+            <li><strong>解答をまとめる:</strong>
+                <ul>
+                    <li>全ての場合分けの結果を整理して記述します。\(a\) の範囲と、それに対応する最大値・最小値（とそのときの \(x\) の値）を明確に示します。</li>
+                </ul>
+            </li>
+        </ol>
+        <p class="tips">💡 グラフを実際に描きながら、定義域を表す区間を左右に動かしてみると、どの場合にどこで最大・最小をとるかが視覚的に理解しやすくなります。</p>
+    </div>
+
+    <div class="caution" id="common-mistakes">
+        <h3>⚠️ 間違いやすいポイント <span class="importance">★★☆</span></h3>
+        <ul>
+            <li><strong>場合分けの境界値の扱い:</strong> \(a < -1\) と \(-1 \leq a \leq 1\) のように、境界値（この例では \(-1\)）をどちらの範囲に含めるか（等号をつけるか）は重要です。通常、一方に含めればもう一方には含めませんが、両方に含めても結果が変わらない場合もあります。問題の指示や文脈に応じて適切に扱いましょう。</li>
+            <li><strong>最大値と最小値の混同:</strong> 特に場合分けが多くなると、どの範囲でどちらを求めているのか混乱しやすくなります。一つ一つ丁寧に確認しましょう。</li>
+            <li><strong>軸と定義域の中央の比較忘れ（最大値の場合）:</strong> 頂点が定義域内にある場合でも、最大値（下に凸の場合）または最小値（上に凸の場合）は、軸が定義域の中央からどちらに寄っているかで決まります。この比較を忘れると間違った端点を選んでしまうことがあります。</li>
+        </ul>
+    </div>
+
+    <div class="practice-problems" id="practice-standard">
+        <h3>✏️ 標準的な練習問題</h3>
+        <h4>問題 1 <span class="difficulty">★★★</span> <span class="importance">★★★</span></h4>
+        <p>関数 \(y = -x^2 + 4x - 1\) について、定義域が \(a \leq x \leq a+1\) のときの最小値を、\(a\) の値によって場合分けして求めなさい。</p>
+        <details>
+            <summary>解答と解説</summary>
+            <p>まず、平方完成します。<br>
+            \(y = -(x^2 - 4x) - 1 = -( (x-2)^2 - 4 ) - 1 = -(x-2)^2 + 4 - 1 = -(x-2)^2 + 3\)<br>
+            頂点は \((2, 3)\) で、上に凸の放物線です。軸は \(x=2\) です。</p>
+            <p>定義域は \(a \leq x \leq a+1\)。最小値を求める場合分けをします（上に凸なので、軸から遠い方の端で最小値をとるか、軸が定義域外なら近い方の端でとります）。</p>
+            <p>定義域の中央は \(a + \frac{1}{2}\) です。</p>
+            <ol>
+                <li><strong>軸 \(x=2\) が定義域の中央 \(a + \frac{1}{2}\) より左にある場合:</strong><br>
+                    \(2 < a + \frac{1}{2} \implies a > \frac{3}{2}\)<br>
+                    このとき、定義域の左端 \(x=a\) が軸から遠いので、ここで最小値をとります。<br>
+                    最小値: \(y = -(a-2)^2 + 3\) (\(x=a\) のとき)
+                </li>
+                <li><strong>軸 \(x=2\) が定義域の中央 \(a + \frac{1}{2}\) と一致する場合:</strong><br>
+                    \(2 = a + \frac{1}{2} \implies a = \frac{3}{2}\)<br>
+                    このとき、定義域の両端 \(x=a=\frac{3}{2}\) と \(x=a+1=\frac{5}{2}\) で同じ最小値をとります。<br>
+                    最小値: \(y = -(\frac{3}{2}-2)^2 + 3 = -(-\frac{1}{2})^2 + 3 = -\frac{1}{4} + 3 = \frac{11}{4}\)
+                </li>
+                <li><strong>軸 \(x=2\) が定義域の中央 \(a + \frac{1}{2}\) より右にある場合:</strong><br>
+                    \(2 > a + \frac{1}{2} \implies a < \frac{3}{2}\)<br>
+                    このとき、定義域の右端 \(x=a+1\) が軸から遠いので、ここで最小値をとります。<br>
+                    最小値: \(y = -((a+1)-2)^2 + 3 = -(a-1)^2 + 3\) (\(x=a+1\) のとき)
+                </li>
+            </ol>
+            <p><strong>答え:</strong></p>
+            <ul>
+                <li>\(a > \frac{3}{2}\) のとき、最小値 \( -(a-2)^2 + 3 \) (\(x=a\) のとき)</li>
+                <li>\(a = \frac{3}{2}\) のとき、最小値 \( \frac{11}{4} \) (\(x=\frac{3}{2}, \frac{5}{2}\) のとき)</li>
+                <li>\(a < \frac{3}{2}\) のとき、最小値 \( -(a-1)^2 + 3 \) (\(x=a+1\) のとき)</li>
+            </ul>
+        </details>
+    </div>
+
+    <div class="summary" id="summary">
+        <h2>🔖 授業の要点まとめ <span class="importance">★★★</span></h2>
+        <ul>
+            <li>2次関数の最大・最小問題では、まずグラフの形状（凸の向き）と頂点の座標、軸の方程式を把握する（平方完成が有効）。</li>
+            <li>定義域が指定されている場合、頂点が定義域内に含まれるか、定義域の端の値との比較が重要。</li>
+            <li>定義域が \(a \leq x \leq a+k\) のように動く場合は、定義域と軸の位置関係で場合分けして考える。
+                <ul>
+                    <li>下に凸のグラフの最小値：(1) 軸が定義域の左外 (2) 軸が定義域内 (3) 軸が定義域の右外</li>
+                    <li>下に凸のグラフの最大値：軸と定義域の中央の位置関係で場合分け（軸が中央より左、中央、中央より右）。</li>
+                    <li>上に凸のグラフの場合は、最大・最小の考え方が逆になる。</li>
+                </ul>
+            </li>
+            <li>グラフを描いて視覚的に考察することが、理解を深め、ミスを防ぐ上で非常に有効。</li>
+            <li>最大値・最小値を答える際は、そのときの \(x\) の値も明記する。</li>
+        </ul>
+    </div>
+
+</body>
+</html>
